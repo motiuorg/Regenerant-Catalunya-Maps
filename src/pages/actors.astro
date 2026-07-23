@@ -13,8 +13,10 @@ let error: string | null = null;
 if (actorsSection?.database_id) {
   try {
     records = await fetchDatabaseRecords(actorsSection.database_id);
+    console.log(`[GQRegCat actors] Fetched ${records.length} actors from Notion`);
   } catch (e: any) {
     error = e.message ?? "Failed to fetch actors from Notion.";
+    console.error(`[GQRegCat actors] Notion fetch failed: ${error}`);
   }
 } else {
   error = "No database_id configured for actors section.";

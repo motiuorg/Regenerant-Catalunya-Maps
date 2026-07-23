@@ -21,8 +21,9 @@ if (actorsSection?.database_id) {
       const tags = Array.isArray(tag) ? tag : tag ? [String(tag)] : [];
       return tags.some((t: string) => t.toLowerCase().includes("catbis"));
     }).length;
-  } catch {
-    // Silently fail on home page — actors page will show error
+    console.log(`[GQRegCat home] Fetched ${actorCount} actors from Notion (CATBIS: ${catbisCount})`);
+  } catch (e: any) {
+    console.error(`[GQRegCat home] Notion fetch failed: ${e.message}`);
   }
 }
 ---
