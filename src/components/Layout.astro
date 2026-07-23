@@ -55,6 +55,16 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <script>
     const els = document.querySelectorAll("main > section, main > header, main > article");
     if ("IntersectionObserver" in window && els.length) {
+      const revealIn = (el) => {
+        el.classList.add("reveal");
+        // Reveal immediately if already in viewport to avoid invisible flash
+        const rect = el.getBoundingClientRect();
+        const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inViewport) {
+          el.classList.add("reveal--in");
+        }
+      };
+
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -64,9 +74,15 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
             }
           }
         },
-        { threshold: 0.08 },
+        { threshold: 0.01, rootMargin: "0px 0px -50px 0px" },
       );
-      els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+
+      els.forEach((el) => {
+        revealIn(el);
+        if (!el.classList.contains("reveal--in")) {
+          io.observe(el);
+        }
+      });
     }
   </script>
 </body>
