@@ -1,20 +1,43 @@
 ---
 import Layout from "../components/Layout.astro";
 import Button from "../components/Button.astro";
+import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const sections = loadSectionConfig();
+const actorsSection = sections.find((s) => s.id === "actors");
+
+let actorCount = 0;
+let catbisCount = 0;
+
+if (actorsSection?.database_id) {
+  try {
+    const records = await fetchDatabaseRecords(actorsSection.database_id);
+    actorCount = records.length;
+    catbisCount = records.filter((r) => {
+      const tag = r.properties["2NDTAG"];
+      const tags = Array.isArray(tag) ? tag : tag ? [String(tag)] : [];
+      return tags.some((t: string) => t.toLowerCase().includes("catbis"));
+    }).length;
+  } catch {
+    // Silently fail on home page — actors page will show error
+  }
+}
 ---
+
 <Layout title="Map" current="map" section="Regenerative Actors" dataset="Catalunya">
   <header class="hero">
     <div class="hero__inner section">
-      <p class="eyebrow">Catalunya · work in progress</p>
+      <p class="eyebrow">Catalunya · {actorCount > 0 ? `${actorCount} actors mapped` : "work in progress"}</p>
       <h1 class="display">Regenerative actors across the territory</h1>
       <p class="lede">
         A living map of initiatives, cooperatives, and networks building regeneration in Catalunya —
-        starting from the Regenerant Catalunya cohort and growing outward with Miceli.
+        sourced from the ReFi BCN CRM and growing outward with Miceli.
       </p>
       <div class="hero__actions">
-        <Button href={`${base}actors/`}>Browse actors</Button>
+        <Button href={`${base}actors/`}>Browse {actorCount > 0 ? `${actorCount} actors` : "actors"}</Button>
         <Button variant="secondary" href={`${base}about/`}>About the project</Button>
       </div>
     </div>
@@ -24,12 +47,13 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
     <div class="map-card">
       <div class="map-card__header">
         <h2>Territorial map</h2>
-        <p class="eyebrow">MapLibre + comarques · placeholder for your first dataset</p>
+        <p class="eyebrow">MapLibre + comarques · placeholder — coordinates coming soon</p>
       </div>
       <div class="map-placeholder">
         <p>🗺️ Map placeholder</p>
-        <p>Replace this div with a MapLibre component once you have actor coordinates.</p>
-        <p>Start from <code>src/components/Map.astro</code>.</p>
+        <p>{actorCount > 0 ? `${actorCount} actors in the database` : "Connect your Notion database to populate the map."}</p>
+        <p>{catbisCount > 0 ? `${catbisCount} tagged CATBIS` : ""}</p>
+        <p>Replace this div with a MapLibre component once actor coordinates are available.</p>
       </div>
     </div>
   </section>
@@ -37,14 +61,13 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
   <section class="section">
     <h2>What this is</h2>
     <p>
-      GQRegCat is a clean-slate website using the editorial-organic design system from ReFi BCN,
-      rebuilt around Giulio's vision of a Catalunya-wide regenerative actor map. The content,
-      structure, and data model are entirely separate from refibcn.github.io.
+      GQRegCat is Giulio's map of regenerative actors across Catalunya, built in collaboration with Miceli.
+      It pulls from the ReFi BCN CRM Notion database and renders a public directory using the editorial-organic design system.
     </p>
     <ul class="checklist">
-      <li><span class="eyebrow__num">01</span> Style shell copied (fonts, colours, spacing, components)</li>
-      <li><span class="eyebrow__num">02</span> ReFi BCN content stripped out</li>
-      <li><span class="eyebrow__num">03</span> Ready for your actor dataset + MapLibre map</li>
+      <li><span class="eyebrow__num">01</span> Notion database connected — actors load at build time</li>
+      <li><span class="eyebrow__num">02</span> Editorial-organic design system (fonts, colours, spacing)</li>
+      <li><span class="eyebrow__num">03</span> MapLibre map ready for coordinates</li>
     </ul>
   </section>
 </Layout>

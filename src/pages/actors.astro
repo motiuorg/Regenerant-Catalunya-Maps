@@ -1,10 +1,114 @@
 ---
 import Layout from "../components/Layout.astro";
+import ActorCard from "../components/ActorCard.astro";
+import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+import type { NormalizedRecord } from "../lib/notion";
+
+const sections = loadSectionConfig();
+const actorsSection = sections.find((s) => s.id === "actors");
+
+let records: NormalizedRecord[] = [];
+let error: string | null = null;
+
+if (actorsSection?.database_id) {
+  try {
+    records = await fetchDatabaseRecords(actorsSection.database_id);
+  } catch (e: any) {
+    error = e.message ?? "Failed to fetch actors from Notion.";
+  }
+} else {
+  error = "No database_id configured for actors section.";
+}
+
+const catbisRecords = records.filter((r) => {
+  const tag = r.properties["2NDTAG"];
+  const tags = Array.isArray(tag) ? tag : tag ? [String(tag)] : [];
+  return tags.some((t: string) => t.toLowerCase().includes("catbis"));
+});
+
+const otherRecords = records.filter((r) => {
+  const tag = r.properties["2NDTAG"];
+  const tags = Array.isArray(tag) ? tag : tag ? [String(tag)] : [];
+  return !tags.some((t: string) => t.toLowerCase().includes("catbis"));
+});
 ---
+
 <Layout title="Actors" current="actors" section="Regenerative Actors" dataset="Catalunya">
-  <section class="section">
-    <p class="eyebrow">Directory</p>
-    <h1>Actor directory</h1>
-    <p class="lede">This page will list the regenerative actors in Catalunya. Add your first actor to <code>src/data/actors.yaml</code> and render them here.</p>
-  </section>
+  <header class="hero hero--compact">
+    <div class="hero__inner section">
+      <p class="eyebrow">Directory · {records.length} actors mapped</p>
+      <h1 class="display">Regenerative actors</h1>
+      <p class="lede">
+        Organizations, networks, and individuals building regeneration across Catalunya and beyond —
+        sourced from the ReFi BCN CRM.
+      </p>
+    </div>
+  </header>
+
+  {error && (
+    <section class="section">
+      <div class="error-banner">
+        <p><strong>Notion fetch error:</strong> {error}</p>
+        <p class="error-hint">If running locally, ensure <code>NOTION_API_KEY</code> is set in <code>.env</code>.</p>
+      </div>
+    </section>
+  )}
+
+  {catbisRecords.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">CATBIS · {catbisRecords.length}</h2>
+      <div class="actor-grid">
+        {catbisRecords.map((r) => <ActorCard record={r} />)}
+      </div>
+    </section>
+  )}
+
+  {otherRecords.length > 0 && (
+    <section class="section">
+      <h2 class="section-title">All actors · {otherRecords.length}</h2>
+      <div class="actor-grid">
+        {otherRecords.map((r) => <ActorCard record={r} />)}
+      </div>
+    </section>
+  )}
 </Layout>
+
+<style>
+  .hero--compact {
+    padding: var(--space-12) var(--gutter) var(--space-8);
+    border-bottom: 1px solid var(--ink);
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+  }
+  .actor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+    gap: var(--space-4);
+  }
+  @media (max-width: 720px) {
+    .actor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .error-banner {
+    background: var(--surface-2);
+    border: 1px solid var(--primary);
+    padding: var(--space-4);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+  .error-banner code {
+    background: var(--surface-1);
+    padding: 0.1rem 0.3rem;
+  }
+  .error-hint {
+    color: var(--text-muted);
+    margin-top: var(--space-2);
+  }
+</style>

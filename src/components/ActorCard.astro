@@ -1,0 +1,147 @@
+---
+import type { NormalizedRecord } from "../lib/notion";
+
+export interface Props {
+  record: NormalizedRecord;
+}
+
+const { record } = Astro.props;
+const props = record.properties;
+
+const name = String(props["Name"] ?? "Untitled");
+const website = props["Website"] ?? null;
+const linkedin = props["LinkedIn"] ?? null;
+const description = String(props["Description"] ?? "").slice(0, 280);
+const sap = String(props["SAP"] ?? "").slice(0, 400);
+const agency = props["Agency"] ?? null;
+const area1 = props["Area1"] ?? null;
+const area2 = props["Area2"] ?? null;
+
+const tags: string[] = Array.isArray(props["Memes"]) ? props["Memes"] : [];
+const flags: string[] = Array.isArray(props["2NDTAG"])
+  ? props["2NDTAG"]
+  : props["2NDTAG"]
+    ? [String(props["2NDTAG"])]
+    : [];
+---
+
+<article class="actor-card">
+  <div class="actor-card__header">
+    <h3 class="actor-name">{name}</h3>
+    <div class="actor-meta">
+      {agency && <span class="badge badge--agency">{agency}</span>}
+      {area1 && <span class="badge badge--area">{area1}</span>}
+      {area2 && <span class="badge badge--area">{area2}</span>}
+    </div>
+  </div>
+
+  <div class="actor-tags">
+    {tags.map((t) => <span class="tag">{t}</span>)}
+    {flags.map((f) => <span class="tag tag--flag">{f}</span>)}
+  </div>
+
+  <p class="actor-desc">{description || sap || "No description available."}</p>
+
+  <div class="actor-links">
+    {website && (
+      <a href={String(website)} target="_blank" rel="noopener noreferrer" class="link-website">
+        Website →
+      </a>
+    )}
+    {linkedin && (
+      <a href={String(linkedin)} target="_blank" rel="noopener noreferrer" class="link-linkedin">
+        LinkedIn →
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .actor-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: border-color var(--t-fast);
+  }
+  .actor-card:hover {
+    border-color: var(--ink);
+  }
+  .actor-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .actor-name {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .actor-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+  }
+  .badge--agency {
+    background: var(--surface-2);
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .actor-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.4rem;
+    background: var(--surface-2);
+    color: var(--text-muted);
+  }
+  .tag--flag {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .actor-desc {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+    flex: 1;
+  }
+  .actor-links {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-1);
+  }
+  .actor-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast);
+  }
+  .actor-links a:hover {
+    border-bottom-color: var(--primary);
+  }
+</style>
