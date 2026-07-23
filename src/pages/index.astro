@@ -1,0 +1,65 @@
+---
+import Layout from "../components/Layout.astro";
+import Button from "../components/Button.astro";
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+---
+<Layout title="Map" current="map" section="Regenerative Actors" dataset="Catalunya">
+  <header class="hero">
+    <div class="hero__inner section">
+      <p class="eyebrow">Catalunya · work in progress</p>
+      <h1 class="display">Regenerative actors across the territory</h1>
+      <p class="lede">
+        A living map of initiatives, cooperatives, and networks building regeneration in Catalunya —
+        starting from the Regenerant Catalunya cohort and growing outward with Miceli.
+      </p>
+      <div class="hero__actions">
+        <Button href={`${base}actors/`}>Browse actors</Button>
+        <Button variant="secondary" href={`${base}about/`}>About the project</Button>
+      </div>
+    </div>
+  </header>
+
+  <section class="map-shell section section--wide">
+    <div class="map-card">
+      <div class="map-card__header">
+        <h2>Territorial map</h2>
+        <p class="eyebrow">MapLibre + comarques · placeholder for your first dataset</p>
+      </div>
+      <div class="map-placeholder">
+        <p>🗺️ Map placeholder</p>
+        <p>Replace this div with a MapLibre component once you have actor coordinates.</p>
+        <p>Start from <code>src/components/Map.astro</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>What this is</h2>
+    <p>
+      GQRegCat is a clean-slate website using the editorial-organic design system from ReFi BCN,
+      rebuilt around Giulio's vision of a Catalunya-wide regenerative actor map. The content,
+      structure, and data model are entirely separate from refibcn.github.io.
+    </p>
+    <ul class="checklist">
+      <li><span class="eyebrow__num">01</span> Style shell copied (fonts, colours, spacing, components)</li>
+      <li><span class="eyebrow__num">02</span> ReFi BCN content stripped out</li>
+      <li><span class="eyebrow__num">03</span> Ready for your actor dataset + MapLibre map</li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+.hero { padding: var(--space-20) var(--gutter); border-bottom: 1px solid var(--ink); background: var(--paper); }
+.hero__inner { display: flex; flex-direction: column; gap: var(--space-5); max-width: var(--container-prose); }
+.hero__actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-2); }
+.map-shell { padding: var(--space-12) var(--gutter); }
+.map-card { background: var(--surface-1); border: 1px solid var(--border-subtle); }
+.map-card__header { padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--border-subtle); }
+.map-card__header h2 { margin: 0; }
+.map-placeholder { min-height: 24rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); color: var(--text-muted); text-align: center; padding: var(--space-6); }
+.map-placeholder code { font-family: var(--mono); background: var(--surface-2); padding: 0.1rem 0.3rem; }
+.checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-5); }
+.checklist li { display: flex; align-items: baseline; gap: var(--space-2); }
+.eyebrow__num { color: var(--primary); margin-right: 0.6em; }
+</style>

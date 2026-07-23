@@ -1,0 +1,12 @@
+# Notion database mappings for GQRegCat
+# Database IDs are not sensitive — only the NOTION_API_KEY is secret.
+# Replace the placeholder database_id with your real Notion database ID.
+
+sections:
+  - id: actors
+    name: Regenerative Actors
+    description: Regenerative actors and initiatives across Catalunya
+    database_id: null
+    route: /actors
+    icon: map-pin
+    # Properties the UI expects: Name, Lat, Lng, Type/Tags, Description, URL
