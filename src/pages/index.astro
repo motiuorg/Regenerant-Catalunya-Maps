@@ -138,7 +138,7 @@ const safeJson = (obj: any) =>
     );
     const { priorities, actors } = data;
     const priorityById = new Map(priorities.map((p: any) => [p.id, p]));
-    const defaultColor = "var(--ink)";
+    const defaultColor = "#1d1a16";
 
     const map = new maplibregl.Map({
       container: "map",
@@ -289,7 +289,11 @@ const safeJson = (obj: any) =>
       selectPriority(initial ?? "all");
     }
 
-    init();
+    if (map.loaded()) {
+      init();
+    } else {
+      map.on("load", init);
+    }
 
     for (const btn of filterButtons) {
       btn.addEventListener("click", () => {
@@ -386,15 +390,17 @@ const safeJson = (obj: any) =>
   }
 
   .actor-marker__dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    border: 1px solid var(--ink);
+    border: 1.5px solid var(--paper);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    transform: translate(-50%, -50%);
     transition: transform 0.3s ease, background-color 0.3s ease;
   }
 
   .actor-marker.active .actor-marker__dot {
-    transform: scale(1.35);
+    transform: translate(-50%, -50%) scale(1.5);
   }
 
   .actor-list-item.is-hidden {
