@@ -140,6 +140,8 @@ const safeJson = (obj: any) =>
     const priorityById = new Map(priorities.map((p: any) => [p.id, p]));
     const defaultColor = "#1d1a16";
 
+    console.log("[map] actors loaded:", actors?.length);
+
     const map = new maplibregl.Map({
       container: "map",
       style: {
@@ -175,36 +177,43 @@ const safeJson = (obj: any) =>
 
     function makeMarkerEl(color: string, title: string) {
       const el = document.createElement("div");
-      el.className = "actor-marker";
-      const dot = document.createElement("div");
-      dot.className = "actor-marker__dot";
-      dot.style.backgroundColor = color;
-      el.appendChild(dot);
+      el.style.width = "12px";
+      el.style.height = "12px";
+      el.style.backgroundColor = color;
+      el.style.borderRadius = "50%";
+      el.style.border = "2px solid #fff";
+      el.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.4)";
+      el.style.cursor = "pointer";
+      el.style.transition = "transform 0.3s ease, opacity 0.3s ease";
       el.title = title;
+      el.className = "actor-marker";
       return el;
     }
 
     function createMarkers() {
+      console.log("[map] creating markers for", actors.length, "actors");
       for (const actor of actors) {
         const color =
           actor.priorities.length > 0
             ? getPriorityColor(actor.priorities[0])
             : defaultColor;
         const el = makeMarkerEl(color, actor.name);
-        const marker = new maplibregl.Marker({ element: el })
+        const marker = new maplibregl.Marker({ element: el, anchor: "center" })
           .setLngLat(actor.positions.all)
           .addTo(map);
         markers.set(actor.id, { marker, el, actor });
       }
+      console.log("[map] created", markers.size, "markers");
     }
 
     function updateMarkers(selectedId: string) {
+      let moved = 0;
       for (const { marker, el, actor } of markers.values()) {
-        el.classList.add("is-transitioning");
+        el.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease";
 
         const isActive = selectedId === "all" || actor.priorities.includes(selectedId);
-        el.classList.toggle("active", isActive);
-        el.classList.toggle("inactive", !isActive);
+        el.style.opacity = isActive ? "1" : "0.15";
+        el.style.zIndex = isActive ? "10" : "1";
 
         const color =
           selectedId === "all"
@@ -215,21 +224,16 @@ const safeJson = (obj: any) =>
               ? getPriorityColor(selectedId)
               : defaultColor;
 
-        const dot = el.querySelector(".actor-marker__dot") as HTMLElement | null;
-        if (dot) dot.style.backgroundColor = color;
+        el.style.backgroundColor = color;
 
         const target =
           isActive && selectedId !== "all"
             ? actor.positions[selectedId]
             : actor.positions.all;
         marker.setLngLat(target);
+        moved++;
       }
-
-      setTimeout(() => {
-        for (const { el } of markers.values()) {
-          el.classList.remove("is-transitioning");
-        }
-      }, transitionDuration);
+      console.log("[map] updated", moved, "markers for priority", selectedId);
     }
 
     const listItems = Array.from(
@@ -255,6 +259,7 @@ const safeJson = (obj: any) =>
           ? `Showing ${visible} actors`
           : `Showing ${visible} actors working on ${priority?.name ?? priority?.shortName}`;
       if (countLabel) countLabel.textContent = label;
+      console.log("[map] list visible:", visible);
     }
 
     function updateButtons(selectedId: string) {
@@ -273,6 +278,7 @@ const safeJson = (obj: any) =>
     }
 
     function selectPriority(id: string) {
+      console.log("[map] selecting priority:", id);
       updateButtons(id);
       updateMarkers(id);
       updateList(id);
@@ -290,8 +296,10 @@ const safeJson = (obj: any) =>
     }
 
     if (map.loaded()) {
+      console.log("[map] already loaded");
       init();
     } else {
+      console.log("[map] waiting for load");
       map.on("load", init);
     }
 
@@ -369,38 +377,6 @@ const safeJson = (obj: any) =>
     min-height: 28rem;
     border: 1px solid var(--border-subtle);
     background: var(--surface-1);
-  }
-
-  .actor-marker {
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-  }
-
-  .actor-marker.is-transitioning {
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-  }
-
-  .actor-marker.active {
-    z-index: 10;
-  }
-
-  .actor-marker.inactive {
-    opacity: 0.15;
-    z-index: 1;
-  }
-
-  .actor-marker__dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1.5px solid var(--paper);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-    transform: translate(-50%, -50%);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-
-  .actor-marker.active .actor-marker__dot {
-    transform: translate(-50%, -50%) scale(1.5);
   }
 
   .actor-list-item.is-hidden {
