@@ -1,11 +1,13 @@
 ---
 import type { NormalizedRecord } from "../lib/notion";
+import type { Priority } from "../lib/priorities";
 
 export interface Props {
   record: NormalizedRecord;
+  priorities?: Priority[];
 }
 
-const { record } = Astro.props;
+const { record, priorities = [] } = Astro.props;
 const props = record.properties;
 
 const name = String(props["Name"] ?? "Untitled");
@@ -33,6 +35,15 @@ const flags: string[] = Array.isArray(props["2NDTAG"])
       {area1 && <span class="badge badge--area">{area1}</span>}
       {area2 && <span class="badge badge--area">{area2}</span>}
     </div>
+    {priorities.length > 0 && (
+      <div class="actor-priorities">
+        {priorities.map((p) => (
+          <span class="priority-badge" style={`--badge-color: ${p.color}`}>
+            {p.shortName}
+          </span>
+        ))}
+      </div>
+    )}
   </div>
 
   <div class="actor-tags">
@@ -100,6 +111,21 @@ const flags: string[] = Array.isArray(props["2NDTAG"])
     background: var(--surface-2);
     color: var(--ink);
     border-color: var(--ink);
+  }
+  .actor-priorities {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .priority-badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.4rem;
+    background: color-mix(in srgb, var(--badge-color) 14%, var(--surface-1));
+    color: var(--badge-color);
+    border: 1px solid var(--badge-color);
   }
   .actor-tags {
     display: flex;

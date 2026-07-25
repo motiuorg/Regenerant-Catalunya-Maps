@@ -47,6 +47,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
+  <slot name="head" />
 </head>
 <body class:list={{ minimal }}>
   {!minimal && <Nav current={current} section={section} dataset={dataset} />}
@@ -57,7 +58,6 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     if ("IntersectionObserver" in window && els.length) {
       const revealIn = (el) => {
         el.classList.add("reveal");
-        // Reveal immediately if already in viewport to avoid invisible flash
         const rect = el.getBoundingClientRect();
         const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
         if (inViewport) {

@@ -1,89 +1,443 @@
 ---
 import Layout from "../components/Layout.astro";
-import Button from "../components/Button.astro";
+import ActorCard from "../components/ActorCard.astro";
+import { loadPriorities, inferPriorities } from "../lib/priorities";
+import { buildActorPositions } from "../lib/geo";
 import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+import type { NormalizedRecord } from "../lib/notion";
 
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const priorities = loadPriorities();
+const priorityIds = priorities.map((p) => p.id);
 
 const sections = loadSectionConfig();
 const actorsSection = sections.find((s) => s.id === "actors");
 
-let actorCount = 0;
-let catbisCount = 0;
+let records: NormalizedRecord[] = [];
+let error: string | null = null;
 
 if (actorsSection?.database_id) {
   try {
-    const records = await fetchDatabaseRecords(actorsSection.database_id);
-    actorCount = records.length;
-    catbisCount = records.filter((r) => {
-      const tag = r.properties["2NDTAG"];
-      const tags = Array.isArray(tag) ? tag : tag ? [String(tag)] : [];
-      return tags.some((t: string) => t.toLowerCase().includes("catbis"));
-    }).length;
-    console.log(`[GQRegCat home] Fetched ${actorCount} actors from Notion (CATBIS: ${catbisCount})`);
+    records = await fetchDatabaseRecords(actorsSection.database_id);
   } catch (e: any) {
-    console.error(`[GQRegCat home] Notion fetch failed: ${e.message}`);
+    error = e.message ?? "Failed to fetch actors from Notion.";
   }
+} else {
+  error = "No database_id configured for actors section.";
 }
+
+const recordsWithPriorities = records.map((record) => ({
+  record,
+  matchedIds: inferPriorities(record, priorities),
+}));
+
+const positions = buildActorPositions(records, priorityIds);
+
+const mapActors = recordsWithPriorities.map(({ record, matchedIds }) => {
+  const pos = positions[record.id] ?? {};
+  return {
+    id: record.id,
+    name: String(record.properties["Name"] ?? "Untitled"),
+    priorities: matchedIds,
+    positions: Object.fromEntries(
+      Object.entries(pos).map(([k, v]) => [k, [v[0], v[1]]])
+    ),
+  };
+});
+
+const safeJson = (obj: any) =>
+  JSON.stringify(obj)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
 ---
 
-<Layout title="Map" current="map" section="Regenerative Actors" dataset="Catalunya">
-  <header class="hero">
+<Layout title="Priority Lens" current="map" section="Regenerative Actors" dataset="Catalunya">
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+      crossorigin="anonymous"
+    />
+  </Fragment>
+
+  <header class="hero hero--compact">
     <div class="hero__inner section">
-      <p class="eyebrow">Catalunya · {actorCount > 0 ? `${actorCount} actors mapped` : "work in progress"}</p>
-      <h1 class="display">Regenerative actors across the territory</h1>
+      <p class="eyebrow">Priority lens · Catalunya</p>
+      <h1 class="display">Regenerative priorities across the territory</h1>
       <p class="lede">
-        A living map of initiatives, cooperatives, and networks building regeneration in Catalunya —
-        sourced from the ReFi BCN CRM and growing outward with Miceli.
+        Choose a bioregional health priority to see which actors are working in that area — on the map and in the list below.
       </p>
-      <div class="hero__actions">
-        <Button href={`${base}actors/`}>Browse {actorCount > 0 ? `${actorCount} actors` : "actors"}</Button>
-        <Button variant="secondary" href={`${base}about/`}>About the project</Button>
-      </div>
     </div>
   </header>
 
-  <section class="map-shell section section--wide">
-    <div class="map-card">
-      <div class="map-card__header">
-        <h2>Territorial map</h2>
-        <p class="eyebrow">MapLibre + comarques · placeholder — coordinates coming soon</p>
+  <section class="section section--wide">
+    {error && (
+      <div class="error-banner">
+        <p><strong>Notion fetch error:</strong> {error}</p>
+        <p class="error-hint">
+          If running locally, ensure <code>NOTION_API_KEY</code> is set in <code>.env</code>.
+        </p>
       </div>
-      <div class="map-placeholder">
-        <p>🗺️ Map placeholder</p>
-        <p>{actorCount > 0 ? `${actorCount} actors in the database` : "Connect your Notion database to populate the map."}</p>
-        <p>{catbisCount > 0 ? `${catbisCount} tagged CATBIS` : ""}</p>
-        <p>Replace this div with a MapLibre component once actor coordinates are available.</p>
+    )}
+
+    <div class="filter-bar">
+      <div class="priority-filter" id="priority-filter">
+        <button
+          class="priority-filter__btn active"
+          type="button"
+          data-priority-id="all"
+          aria-pressed="true"
+        >
+          All
+        </button>
+        {priorities.map((p) => (
+          <button
+            class="priority-filter__btn"
+            type="button"
+            data-priority-id={p.id}
+            aria-pressed="false"
+            style={`--priority-color: ${p.color}`}
+          >
+            {p.shortName}
+          </button>
+        ))}
       </div>
+      <p id="actor-count" class="count">Loading…</p>
     </div>
   </section>
 
-  <section class="section">
-    <h2>What this is</h2>
-    <p>
-      GQRegCat is Giulio's map of regenerative actors across Catalunya, built in collaboration with Miceli.
-      It pulls from the ReFi BCN CRM Notion database and renders a public directory using the editorial-organic design system.
-    </p>
-    <ul class="checklist">
-      <li><span class="eyebrow__num">01</span> Notion database connected — actors load at build time</li>
-      <li><span class="eyebrow__num">02</span> Editorial-organic design system (fonts, colours, spacing)</li>
-      <li><span class="eyebrow__num">03</span> MapLibre map ready for coordinates</li>
-    </ul>
+  <section class="map-section">
+    <div id="map" class="map-container"></div>
   </section>
+
+  <section class="section">
+    <h2 class="section-title">Actors</h2>
+    <div class="actor-grid" id="actor-list">
+      {recordsWithPriorities.map(({ record, matchedIds }) => (
+        <div
+          class="actor-list-item"
+          data-actor-priorities={matchedIds.join(" ")}
+        >
+          <ActorCard record={record} priorities={priorities.filter((p) => matchedIds.includes(p.id))} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script
+    type="application/json"
+    id="priority-map-data"
+    set:html={safeJson({ priorities, actors: mapActors })}
+  ></script>
+
+  <script>
+    import maplibregl from "maplibre-gl";
+
+    const data = JSON.parse(
+      document.getElementById("priority-map-data")?.textContent ?? "{}"
+    );
+    const { priorities, actors } = data;
+    const priorityById = new Map(priorities.map((p: any) => [p.id, p]));
+    const defaultColor = "var(--ink)";
+
+    const map = new maplibregl.Map({
+      container: "map",
+      style: {
+        version: 8,
+        sources: {
+          carto: {
+            type: "raster",
+            tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          },
+        },
+        layers: [
+          { id: "carto", type: "raster", source: "carto", minzoom: 0, maxzoom: 22 },
+        ],
+      },
+      center: [2.0, 41.7],
+      zoom: 7.5,
+      maxBounds: [
+        [0.0, 40.0],
+        [4.0, 43.5],
+      ],
+    });
+
+    const markers = new Map<string, { marker: any; el: HTMLElement; actor: any }>();
+    const transitionDuration = 620;
+
+    function getPriorityColor(priorityId: string) {
+      if (priorityId === "all") return defaultColor;
+      return priorityById.get(priorityId)?.color ?? defaultColor;
+    }
+
+    function makeMarkerEl(color: string, title: string) {
+      const el = document.createElement("div");
+      el.className = "actor-marker";
+      const dot = document.createElement("div");
+      dot.className = "actor-marker__dot";
+      dot.style.backgroundColor = color;
+      el.appendChild(dot);
+      el.title = title;
+      return el;
+    }
+
+    function createMarkers() {
+      for (const actor of actors) {
+        const color =
+          actor.priorities.length > 0
+            ? getPriorityColor(actor.priorities[0])
+            : defaultColor;
+        const el = makeMarkerEl(color, actor.name);
+        const marker = new maplibregl.Marker({ element: el })
+          .setLngLat(actor.positions.all)
+          .addTo(map);
+        markers.set(actor.id, { marker, el, actor });
+      }
+    }
+
+    function updateMarkers(selectedId: string) {
+      for (const { marker, el, actor } of markers.values()) {
+        el.classList.add("is-transitioning");
+
+        const isActive = selectedId === "all" || actor.priorities.includes(selectedId);
+        el.classList.toggle("active", isActive);
+        el.classList.toggle("inactive", !isActive);
+
+        const color =
+          selectedId === "all"
+            ? actor.priorities.length > 0
+              ? getPriorityColor(actor.priorities[0])
+              : defaultColor
+            : isActive
+              ? getPriorityColor(selectedId)
+              : defaultColor;
+
+        const dot = el.querySelector(".actor-marker__dot") as HTMLElement | null;
+        if (dot) dot.style.backgroundColor = color;
+
+        const target =
+          isActive && selectedId !== "all"
+            ? actor.positions[selectedId]
+            : actor.positions.all;
+        marker.setLngLat(target);
+      }
+
+      setTimeout(() => {
+        for (const { el } of markers.values()) {
+          el.classList.remove("is-transitioning");
+        }
+      }, transitionDuration);
+    }
+
+    const listItems = Array.from(
+      document.querySelectorAll<HTMLElement>(".actor-list-item")
+    );
+    const filterButtons = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-priority-id]")
+    );
+    const countLabel = document.getElementById("actor-count");
+
+    function updateList(selectedId: string) {
+      let visible = 0;
+      for (const item of listItems) {
+        const ids = item.getAttribute("data-actor-priorities")?.split(" ") ?? [];
+        const show = selectedId === "all" || ids.includes(selectedId);
+        item.classList.toggle("is-hidden", !show);
+        if (show) visible++;
+      }
+
+      const priority = priorityById.get(selectedId);
+      const label =
+        selectedId === "all"
+          ? `Showing ${visible} actors`
+          : `Showing ${visible} actors working on ${priority?.name ?? priority?.shortName}`;
+      if (countLabel) countLabel.textContent = label;
+    }
+
+    function updateButtons(selectedId: string) {
+      for (const btn of filterButtons) {
+        const active = btn.getAttribute("data-priority-id") === selectedId;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-pressed", String(active));
+      }
+    }
+
+    function updateUrl(selectedId: string) {
+      const url = new URL(location.href);
+      if (selectedId === "all") url.searchParams.delete("priority");
+      else url.searchParams.set("priority", selectedId);
+      history.replaceState({}, "", url);
+    }
+
+    function selectPriority(id: string) {
+      updateButtons(id);
+      updateMarkers(id);
+      updateList(id);
+      updateUrl(id);
+    }
+
+    function init() {
+      const params = new URLSearchParams(location.search);
+      const initial =
+        params.get("priority") && priorityById.has(params.get("priority"))
+          ? params.get("priority")
+          : "all";
+      createMarkers();
+      selectPriority(initial ?? "all");
+    }
+
+    init();
+
+    for (const btn of filterButtons) {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-priority-id");
+        if (id) selectPriority(id);
+      });
+    }
+
+    window.addEventListener("resize", () => map.resize());
+  </script>
 </Layout>
 
 <style>
-.hero { padding: var(--space-20) var(--gutter); border-bottom: 1px solid var(--ink); background: var(--paper); }
-.hero__inner { display: flex; flex-direction: column; gap: var(--space-5); max-width: var(--container-prose); }
-.hero__actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-2); }
-.map-shell { padding: var(--space-12) var(--gutter); }
-.map-card { background: var(--surface-1); border: 1px solid var(--border-subtle); }
-.map-card__header { padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--border-subtle); }
-.map-card__header h2 { margin: 0; }
-.map-placeholder { min-height: 24rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); color: var(--text-muted); text-align: center; padding: var(--space-6); }
-.map-placeholder code { font-family: var(--mono); background: var(--surface-2); padding: 0.1rem 0.3rem; }
-.checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-5); }
-.checklist li { display: flex; align-items: baseline; gap: var(--space-2); }
-.eyebrow__num { color: var(--primary); margin-right: 0.6em; }
+  .hero--compact {
+    padding: var(--space-12) var(--gutter) var(--space-8);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .priority-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .priority-filter__btn {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: background-color var(--t-fast), color var(--t-fast),
+      border-color var(--t-fast), transform var(--t-fast);
+  }
+
+  .priority-filter__btn:hover {
+    border-color: var(--ink);
+  }
+
+  .priority-filter__btn.active {
+    background: var(--priority-color, var(--ink));
+    color: var(--paper);
+    border-color: var(--priority-color, var(--ink));
+  }
+
+  .count {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .map-section {
+    padding: 0 var(--gutter) var(--space-16);
+  }
+
+  .map-container {
+    width: 100%;
+    height: 70vh;
+    min-height: 28rem;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-1);
+  }
+
+  .actor-marker {
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+
+  .actor-marker.is-transitioning {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  }
+
+  .actor-marker.active {
+    z-index: 10;
+  }
+
+  .actor-marker.inactive {
+    opacity: 0.15;
+    z-index: 1;
+  }
+
+  .actor-marker__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .actor-marker.active .actor-marker__dot {
+    transform: scale(1.35);
+  }
+
+  .actor-list-item.is-hidden {
+    display: none;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .actor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 720px) {
+    .actor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .error-banner {
+    background: var(--surface-2);
+    border: 1px solid var(--primary);
+    padding: var(--space-4);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .error-banner code {
+    background: var(--surface-1);
+    padding: 0.1rem 0.3rem;
+  }
+
+  .error-hint {
+    color: var(--text-muted);
+    margin-top: var(--space-2);
+  }
 </style>

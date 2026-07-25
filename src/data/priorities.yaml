@@ -1,0 +1,304 @@
+priorities:
+  - id: ecosystem
+    name: Ecosystem Restoration & Biodiversity Regeneration
+    shortName: Ecosystems
+    description: Restoring habitats, regenerating biodiversity, and healing living systems.
+    color: "#447932"
+    keywords:
+      - ecosystem
+      - ecosystems
+      - restoration
+      - biodiversity
+      - habitat
+      - habitats
+      - rewild
+      - rewilding
+      - forest
+      - forests
+      - boscos
+      - bosque
+      - natura
+      - naturaleza
+      - medi ambient
+      - medio ambiente
+      - flora
+      - fauna
+      - conservation
+      - conservació
+      - conservación
+      - ecological
+      - ecològic
+      - ecológic
+      - ecológica
+      - wetland
+      - wetlands
+      - humit
+      - humidal
+      - humedal
+      - reforest
+      - reforestation
+      - reforestació
+      - soil
+      - terra
+      - suelo
+      - native
+      - pollinator
+      - seed
+      - seeds
+      - llavor
+      - semilla
+      - ecology
+      - regeneració ecològica
+      - regeneración ecológica
+
+  - id: food
+    name: Food Sovereignty & Regenerative Agriculture
+    shortName: Food
+    description: Regenerative food systems, agroecology, and local sovereignty.
+    color: "#DC7221"
+    keywords:
+      - food
+      - foods
+      - agriculture
+      - agricultural
+      - farming
+      - farm
+      - farms
+      - granja
+      - finca
+      - mas
+      - regenerative agriculture
+      - agroecology
+      - agroecologia
+      - food sovereignty
+      - sobirania alimentària
+      - soberanía alimentaria
+      - rural
+      - pastoral
+      - livestock
+      - hort
+      - huerto
+      - organic
+      - permaculture
+      - permacultura
+      - seeds
+      - producer
+      - km0
+      - local food
+      - alimentació
+      - alimentación
+      - agricultura
+      - regenerativa
+      - agroforestry
+      - agroforestal
+      - CSA
+      - land stewardship
+      - custòdia
+      - custodia
+      - food system
+      - aliments
+      - alimentos
+
+  - id: energy
+    name: Energy Descent & Climate Resilience
+    shortName: Energy
+    description: Renewable energy, climate adaptation, and just transition.
+    color: "#C92637"
+    keywords:
+      - energy
+      - renewable
+      - renewable energy
+      - solar
+      - wind
+      - eòlica
+      - eólica
+      - climate
+      - canvi climàtic
+      - cambio climático
+      - descent
+      - decreixement
+      - decrecimiento
+      - resilience
+      - resiliència
+      - resiliencia
+      - transition
+      - transició
+      - transición
+      - mitigation
+      - adaptation
+      - adaptació
+      - adaptación
+      - carbon
+      - emissions
+      - CO2
+      - fossil
+      - energy community
+      - comunitat energètica
+      - comunidad energética
+      - prosumer
+      - photovoltaic
+      - fotovoltaica
+      - geothermal
+      - biomass
+      - heat pump
+      - efficiency
+      - eficiència
+      - eficiencia
+      - climate resilience
+      - climate change
+      - just transition
+
+  - id: water
+    name: Water Security & Watershed Resilience
+    shortName: Water
+    description: Water cycles, watershed health, and drought-flood resilience.
+    color: "#4C6BC1"
+    keywords:
+      - water
+      - aigua
+      - agua
+      - watershed
+      - conca
+      - cuenca
+      - river
+      - riu
+      - río
+      - hydrological
+      - hydrology
+      - flood
+      - inundació
+      - inundación
+      - drought
+      - sequera
+      - sequía
+      - spring
+      - font
+      - manantial
+      - aquifer
+      - aqüífer
+      - acuífero
+      - basin
+      - water cycle
+      - cicle de l'aigua
+      - ciclo del agua
+      - irrigation
+      - reg
+      - riego
+      - water governance
+      - water security
+      - water resilience
+      - rainwater
+      - aigua pluvial
+      - agua pluvial
+      - stormwater
+      - drainage
+
+  - id: circular
+    name: Circular Economy (Materials & Waste)
+    shortName: Circular
+    description: Keeping materials in use, designing out waste, and regenerating cycles.
+    color: "#8161BF"
+    keywords:
+      - circular
+      - materials
+      - waste
+      - residu
+      - residuo
+      - recycling
+      - reciclatge
+      - reciclaje
+      - reuse
+      - reutilització
+      - reutilización
+      - repair
+      - reparació
+      - reparación
+      - upcycle
+      - compost
+      - industrial ecology
+      - cradle to cradle
+      - zero waste
+      - residu zero
+      - residuo cero
+      - material
+      - textile
+      - plastic
+      - packaging
+      - sustainable consumption
+      - sustainable production
+      - waste management
+      - deconstruction
+      - biomaterials
+      - construction
+      - building
+      - second hand
+      - segona mà
+      - segunda mano
+      - economia circular
+      - economía circular
+
+  - id: social
+    name: Social Equity & Community Resilience
+    shortName: Social
+    description: Social justice, community care, and inclusive local resilience.
+    color: "#DC697F"
+    keywords:
+      - social
+      - equity
+      - community
+      - comunitat
+      - comunidad
+      - inclusion
+      - inclusió
+      - inclusión
+      - diversity
+      - diversitat
+      - diversidad
+      - justice
+      - justícia
+      - justicia
+      - cooperative
+      - coop
+      - cooperativa
+      - education
+      - learning
+      - aprenentatge
+      - aprendizaje
+      - youth
+      - joves
+      - jóvenes
+      - gender
+      - gènere
+      - género
+      - migrant
+      - immigration
+      - solidarity
+      - solidaritat
+      - solidaridad
+      - community resilience
+      - local economy
+      - social economy
+      - economia social
+      - economía social
+      - commons
+      - common
+      - cultural
+      - culture
+      - health
+      - salut
+      - salud
+      - mental health
+      - care
+      - cures
+      - cuidados
+      - mutual aid
+      - mutual
+      - community building
+      - empowerment
+      - civic
+      - participation
+      - participació
+      - participación
+      - neighborhood
+      - barri
+      - barrio
