@@ -2,8 +2,8 @@
 import Layout from "../components/Layout.astro";
 import ActorCard from "../components/ActorCard.astro";
 import { loadPriorities, inferPriorities } from "../lib/priorities";
-import { buildActorPositions } from "../lib/geo";
-import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+import { buildActorPositions, loadCataloniaBoundary } from "../lib/geo";
+import { loadSectionConfig, fetchDatabaseRecords, getUrl } from "../lib/notion";
 import type { NormalizedRecord } from "../lib/notion";
 
 const priorities = loadPriorities();
@@ -30,13 +30,15 @@ const recordsWithPriorities = records.map((record) => ({
   matchedIds: inferPriorities(record, priorities),
 }));
 
-const positions = buildActorPositions(records, priorityIds);
+const boundary = loadCataloniaBoundary();
+const positions = buildActorPositions(records, priorityIds, boundary);
 
 const mapActors = recordsWithPriorities.map(({ record, matchedIds }) => {
   const pos = positions[record.id] ?? {};
   return {
     id: record.id,
     name: String(record.properties["Name"] ?? "Untitled"),
+    url: getUrl(record),
     priorities: matchedIds,
     positions: Object.fromEntries(
       Object.entries(pos).map(([k, v]) => [k, [v[0], v[1]]])
@@ -167,7 +169,10 @@ const safeJson = (obj: any) =>
       ],
     });
 
-    const markers = new Map<string, { marker: any; el: HTMLElement; actor: any }>();
+    const markers = new Map<
+      string,
+      { marker: any; el: HTMLElement; actor: any; popup: any }
+    >();
     const transitionDuration = 620;
 
     function getPriorityColor(priorityId: string) {
@@ -184,10 +189,35 @@ const safeJson = (obj: any) =>
       el.style.border = "2px solid #fff";
       el.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.4)";
       el.style.cursor = "pointer";
-      el.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+      // Only opacity is transitioned permanently. Transform is managed by
+      // MapLibre during pan/zoom; adding our own transform transition causes
+      // the markers to drift behind the map. See updateMarkers for the
+      // temporary transform transition used during priority filtering.
+      el.style.transition = "opacity 0.25s ease";
       el.title = title;
       el.className = "actor-marker";
       return el;
+    }
+
+    function createPopupHtml(actor: any) {
+      const website = actor.url
+        ? `<a href="${actor.url}" target="_blank" rel="noopener noreferrer" class="actor-popup__link">Website</a>`
+        : "";
+      return `
+        <div class="actor-popup">
+          <p class="actor-popup__name">${escapeHtml(actor.name)}</p>
+          ${website}
+        </div>
+      `;
+    }
+
+    function escapeHtml(text: string): string {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
     function createMarkers() {
@@ -198,10 +228,28 @@ const safeJson = (obj: any) =>
             ? getPriorityColor(actor.priorities[0])
             : defaultColor;
         const el = makeMarkerEl(color, actor.name);
+        const popup = new maplibregl.Popup({
+          offset: 10,
+          closeButton: false,
+          className: "actor-popup-wrapper",
+        }).setHTML(createPopupHtml(actor));
+
         const marker = new maplibregl.Marker({ element: el, anchor: "center" })
           .setLngLat(actor.positions.all)
+          .setPopup(popup)
           .addTo(map);
-        markers.set(actor.id, { marker, el, actor });
+
+        // Hover opens the popup; click navigates to the actor website if present.
+        el.addEventListener("mouseenter", () => marker.togglePopup());
+        el.addEventListener("mouseleave", () => marker.togglePopup());
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (actor.url) {
+            window.open(actor.url, "_blank", "noopener,noreferrer");
+          }
+        });
+
+        markers.set(actor.id, { marker, el, actor, popup });
       }
       console.log("[map] created", markers.size, "markers");
     }
@@ -209,7 +257,15 @@ const safeJson = (obj: any) =>
     function updateMarkers(selectedId: string) {
       let moved = 0;
       for (const { marker, el, actor } of markers.values()) {
-        el.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease";
+        // Temporarily animate the transform between priority positions, then
+        // hand control back to MapLibre by removing the transform transition.
+        el.style.transition =
+          "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease";
+        window.clearTimeout(parseInt(el.dataset.transitionTimer ?? "0"));
+        const timer = window.setTimeout(() => {
+          el.style.transition = "opacity 0.25s ease";
+        }, transitionDuration);
+        el.dataset.transitionTimer = String(timer);
 
         const isActive = selectedId === "all" || actor.priorities.includes(selectedId);
         el.style.opacity = isActive ? "1" : "0.15";
@@ -421,5 +477,45 @@ const safeJson = (obj: any) =>
   .error-hint {
     color: var(--text-muted);
     margin-top: var(--space-2);
+  }
+
+  .actor-marker {
+    transform-origin: center center;
+  }
+
+  .actor-marker:hover {
+    transform: scale(1.4) !important;
+  }
+
+  .actor-popup-wrapper .maplibregl-popup-content {
+    padding: var(--space-2) var(--space-3);
+    background: var(--paper);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm, 4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    font-family: var(--sans);
+  }
+
+  .actor-popup__name {
+    margin: 0 0 0.15rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    max-width: 16rem;
+    line-height: 1.25;
+  }
+
+  .actor-popup__link {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .actor-popup__link:hover {
+    text-decoration: underline;
   }
 </style>
