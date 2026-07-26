@@ -58,13 +58,7 @@ export function loadCataloniaBoundary(): CataloniaBoundary {
     thisFile,
     "..",
     "..",
-    "..",
-    "..",
-    "..",
-    "packages",
-    "maps",
-    "catalunya-actor-map",
-    "v0",
+    "data",
     "catalunya-comarques.geojson"
   );
   const raw = fs.readFileSync(geoPath, "utf8");
