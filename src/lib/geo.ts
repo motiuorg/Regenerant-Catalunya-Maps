@@ -1,7 +1,7 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import { fileURLToPath } from "node:url";
+import geojsonRaw from "../data/catalunya-comarques.geojson?raw";
 import type { NormalizedRecord } from "./notion";
+
+const geojson = JSON.parse(geojsonRaw);
 
 export const CATALONIA_BOUNDS = {
   west: 0.5,
@@ -51,18 +51,9 @@ export function pointInCatalonia(
 }
 
 export function loadCataloniaBoundary(): CataloniaBoundary {
-  // Resolve the GeoJSON relative to this source file so it works regardless of
-  // the process cwd (local dev, astro build, direct node imports, etc.).
-  const thisFile = fileURLToPath(import.meta.url);
-  const geoPath = path.resolve(
-    thisFile,
-    "..",
-    "..",
-    "data",
-    "catalunya-comarques.geojson"
-  );
-  const raw = fs.readFileSync(geoPath, "utf8");
-  const geojson = JSON.parse(raw);
+  // Import the GeoJSON as a module so it is bundled at build time and no
+  // runtime file-system lookup is needed (works in local dev, Astro build,
+  // and GitHub Actions without relying on import.meta.url paths).
 
   const rings: Array<Array<[number, number]>> = [];
 
