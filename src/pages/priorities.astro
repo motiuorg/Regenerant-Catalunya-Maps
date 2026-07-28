@@ -7,10 +7,7 @@ import { normalizeRecord, hasCatbis, uniqueValues } from "../lib/crm";
 import type { CrmActor } from "../lib/crm";
 
 const priorities = loadPriorities();
-const priorityById = new Map(priorities.map((p) => [p.id, p]));
-const priorityColors = Object.fromEntries(
-  priorities.map((p) => [p.id, p.color])
-);
+const priorityColors = Object.fromEntries(priorities.map((p) => [p.id, p.color]));
 
 const sections = loadSectionConfig();
 const actorsSection = sections.find((s) => s.id === "actors");
@@ -27,9 +24,7 @@ if (actorsSection?.database_id) {
   error = "No database_id configured for actors section.";
 }
 
-const actors: CrmActor[] = records
-  .filter(hasCatbis)
-  .map(normalizeRecord);
+const actors: CrmActor[] = records.filter(hasCatbis).map(normalizeRecord);
 
 const priorityTags = priorities.map((p) => p.id);
 const ontologyTags = uniqueValues(actors, "ontologyTags");
@@ -83,12 +78,18 @@ const safeJson = (obj: any) =>
       {ontologyTags.length > 0 && (
         <div class="filter-group">
           <span class="filter-label">Ontology</span>
-          <select id="ontology-filter" class="multi-select" multiple size="1">
-            <option value="" disabled selected>Choose ontology tags…</option>
+          <div class="checkbox-list" id="ontology-filters">
             {ontologyTags.map((tag) => (
-              <option value={tag}>{tag}</option>
+              <label class="checkbox-item">
+                <input
+                  type="checkbox"
+                  value={tag}
+                  data-filter-key="ontologyTags"
+                />
+                <span>{tag}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
       )}
     </div>
@@ -104,75 +105,67 @@ const safeJson = (obj: any) =>
     </div>
   </section>
 
-  <script>
-    type Actor = {
-      thirdTags: string[];
-      ontologyTags: string[];
-    };
+  <script is:inline>
+    (function () {
+      const items = Array.from(document.querySelectorAll(".actor-list-item"));
+      const actors = items.map((el) => JSON.parse(el.dataset.actor || "{}"));
+      const countLabel = document.getElementById("gallery-count");
 
-    const items = Array.from(
-      document.querySelectorAll<HTMLElement>(".actor-list-item")
-    );
-    const actors: Actor[] = items.map((el) =>
-      JSON.parse(el.dataset.actor ?? "{}")
-    );
-    const countLabel = document.getElementById("gallery-count");
+      const filters = {
+        thirdTags: [],
+        ontologyTags: [],
+      };
 
-    const filters: { thirdTags: string[]; ontologyTags: string[] } = {
-      thirdTags: [],
-      ontologyTags: [],
-    };
-
-    function matches(actor: Actor, key: keyof Actor, values: string[]) {
-      if (values.length === 0) return true;
-      const actorValues = (actor[key] as string[]) ?? [];
-      return values.some((v) => actorValues.includes(v));
-    }
-
-    function isVisible(actor: Actor) {
-      return (
-        matches(actor, "thirdTags", filters.thirdTags) &&
-        matches(actor, "ontologyTags", filters.ontologyTags)
-      );
-    }
-
-    function updateGallery() {
-      let visible = 0;
-      for (let i = 0; i < actors.length; i++) {
-        const show = isVisible(actors[i]);
-        items[i].classList.toggle("is-hidden", !show);
-        if (show) visible++;
+      function matches(actor, key, values) {
+        if (values.length === 0) return true;
+        const actorValues = actor[key] || [];
+        return values.some((v) => actorValues.includes(v));
       }
-      if (countLabel) {
-        countLabel.textContent = `Showing ${visible} of ${actors.length} entities`;
-      }
-    }
 
-    document.querySelectorAll("#priority-filters .filter-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const value = (btn as HTMLElement).dataset.filterValue!;
-        const active = btn.classList.toggle("active");
-        (btn as HTMLElement).setAttribute("aria-pressed", String(active));
-        if (active) {
-          filters.thirdTags.push(value);
-        } else {
-          filters.thirdTags = filters.thirdTags.filter((v) => v !== value);
-        }
-        updateGallery();
-      });
-    });
-
-    const ontologySelect = document.getElementById("ontology-filter") as HTMLSelectElement | null;
-    if (ontologySelect) {
-      ontologySelect.addEventListener("change", () => {
-        filters.ontologyTags = Array.from(ontologySelect.selectedOptions).map(
-          (o) => o.value
+      function isVisible(actor) {
+        return (
+          matches(actor, "thirdTags", filters.thirdTags) &&
+          matches(actor, "ontologyTags", filters.ontologyTags)
         );
-        updateGallery();
-      });
-    }
+      }
 
-    updateGallery();
+      function updateGallery() {
+        let visible = 0;
+        for (let i = 0; i < actors.length; i++) {
+          const show = isVisible(actors[i]);
+          items[i].classList.toggle("is-hidden", !show);
+          if (show) visible++;
+        }
+        if (countLabel) {
+          countLabel.textContent = `Showing ${visible} of ${actors.length} entities`;
+        }
+      }
+
+      document.querySelectorAll("#priority-filters .filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const value = btn.dataset.filterValue;
+          const active = btn.classList.toggle("active");
+          btn.setAttribute("aria-pressed", String(active));
+          if (active) {
+            filters.thirdTags.push(value);
+          } else {
+            filters.thirdTags = filters.thirdTags.filter((v) => v !== value);
+          }
+          updateGallery();
+        });
+      });
+
+      document.querySelectorAll("#ontology-filters input[type='checkbox']").forEach((input) => {
+        input.addEventListener("change", () => {
+          filters.ontologyTags = Array.from(
+            document.querySelectorAll("#ontology-filters input[type='checkbox']:checked")
+          ).map((el) => el.value);
+          updateGallery();
+        });
+      });
+
+      updateGallery();
+    })();
   </script>
 </Layout>
 
@@ -239,15 +232,30 @@ const safeJson = (obj: any) =>
     color: var(--filter-color, var(--ink));
     border-color: var(--filter-color, var(--ink));
   }
-  .multi-select {
-    min-width: 14rem;
-    max-width: 24rem;
-    font-family: var(--sans);
-    font-size: 0.85rem;
+
+  .checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-height: 12rem;
+    overflow-y: auto;
     padding: var(--space-2);
     background: var(--surface-1);
     border: 1px solid var(--border-subtle);
+    min-width: 14rem;
+    max-width: 24rem;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--sans);
+    font-size: 0.85rem;
     color: var(--text-primary);
+    cursor: pointer;
+  }
+  .checkbox-item input {
+    cursor: pointer;
   }
 
   .count {

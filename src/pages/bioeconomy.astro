@@ -24,10 +24,11 @@ if (actorsSection?.database_id) {
   error = "No database_id configured for actors section.";
 }
 
-const actors: CrmActor[] = records.filter(hasCatbis).map(normalizeRecord);
+const actors: CrmActor[] = records
+  .filter((r) => hasCatbis(r) && (r.properties["Memes"] ?? []).some((m: any) => String(m).toLowerCase() === "bioeconomy"))
+  .map(normalizeRecord);
 
 const priorityTags = priorities.map((p) => p.id);
-const area2Tags = uniqueValues(actors, "area2");
 const ontologyTags = uniqueValues(actors, "ontologyTags");
 
 const safeJson = (obj: any) =>
@@ -37,15 +38,16 @@ const safeJson = (obj: any) =>
     .replace(/&/g, "\\u0026");
 ---
 
-<Layout title="By territory" current="territory">
+<Layout title="Bioeconomy" current="bioeconomy">
   <header class="hero hero--compact">
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">By territory</h1>
+      <h1 class="display">Bioeconomy</h1>
       <p class="lede">
-        CATBIS entities filtered by where they operate across Catalunya. Select comarcas
-        and climate zones; combine with bioregional priorities or ontology tags to explore
-        place-based regeneration.
+        CATBIS entities tagged <strong>Bioeconomy</strong> in the CRM. These are actors
+        working with biological resources, bio-based production, circular/regenerative
+        value chains, and the institutions, companies, networks, funders, and knowledge
+        systems that support them. Use the priority buttons to narrow by bioregional lens.
       </p>
     </div>
   </header>
@@ -58,24 +60,8 @@ const safeJson = (obj: any) =>
     )}
 
     <div class="filter-bar">
-      <div class="filter-group filter-group--wide">
-        <span class="filter-label">Comarca / climate zone</span>
-        <div class="checkbox-list checkbox-list--wide" id="area2-filters">
-          {area2Tags.map((tag) => (
-            <label class="checkbox-item">
-              <input
-                type="checkbox"
-                value={tag}
-                data-filter-key="area2"
-              />
-              <span>{tag}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
       <div class="filter-group">
-        <span class="filter-label">Priority</span>
+        <span class="filter-label">Bioregional priority</span>
         <div class="filter-buttons" id="priority-filters">
           {priorityTags.map((tag) => (
             <button
@@ -130,7 +116,6 @@ const safeJson = (obj: any) =>
 
       const filters = {
         thirdTags: [],
-        area2: [],
         ontologyTags: [],
       };
 
@@ -142,7 +127,6 @@ const safeJson = (obj: any) =>
 
       function isVisible(actor) {
         return (
-          matches(actor, "area2", filters.area2) &&
           matches(actor, "thirdTags", filters.thirdTags) &&
           matches(actor, "ontologyTags", filters.ontologyTags)
         );
@@ -160,13 +144,6 @@ const safeJson = (obj: any) =>
         }
       }
 
-      function readChecked(groupId, key) {
-        filters[key] = Array.from(
-          document.querySelectorAll(`#${groupId} input[type='checkbox']:checked`)
-        ).map((el) => el.value);
-        updateGallery();
-      }
-
       document.querySelectorAll("#priority-filters .filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           const value = btn.dataset.filterValue;
@@ -181,12 +158,13 @@ const safeJson = (obj: any) =>
         });
       });
 
-      document.querySelectorAll("#area2-filters input[type='checkbox']").forEach((input) => {
-        input.addEventListener("change", () => readChecked("area2-filters", "area2"));
-      });
-
       document.querySelectorAll("#ontology-filters input[type='checkbox']").forEach((input) => {
-        input.addEventListener("change", () => readChecked("ontology-filters", "ontologyTags"));
+        input.addEventListener("change", () => {
+          filters.ontologyTags = Array.from(
+            document.querySelectorAll("#ontology-filters input[type='checkbox']:checked")
+          ).map((el) => el.value);
+          updateGallery();
+        });
       });
 
       updateGallery();
@@ -224,10 +202,6 @@ const safeJson = (obj: any) =>
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-  }
-  .filter-group--wide {
-    flex: 1 1 18rem;
-    max-width: 28rem;
   }
   .filter-label {
     font-family: var(--mono);
@@ -273,9 +247,6 @@ const safeJson = (obj: any) =>
     border: 1px solid var(--border-subtle);
     min-width: 14rem;
     max-width: 24rem;
-  }
-  .checkbox-list--wide {
-    max-width: 100%;
   }
   .checkbox-item {
     display: flex;

@@ -37,19 +37,19 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
         </p>
         <span class="entry-card__link">Open the territory gallery →</span>
       </a>
+
+      <a href={`${base}bioeconomy/`} class="entry-card">
+        <span class="entry-card__eyebrow">Explore by</span>
+        <h2 class="entry-card__title">Bioeconomy</h2>
+        <p class="entry-card__text">
+          Browse CATBIS entities tagged Bioeconomy — biological resources, bio-based
+          production, circular value chains, and their supporting networks.
+        </p>
+        <span class="entry-card__link">Open the bioeconomy gallery →</span>
+      </a>
     </div>
   </section>
 
-  <section class="section">
-    <div class="note">
-      <p>
-        This is a living directory. Every entity shown is tagged <code>CATBIS</code> in the
-        ReFi BCN CRM and carries information about its bioregional priorities, territorial
-        scope, and ontology. Filters can be combined: they narrow the gallery by matching
-        any selected tag within each group.
-      </p>
-    </div>
-  </section>
 </Layout>
 
 <style>
@@ -122,19 +122,4 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
     margin-top: var(--space-2);
   }
 
-  .note {
-    max-width: var(--container-prose);
-    margin: 0 auto;
-    padding: var(--space-6);
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-  .note p { margin: 0; }
-  .note code {
-    background: var(--surface-2);
-    padding: 0.1rem 0.3rem;
-    font-family: var(--mono);
-  }
 </style>
