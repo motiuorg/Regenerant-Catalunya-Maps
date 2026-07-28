@@ -1,521 +1,140 @@
 ---
 import Layout from "../components/Layout.astro";
-import ActorCard from "../components/ActorCard.astro";
-import { loadPriorities, inferPriorities } from "../lib/priorities";
-import { buildActorPositions, loadCataloniaBoundary } from "../lib/geo";
-import { loadSectionConfig, fetchDatabaseRecords, getUrl } from "../lib/notion";
-import type { NormalizedRecord } from "../lib/notion";
 
-const priorities = loadPriorities();
-const priorityIds = priorities.map((p) => p.id);
-
-const sections = loadSectionConfig();
-const actorsSection = sections.find((s) => s.id === "actors");
-
-let records: NormalizedRecord[] = [];
-let error: string | null = null;
-
-if (actorsSection?.database_id) {
-  try {
-    records = await fetchDatabaseRecords(actorsSection.database_id);
-  } catch (e: any) {
-    error = e.message ?? "Failed to fetch actors from Notion.";
-  }
-} else {
-  error = "No database_id configured for actors section.";
-}
-
-const recordsWithPriorities = records.map((record) => ({
-  record,
-  matchedIds: inferPriorities(record, priorities),
-}));
-
-const boundary = loadCataloniaBoundary();
-const positions = buildActorPositions(records, priorityIds, boundary);
-
-const mapActors = recordsWithPriorities.map(({ record, matchedIds }) => {
-  const pos = positions[record.id] ?? {};
-  return {
-    id: record.id,
-    name: String(record.properties["Name"] ?? "Untitled"),
-    url: getUrl(record),
-    priorities: matchedIds,
-    positions: Object.fromEntries(
-      Object.entries(pos).map(([k, v]) => [k, [v[0], v[1]]])
-    ),
-  };
-});
-
-const safeJson = (obj: any) =>
-  JSON.stringify(obj)
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026");
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
-<Layout title="Priority Lens" current="map" section="Regenerative Actors" dataset="Catalunya">
-  <Fragment slot="head">
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"
-      crossorigin="anonymous"
-    />
-  </Fragment>
-
-  <header class="hero hero--compact">
+<Layout title="Home" current="home">
+  <header class="hero">
     <div class="hero__inner section">
-      <p class="eyebrow">Priority lens · Catalunya</p>
-      <h1 class="display">Regenerative priorities across the territory</h1>
+      <p class="eyebrow">Regenerant Catalunya Maps</p>
+      <h1 class="display">Mapping regenerative projects and programs across Catalunya</h1>
       <p class="lede">
-        Choose a bioregional health priority to see which actors are working in that area — on the map and in the list below.
+        A first attempt at aggregating regenerative actors, initiatives, and programs
+        working in Catalunya — explored through bioregional priorities or territorial lenses.
       </p>
     </div>
   </header>
 
   <section class="section section--wide">
-    {error && (
-      <div class="error-banner">
-        <p><strong>Notion fetch error:</strong> {error}</p>
-        <p class="error-hint">
-          If running locally, ensure <code>NOTION_API_KEY</code> is set in <code>.env</code>.
+    <div class="entry-grid">
+      <a href={`${base}priorities/`} class="entry-card">
+        <span class="entry-card__eyebrow">Explore by</span>
+        <h2 class="entry-card__title">Bioregional priority</h2>
+        <p class="entry-card__text">
+          Browse CATBIS entities through six lenses: ecosystems, food, energy, water,
+          circular economy, and social equity.
         </p>
-      </div>
-    )}
+        <span class="entry-card__link">Open the priority gallery →</span>
+      </a>
 
-    <div class="filter-bar">
-      <div class="priority-filter" id="priority-filter">
-        <button
-          class="priority-filter__btn active"
-          type="button"
-          data-priority-id="all"
-          aria-pressed="true"
-        >
-          All
-        </button>
-        {priorities.map((p) => (
-          <button
-            class="priority-filter__btn"
-            type="button"
-            data-priority-id={p.id}
-            aria-pressed="false"
-            style={`--priority-color: ${p.color}`}
-          >
-            {p.shortName}
-          </button>
-        ))}
-      </div>
-      <p id="actor-count" class="count">Loading…</p>
+      <a href={`${base}territory/`} class="entry-card">
+        <span class="entry-card__eyebrow">Explore by</span>
+        <h2 class="entry-card__title">Territory</h2>
+        <p class="entry-card__text">
+          Browse CATBIS entities by comarca and climate zone across Catalunya.
+        </p>
+        <span class="entry-card__link">Open the territory gallery →</span>
+      </a>
     </div>
-  </section>
-
-  <section class="map-section">
-    <div id="map" class="map-container"></div>
   </section>
 
   <section class="section">
-    <h2 class="section-title">Actors</h2>
-    <div class="actor-grid" id="actor-list">
-      {recordsWithPriorities.map(({ record, matchedIds }) => (
-        <div
-          class="actor-list-item"
-          data-actor-priorities={matchedIds.join(" ")}
-        >
-          <ActorCard record={record} priorities={priorities.filter((p) => matchedIds.includes(p.id))} />
-        </div>
-      ))}
+    <div class="note">
+      <p>
+        This is a living directory. Every entity shown is tagged <code>CATBIS</code> in the
+        ReFi BCN CRM and carries information about its bioregional priorities, territorial
+        scope, and ontology. Filters can be combined: they narrow the gallery by matching
+        any selected tag within each group.
+      </p>
     </div>
   </section>
-
-  <script
-    type="application/json"
-    id="priority-map-data"
-    set:html={safeJson({ priorities, actors: mapActors })}
-  ></script>
-
-  <script>
-    import maplibregl from "maplibre-gl";
-
-    const data = JSON.parse(
-      document.getElementById("priority-map-data")?.textContent ?? "{}"
-    );
-    const { priorities, actors } = data;
-    const priorityById = new Map(priorities.map((p: any) => [p.id, p]));
-    const defaultColor = "#1d1a16";
-
-    console.log("[map] actors loaded:", actors?.length);
-
-    const map = new maplibregl.Map({
-      container: "map",
-      style: {
-        version: 8,
-        sources: {
-          carto: {
-            type: "raster",
-            tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],
-            tileSize: 256,
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          },
-        },
-        layers: [
-          { id: "carto", type: "raster", source: "carto", minzoom: 0, maxzoom: 22 },
-        ],
-      },
-      center: [2.0, 41.7],
-      zoom: 7.5,
-      maxBounds: [
-        [0.0, 40.0],
-        [4.0, 43.5],
-      ],
-    });
-
-    const markers = new Map<
-      string,
-      { marker: any; el: HTMLElement; actor: any; popup: any }
-    >();
-    const transitionDuration = 620;
-
-    function getPriorityColor(priorityId: string) {
-      if (priorityId === "all") return defaultColor;
-      return priorityById.get(priorityId)?.color ?? defaultColor;
-    }
-
-    function makeMarkerEl(color: string, title: string) {
-      const el = document.createElement("div");
-      el.style.width = "12px";
-      el.style.height = "12px";
-      el.style.backgroundColor = color;
-      el.style.borderRadius = "50%";
-      el.style.border = "2px solid #fff";
-      el.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.4)";
-      el.style.cursor = "pointer";
-      // Only opacity is transitioned permanently. Transform is managed by
-      // MapLibre during pan/zoom; adding our own transform transition causes
-      // the markers to drift behind the map. See updateMarkers for the
-      // temporary transform transition used during priority filtering.
-      el.style.transition = "opacity 0.25s ease";
-      el.title = title;
-      el.className = "actor-marker";
-      return el;
-    }
-
-    function createPopupHtml(actor: any) {
-      const website = actor.url
-        ? `<a href="${actor.url}" target="_blank" rel="noopener noreferrer" class="actor-popup__link">Website</a>`
-        : "";
-      return `
-        <div class="actor-popup">
-          <p class="actor-popup__name">${escapeHtml(actor.name)}</p>
-          ${website}
-        </div>
-      `;
-    }
-
-    function escapeHtml(text: string): string {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function createMarkers() {
-      console.log("[map] creating markers for", actors.length, "actors");
-      for (const actor of actors) {
-        const color =
-          actor.priorities.length > 0
-            ? getPriorityColor(actor.priorities[0])
-            : defaultColor;
-        const el = makeMarkerEl(color, actor.name);
-        const popup = new maplibregl.Popup({
-          offset: 10,
-          closeButton: false,
-          className: "actor-popup-wrapper",
-        }).setHTML(createPopupHtml(actor));
-
-        const marker = new maplibregl.Marker({ element: el, anchor: "center" })
-          .setLngLat(actor.positions.all)
-          .setPopup(popup)
-          .addTo(map);
-
-        // Hover opens the popup; click navigates to the actor website if present.
-        el.addEventListener("mouseenter", () => marker.togglePopup());
-        el.addEventListener("mouseleave", () => marker.togglePopup());
-        el.addEventListener("click", (e) => {
-          e.stopPropagation();
-          if (actor.url) {
-            window.open(actor.url, "_blank", "noopener,noreferrer");
-          }
-        });
-
-        markers.set(actor.id, { marker, el, actor, popup });
-      }
-      console.log("[map] created", markers.size, "markers");
-    }
-
-    function updateMarkers(selectedId: string) {
-      let moved = 0;
-      for (const { marker, el, actor } of markers.values()) {
-        // Temporarily animate the transform between priority positions, then
-        // hand control back to MapLibre by removing the transform transition.
-        el.style.transition =
-          "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease";
-        window.clearTimeout(parseInt(el.dataset.transitionTimer ?? "0"));
-        const timer = window.setTimeout(() => {
-          el.style.transition = "opacity 0.25s ease";
-        }, transitionDuration);
-        el.dataset.transitionTimer = String(timer);
-
-        const isActive = selectedId === "all" || actor.priorities.includes(selectedId);
-        el.style.opacity = isActive ? "1" : "0.15";
-        el.style.zIndex = isActive ? "10" : "1";
-
-        const color =
-          selectedId === "all"
-            ? actor.priorities.length > 0
-              ? getPriorityColor(actor.priorities[0])
-              : defaultColor
-            : isActive
-              ? getPriorityColor(selectedId)
-              : defaultColor;
-
-        el.style.backgroundColor = color;
-
-        const target =
-          isActive && selectedId !== "all"
-            ? actor.positions[selectedId]
-            : actor.positions.all;
-        marker.setLngLat(target);
-        moved++;
-      }
-      console.log("[map] updated", moved, "markers for priority", selectedId);
-    }
-
-    const listItems = Array.from(
-      document.querySelectorAll<HTMLElement>(".actor-list-item")
-    );
-    const filterButtons = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-priority-id]")
-    );
-    const countLabel = document.getElementById("actor-count");
-
-    function updateList(selectedId: string) {
-      let visible = 0;
-      for (const item of listItems) {
-        const ids = item.getAttribute("data-actor-priorities")?.split(" ") ?? [];
-        const show = selectedId === "all" || ids.includes(selectedId);
-        item.classList.toggle("is-hidden", !show);
-        if (show) visible++;
-      }
-
-      const priority = priorityById.get(selectedId);
-      const label =
-        selectedId === "all"
-          ? `Showing ${visible} actors`
-          : `Showing ${visible} actors working on ${priority?.name ?? priority?.shortName}`;
-      if (countLabel) countLabel.textContent = label;
-      console.log("[map] list visible:", visible);
-    }
-
-    function updateButtons(selectedId: string) {
-      for (const btn of filterButtons) {
-        const active = btn.getAttribute("data-priority-id") === selectedId;
-        btn.classList.toggle("active", active);
-        btn.setAttribute("aria-pressed", String(active));
-      }
-    }
-
-    function updateUrl(selectedId: string) {
-      const url = new URL(location.href);
-      if (selectedId === "all") url.searchParams.delete("priority");
-      else url.searchParams.set("priority", selectedId);
-      history.replaceState({}, "", url);
-    }
-
-    function selectPriority(id: string) {
-      console.log("[map] selecting priority:", id);
-      updateButtons(id);
-      updateMarkers(id);
-      updateList(id);
-      updateUrl(id);
-    }
-
-    function init() {
-      const params = new URLSearchParams(location.search);
-      const initial =
-        params.get("priority") && priorityById.has(params.get("priority"))
-          ? params.get("priority")
-          : "all";
-      createMarkers();
-      selectPriority(initial ?? "all");
-    }
-
-    if (map.loaded()) {
-      console.log("[map] already loaded");
-      init();
-    } else {
-      console.log("[map] waiting for load");
-      map.on("load", init);
-    }
-
-    for (const btn of filterButtons) {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-priority-id");
-        if (id) selectPriority(id);
-      });
-    }
-
-    window.addEventListener("resize", () => map.resize());
-  </script>
 </Layout>
 
 <style>
-  .hero--compact {
-    padding: var(--space-12) var(--gutter) var(--space-8);
+  .hero {
+    padding: var(--space-16) var(--gutter) var(--space-12);
     border-bottom: 1px solid var(--ink);
     background: var(--paper);
   }
-
-  .filter-bar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  .hero__inner {
+    max-width: var(--container-default);
+    margin: 0 auto;
+  }
+  .hero .eyebrow {
     margin-bottom: var(--space-4);
   }
-
-  .priority-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
+  .hero h1 {
+    max-width: 18ch;
+    margin-bottom: var(--space-5);
+  }
+  .hero .lede {
+    max-width: 60ch;
   }
 
-  .priority-filter__btn {
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--space-5);
+  }
+  .entry-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--t-fast), translate var(--t-med), box-shadow var(--t-med);
+  }
+  .entry-card:hover {
+    border-color: var(--ink);
+    translate: 0 -2px;
+    box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .entry-card__eyebrow {
     font-family: var(--mono);
     font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-2) var(--space-3);
-    background: var(--surface-1);
-    color: var(--text-primary);
-    border: 1px solid var(--border-subtle);
-    cursor: pointer;
-    transition: background-color var(--t-fast), color var(--t-fast),
-      border-color var(--t-fast), transform var(--t-fast);
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
   }
-
-  .priority-filter__btn:hover {
-    border-color: var(--ink);
+  .entry-card__title {
+    font-family: var(--serif);
+    font-size: var(--text-xl);
+    margin: 0;
   }
-
-  .priority-filter__btn.active {
-    background: var(--priority-color, var(--ink));
-    color: var(--paper);
-    border-color: var(--priority-color, var(--ink));
+  .entry-card__text {
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    line-height: var(--leading-body);
+    flex: 1;
+    margin: 0;
   }
-
-  .count {
+  .entry-card__link {
     font-family: var(--mono);
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin: 0;
-  }
-
-  .map-section {
-    padding: 0 var(--gutter) var(--space-16);
-  }
-
-  .map-container {
-    width: 100%;
-    height: 70vh;
-    min-height: 28rem;
-    border: 1px solid var(--border-subtle);
-    background: var(--surface-1);
-  }
-
-  .actor-list-item.is-hidden {
-    display: none;
-  }
-
-  .section-title {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: var(--space-5);
-  }
-
-  .actor-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-    gap: var(--space-4);
-  }
-
-  @media (max-width: 720px) {
-    .actor-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .error-banner {
-    background: var(--surface-2);
-    border: 1px solid var(--primary);
-    padding: var(--space-4);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    margin-bottom: var(--space-6);
-  }
-
-  .error-banner code {
-    background: var(--surface-1);
-    padding: 0.1rem 0.3rem;
-  }
-
-  .error-hint {
-    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    color: var(--primary);
     margin-top: var(--space-2);
   }
 
-  .actor-marker {
-    transform-origin: center center;
-  }
-
-  .actor-marker:hover {
-    transform: scale(1.4) !important;
-  }
-
-  .actor-popup-wrapper .maplibregl-popup-content {
-    padding: var(--space-2) var(--space-3);
-    background: var(--paper);
+  .note {
+    max-width: var(--container-prose);
+    margin: 0 auto;
+    padding: var(--space-6);
+    background: var(--surface-1);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm, 4px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-    font-family: var(--sans);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
   }
-
-  .actor-popup__name {
-    margin: 0 0 0.15rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    max-width: 16rem;
-    line-height: 1.25;
-  }
-
-  .actor-popup__link {
-    display: inline-block;
+  .note p { margin: 0; }
+  .note code {
+    background: var(--surface-2);
+    padding: 0.1rem 0.3rem;
     font-family: var(--mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .actor-popup__link:hover {
-    text-decoration: underline;
   }
 </style>

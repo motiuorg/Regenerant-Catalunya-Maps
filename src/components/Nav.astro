@@ -15,9 +15,9 @@ const { current = "home", section, dataset } = Astro.props;
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const items = [
-  { id: "map", label: "Map", href: base },
-  { id: "actors", label: "Actors", href: `${base}actors/` },
-  { id: "about", label: "About", href: `${base}about/` },
+  { id: "home", label: "Home", href: base },
+  { id: "priorities", label: "By priority", href: `${base}priorities/` },
+  { id: "territory", label: "By territory", href: `${base}territory/` },
 ];
 ---
 <header class="site-nav">
@@ -31,7 +31,6 @@ const items = [
       {items.map((it) => (
         <li><a href={it.href} class:list={[{ active: current === it.id }]}>{it.label}</a></li>
       ))}
-      <li><a href={`${base}contact/`} class:list={["nav-cta", { active: current === "contact" }]}>Contact</a></li>
     </ul>
   </nav>
 </header>
@@ -44,14 +43,6 @@ const items = [
 nav ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; flex-wrap: wrap; }
 nav a { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rule); text-decoration: none; padding: 0.25rem 0; border-bottom: 1px solid transparent; white-space: nowrap; }
 nav a.active, nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
-nav a.nav-cta {
-  color: var(--primary-foreground);
-  background: var(--primary);
-  border: 1px solid var(--primary);
-  padding: 0.3rem 0.75rem;
-  transition: background-color var(--t-fast), border-color var(--t-fast);
-}
-nav a.nav-cta:hover, nav a.nav-cta.active { background: var(--primary-hover); border-color: var(--primary-hover); color: var(--primary-foreground); }
 @media (max-width: 880px) { .brand-system, .brand-sep { display: none; } }
 @media (max-width: 720px) { .site-nav { flex-direction: column; align-items: flex-start; } nav ul { gap: 0.9rem; } }
 </style>

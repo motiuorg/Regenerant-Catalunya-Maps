@@ -1,5 +1,5 @@
 priorities:
-  - id: ecosystem
+  - id: Ecosystems
     name: Ecosystem Restoration & Biodiversity Regeneration
     shortName: Ecosystems
     description: Restoring habitats, regenerating biodiversity, and healing living systems.
@@ -51,7 +51,7 @@ priorities:
       - regeneració ecològica
       - regeneración ecológica
 
-  - id: food
+  - id: Food
     name: Food Sovereignty & Regenerative Agriculture
     shortName: Food
     description: Regenerative food systems, agroecology, and local sovereignty.
@@ -99,7 +99,7 @@ priorities:
       - aliments
       - alimentos
 
-  - id: energy
+  - id: Energy
     name: Energy Descent & Climate Resilience
     shortName: Energy
     description: Renewable energy, climate adaptation, and just transition.
@@ -148,7 +148,7 @@ priorities:
       - climate change
       - just transition
 
-  - id: water
+  - id: Water
     name: Water Security & Watershed Resilience
     shortName: Water
     description: Water cycles, watershed health, and drought-flood resilience.
@@ -193,7 +193,7 @@ priorities:
       - stormwater
       - drainage
 
-  - id: circular
+  - id: Circular
     name: Circular Economy (Materials & Waste)
     shortName: Circular
     description: Keeping materials in use, designing out waste, and regenerating cycles.
@@ -237,7 +237,7 @@ priorities:
       - economia circular
       - economía circular
 
-  - id: social
+  - id: Social
     name: Social Equity & Community Resilience
     shortName: Social
     description: Social justice, community care, and inclusive local resilience.

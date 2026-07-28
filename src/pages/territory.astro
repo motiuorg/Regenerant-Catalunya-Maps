@@ -1,0 +1,308 @@
+---
+import Layout from "../components/Layout.astro";
+import ActorCard from "../components/ActorCard.astro";
+import { loadPriorities } from "../lib/priorities";
+import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+import { normalizeRecord, hasCatbis, uniqueValues } from "../lib/crm";
+import type { CrmActor } from "../lib/crm";
+
+const priorities = loadPriorities();
+const priorityColors = Object.fromEntries(priorities.map((p) => [p.id, p.color]));
+
+const sections = loadSectionConfig();
+const actorsSection = sections.find((s) => s.id === "actors");
+
+let records: any[] = [];
+let error: string | null = null;
+if (actorsSection?.database_id) {
+  try {
+    records = await fetchDatabaseRecords(actorsSection.database_id);
+  } catch (e: any) {
+    error = e.message ?? "Failed to fetch actors from Notion.";
+  }
+} else {
+  error = "No database_id configured for actors section.";
+}
+
+const actors: CrmActor[] = records
+  .filter(hasCatbis)
+  .map(normalizeRecord);
+
+const priorityTags = priorities.map((p) => p.id);
+const area2Tags = uniqueValues(actors, "area2");
+const ontologyTags = uniqueValues(actors, "ontologyTags");
+
+const safeJson = (obj: any) =>
+  JSON.stringify(obj)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+---
+
+<Layout title="By territory" current="territory">
+  <header class="hero hero--compact">
+    <div class="hero__inner section">
+      <p class="eyebrow">Regenerant Catalunya Maps</p>
+      <h1 class="display">By territory</h1>
+      <p class="lede">
+        CATBIS entities filtered by where they operate across Catalunya. Select comarcas
+        and climate zones; combine with bioregional priorities or ontology tags to explore
+        place-based regeneration.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--wide">
+    {error && (
+      <div class="error-banner">
+        <p><strong>Notion fetch error:</strong> {error}</p>
+      </div>
+    )}
+
+    <div class="filter-bar">
+      <div class="filter-group filter-group--wide">
+        <span class="filter-label">Comarca / climate zone</span>
+        <select id="area2-filter" class="multi-select" multiple size="4">
+          {area2Tags.map((tag) => (
+            <option value={tag}>{tag}</option>
+          ))}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Priority</span>
+        <div class="filter-buttons" id="priority-filters">
+          {priorityTags.map((tag) => (
+            <button
+              type="button"
+              class="filter-btn"
+              data-filter-key="thirdTags"
+              data-filter-value={tag}
+              style={`--filter-color: ${priorityColors[tag] ?? "var(--ink)"}`}
+              aria-pressed="false"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {ontologyTags.length > 0 && (
+        <div class="filter-group">
+          <span class="filter-label">Ontology</span>
+          <select id="ontology-filter" class="multi-select" multiple size="1">
+            <option value="" disabled selected>Choose ontology tags…</option>
+            {ontologyTags.map((tag) => (
+              <option value={tag}>{tag}</option>
+            ))}
+          </select>
+        </div>
+      )}
+    </div>
+
+    <p class="count" id="gallery-count">Loading…</p>
+
+    <div class="actor-grid" id="actor-gallery">
+      {actors.map((actor) => (
+        <div class="actor-list-item" data-actor={safeJson(actor)}>
+          <ActorCard actor={actor} priorityColors={priorityColors} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    type Actor = {
+      thirdTags: string[];
+      area2: string[];
+      ontologyTags: string[];
+    };
+
+    const items = Array.from(
+      document.querySelectorAll<HTMLElement>(".actor-list-item")
+    );
+    const actors: Actor[] = items.map((el) =>
+      JSON.parse(el.dataset.actor ?? "{}")
+    );
+    const countLabel = document.getElementById("gallery-count");
+
+    const filters: { thirdTags: string[]; area2: string[]; ontologyTags: string[] } = {
+      thirdTags: [],
+      area2: [],
+      ontologyTags: [],
+    };
+
+    function matches(actor: Actor, key: keyof Actor, values: string[]) {
+      if (values.length === 0) return true;
+      const actorValues = (actor[key] as string[]) ?? [];
+      return values.some((v) => actorValues.includes(v));
+    }
+
+    function isVisible(actor: Actor) {
+      return (
+        matches(actor, "area2", filters.area2) &&
+        matches(actor, "thirdTags", filters.thirdTags) &&
+        matches(actor, "ontologyTags", filters.ontologyTags)
+      );
+    }
+
+    function updateGallery() {
+      let visible = 0;
+      for (let i = 0; i < actors.length; i++) {
+        const show = isVisible(actors[i]);
+        items[i].classList.toggle("is-hidden", !show);
+        if (show) visible++;
+      }
+      if (countLabel) {
+        countLabel.textContent = `Showing ${visible} of ${actors.length} entities`;
+      }
+    }
+
+    document.querySelectorAll("#priority-filters .filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const value = (btn as HTMLElement).dataset.filterValue!;
+        const active = btn.classList.toggle("active");
+        (btn as HTMLElement).setAttribute("aria-pressed", String(active));
+        if (active) {
+          filters.thirdTags.push(value);
+        } else {
+          filters.thirdTags = filters.thirdTags.filter((v) => v !== value);
+        }
+        updateGallery();
+      });
+    });
+
+    const area2Select = document.getElementById("area2-filter") as HTMLSelectElement | null;
+    if (area2Select) {
+      area2Select.addEventListener("change", () => {
+        filters.area2 = Array.from(area2Select.selectedOptions).map((o) => o.value);
+        updateGallery();
+      });
+    }
+
+    const ontologySelect = document.getElementById("ontology-filter") as HTMLSelectElement | null;
+    if (ontologySelect) {
+      ontologySelect.addEventListener("change", () => {
+        filters.ontologyTags = Array.from(ontologySelect.selectedOptions).map(
+          (o) => o.value
+        );
+        updateGallery();
+      });
+    }
+
+    updateGallery();
+  </script>
+</Layout>
+
+<style>
+  .hero--compact {
+    padding: var(--space-12) var(--gutter) var(--space-8);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .hero__inner {
+    max-width: var(--container-default);
+    margin: 0 auto;
+  }
+  .hero--compact .eyebrow {
+    margin-bottom: var(--space-3);
+  }
+  .hero--compact h1 {
+    margin-bottom: var(--space-4);
+  }
+  .hero--compact .lede {
+    max-width: 70ch;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .filter-group--wide {
+    flex: 1 1 18rem;
+    max-width: 28rem;
+  }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  }
+  .filter-btn:hover {
+    border-color: var(--ink);
+  }
+  .filter-btn.active {
+    background: color-mix(in srgb, var(--filter-color, var(--ink)) 14%, var(--surface-1));
+    color: var(--filter-color, var(--ink));
+    border-color: var(--filter-color, var(--ink));
+  }
+  .multi-select {
+    min-width: 14rem;
+    max-width: 100%;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    padding: var(--space-2);
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+  }
+
+  .count {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-6);
+  }
+
+  .actor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .actor-list-item.is-hidden {
+    display: none;
+  }
+
+  .error-banner {
+    background: var(--surface-2);
+    border: 1px solid var(--primary);
+    padding: var(--space-4);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 720px) {
+    .actor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,45 +1,34 @@
 ---
-import type { NormalizedRecord } from "../lib/notion";
-import type { Priority } from "../lib/priorities";
+import type { CrmActor } from "../lib/crm";
 
 export interface Props {
-  record: NormalizedRecord;
-  priorities?: Priority[];
+  actor: CrmActor;
+  priorityColors?: Record<string, string>;
 }
+const { actor, priorityColors = {} } = Astro.props;
 
-const { record, priorities = [] } = Astro.props;
-const props = record.properties;
-
-const name = String(props["Name"] ?? "Untitled");
-const website = props["Website"] ?? null;
-const linkedin = props["LinkedIn"] ?? null;
-const description = String(props["Description"] ?? "").slice(0, 280);
-const sap = String(props["SAP"] ?? "").slice(0, 400);
-const agency = props["Agency"] ?? null;
-const area1 = props["Area1"] ?? null;
-const area2 = props["Area2"] ?? null;
-
-const tags: string[] = Array.isArray(props["Memes"]) ? props["Memes"] : [];
-const flags: string[] = Array.isArray(props["2NDTAG"])
-  ? props["2NDTAG"]
-  : props["2NDTAG"]
-    ? [String(props["2NDTAG"])]
-    : [];
+const description = actor.description.slice(0, 280);
 ---
 
 <article class="actor-card">
   <div class="actor-card__header">
-    <h3 class="actor-name">{name}</h3>
+    <h3 class="actor-name">{actor.name}</h3>
     <div class="actor-meta">
-      {agency && <span class="badge badge--agency">{agency}</span>}
-      {area1 && <span class="badge badge--area">{area1}</span>}
-      {area2 && <span class="badge badge--area">{area2}</span>}
+      {actor.agency.map((a) => (
+        <span class="badge badge--agency">{a}</span>
+      ))}
+      {actor.area2.map((a) => (
+        <span class="badge badge--area">{a}</span>
+      ))}
     </div>
-    {priorities.length > 0 && (
+    {actor.thirdTags.length > 0 && (
       <div class="actor-priorities">
-        {priorities.map((p) => (
-          <span class="priority-badge" style={`--badge-color: ${p.color}`}>
-            {p.shortName}
+        {actor.thirdTags.map((tag) => (
+          <span
+            class="priority-badge"
+            style={priorityColors[tag] ? `--badge-color: ${priorityColors[tag]}` : undefined}
+          >
+            {tag}
           </span>
         ))}
       </div>
@@ -47,20 +36,20 @@ const flags: string[] = Array.isArray(props["2NDTAG"])
   </div>
 
   <div class="actor-tags">
-    {tags.map((t) => <span class="tag">{t}</span>)}
-    {flags.map((f) => <span class="tag tag--flag">{f}</span>)}
+    {actor.ontologyTags.map((t) => <span class="tag">{t}</span>)}
+    {actor.memes.map((t) => <span class="tag tag--meme">{t}</span>)}
   </div>
 
-  <p class="actor-desc">{description || sap || "No description available."}</p>
+  <p class="actor-desc">{description || "No description available."}</p>
 
   <div class="actor-links">
-    {website && (
-      <a href={String(website)} target="_blank" rel="noopener noreferrer" class="link-website">
+    {actor.website && (
+      <a href={actor.website} target="_blank" rel="noopener noreferrer" class="link-website">
         Website →
       </a>
     )}
-    {linkedin && (
-      <a href={String(linkedin)} target="_blank" rel="noopener noreferrer" class="link-linkedin">
+    {actor.linkedin && (
+      <a href={actor.linkedin} target="_blank" rel="noopener noreferrer" class="link-linkedin">
         LinkedIn →
       </a>
     )}
@@ -123,9 +112,9 @@ const flags: string[] = Array.isArray(props["2NDTAG"])
     text-transform: uppercase;
     letter-spacing: 0.04em;
     padding: 0.15rem 0.4rem;
-    background: color-mix(in srgb, var(--badge-color) 14%, var(--surface-1));
-    color: var(--badge-color);
-    border: 1px solid var(--badge-color);
+    background: color-mix(in srgb, var(--badge-color, var(--ink)) 14%, var(--surface-1));
+    color: var(--badge-color, var(--ink));
+    border: 1px solid var(--badge-color, var(--ink));
   }
   .actor-tags {
     display: flex;
@@ -141,7 +130,7 @@ const flags: string[] = Array.isArray(props["2NDTAG"])
     background: var(--surface-2);
     color: var(--text-muted);
   }
-  .tag--flag {
+  .tag--meme {
     background: var(--primary);
     color: var(--primary-foreground);
   }
