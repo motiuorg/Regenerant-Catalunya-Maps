@@ -6,3 +6,8 @@ node_modules/
 .env.*
 *.log
 .DS_Store
+
+# Reference docs / CRM exports (may contain personal data)
+ReFi BCN CRM *.csv
+Catalunya — Comarques*.md
+CRM restructuring *.md
