@@ -22,6 +22,31 @@ export interface CrmActor {
   relatedResources: string[];
 }
 
+export interface CrmProgram {
+  id: string;
+  name: string;
+  description: string;
+  whatItIs: string;
+  website: string | null;
+  area2: string[];
+  agency: string | null;
+  secondTags: string[];
+}
+
+export interface CrmEvent {
+  id: string;
+  name: string;
+  about: string;
+  whatItIs: string;
+  date: string;
+  location: string;
+  link: string | null;
+  type: string | null;
+  secondTags: string[];
+}
+
+export type CrmRecord = CrmActor | CrmProgram | CrmEvent;
+
 function toStringArray(value: any): string[] {
   if (Array.isArray(value)) return value.map((v) => String(v));
   if (value === null || value === undefined || value === "") return [];
@@ -69,17 +94,65 @@ export function normalizeRecord(record: NormalizedRecord): CrmActor {
   };
 }
 
-export function hasCatbis(record: NormalizedRecord | CrmActor): boolean {
-  const tags = "secondTags" in record ? record.secondTags : toStringArray(record.properties["2NDTAG"]);
-  return tags.some((t) => t.toLowerCase() === "catbis");
+export function normalizeProgram(record: NormalizedRecord): CrmProgram {
+  const props = record.properties;
+  return {
+    id: record.id,
+    name: String(props["Name"] ?? "Untitled"),
+    description: String(props["Description"] ?? ""),
+    whatItIs: String(props["What it is"] ?? ""),
+    website: toNullableString(
+      props["Website"] ?? props["Link"] ?? props["URL"] ?? props["Website 1"] ?? props["Website 2"]
+    ),
+    area2: toStringArray(props["Area2"]),
+    agency: toNullableString(props["Agency"]),
+    secondTags: toStringArray(props["2NDTAG"]),
+  };
 }
 
-export function uniqueValues(actors: CrmActor[], key: keyof CrmActor): string[] {
+export function normalizeEvent(record: NormalizedRecord): CrmEvent {
+  const props = record.properties;
+  return {
+    id: record.id,
+    name: String(props["Event"] ?? props["Name"] ?? "Untitled"),
+    about: String(props["About"] ?? ""),
+    whatItIs: String(props["What it is"] ?? ""),
+    date: String(props["Date"] ?? ""),
+    location: String(props["Location"] ?? ""),
+    link: toNullableString(props["Link"]),
+    type: toNullableString(props["Type"]),
+    secondTags: toStringArray(props["Select"] ?? props["2NDTAG"] ?? props["Tag"] ?? props["Tags"]),
+  };
+}
+
+export function hasCatbis(record: NormalizedRecord | CrmRecord): boolean {
+  if ("secondTags" in record && Array.isArray(record.secondTags)) {
+    return record.secondTags.some((t) => t.toLowerCase() === "catbis");
+  }
+  const props = (record as NormalizedRecord).properties ?? {};
+  const candidates = [
+    props["2NDTAG"],
+    props["Select"],
+    props["Tag"],
+    props["Tags"],
+  ];
+  for (const value of candidates) {
+    if (value === undefined || value === null) continue;
+    const tags = toStringArray(value);
+    if (tags.some((t) => t.toLowerCase() === "catbis")) return true;
+  }
+  return false;
+}
+
+export function uniqueValues<T extends Record<string, any>>(
+  records: T[],
+  key: keyof T
+): string[] {
   const values = new Set<string>();
-  for (const actor of actors) {
-    const v = actor[key];
+  for (const record of records) {
+    const v = record[key];
     if (Array.isArray(v)) {
-      for (const item of v) values.add(item);
+      for (const item of v as any[]) values.add(String(item));
     } else if (v !== null && v !== undefined && v !== "") {
       values.add(String(v));
     }

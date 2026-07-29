@@ -1,0 +1,225 @@
+---
+import Layout from "../components/Layout.astro";
+import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
+import { normalizeEvent, hasCatbis } from "../lib/crm";
+import type { CrmEvent } from "../lib/crm";
+
+const sections = loadSectionConfig();
+const eventsSection = sections.find((s) => s.id === "events");
+
+let records: any[] = [];
+let error: string | null = null;
+if (eventsSection?.database_id) {
+  try {
+    records = await fetchDatabaseRecords(eventsSection.database_id);
+  } catch (e: any) {
+    error = e.message ?? "Failed to fetch events from Notion.";
+  }
+} else {
+  error = "No database_id configured for events section.";
+}
+
+const events: CrmEvent[] = records.filter(hasCatbis).map(normalizeEvent);
+---
+
+<Layout title="Events" current="events">
+  <header class="hero hero--compact">
+    <div class="hero__inner section">
+      <p class="eyebrow">Regenerant Catalunya Maps</p>
+      <h1 class="display">Events</h1>
+      <p class="lede">
+        Gatherings, conferences, workshops, and community events related to regeneration in Catalunya.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--wide">
+    {error && (
+      <div class="error-banner">
+        <p><strong>Data error:</strong> {error}</p>
+      </div>
+    )}
+
+    <p class="count">{events.length} events mapped</p>
+
+    <div class="item-grid">
+      {events.map((event) => (
+        <article class="item-card">
+          <div class="item-card__header">
+            <h3 class="item-name">{event.name}</h3>
+            {event.type && <span class="item-type">{event.type}</span>}
+          </div>
+
+          <div class="item-meta">
+            {event.date && (
+              <span class="meta-item">
+                <span class="meta-label">Date</span>
+                <span class="meta-value">{event.date}</span>
+              </span>
+            )}
+            {event.location && (
+              <span class="meta-item">
+                <span class="meta-label">Location</span>
+                <span class="meta-value">{event.location}</span>
+              </span>
+            )}
+          </div>
+
+          <p class="item-description">
+            {event.about || event.whatItIs || "No description available."}
+          </p>
+
+          {event.link && (
+            <a
+              href={event.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="item-link"
+            >
+              Link →
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero--compact {
+    padding: var(--space-12) var(--gutter) var(--space-8);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .hero__inner {
+    max-width: var(--container-default);
+    margin: 0 auto;
+  }
+  .hero--compact .eyebrow {
+    margin-bottom: var(--space-3);
+  }
+  .hero--compact h1 {
+    margin-bottom: var(--space-4);
+  }
+  .hero--compact .lede {
+    max-width: 70ch;
+  }
+
+  .count {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-6);
+  }
+
+  .item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .item-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: border-color var(--t-fast);
+  }
+  .item-card:hover {
+    border-color: var(--ink);
+  }
+
+  .item-card__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .item-name {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .item-type {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+    white-space: nowrap;
+  }
+
+  .item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+  .meta-value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+  }
+
+  .item-description {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .item-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast);
+    align-self: flex-start;
+    margin-top: var(--space-1);
+  }
+  .item-link:hover {
+    border-bottom-color: var(--primary);
+  }
+
+  .error-banner {
+    background: var(--surface-2);
+    border: 1px solid var(--primary);
+    padding: var(--space-4);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 720px) {
+    .item-grid {
+      grid-template-columns: 1fr;
+    }
+    .item-card__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
