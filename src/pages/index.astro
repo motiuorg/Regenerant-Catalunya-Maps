@@ -1,125 +1,19 @@
 ---
-import Layout from "../components/Layout.astro";
-
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
-<Layout title="Home" current="home">
-  <header class="hero">
-    <div class="hero__inner section">
-      <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Mapping regenerative projects and programs across Catalunya</h1>
-      <p class="lede">
-        A first attempt at aggregating regenerative actors, initiatives, and programs
-        working in Catalunya — explored through bioregional priorities or territorial lenses.
-      </p>
-    </div>
-  </header>
-
-  <section class="section section--wide">
-    <div class="entry-grid">
-      <a href={`${base}priorities/`} class="entry-card">
-        <span class="entry-card__eyebrow">Explore by</span>
-        <h2 class="entry-card__title">Bioregional priority</h2>
-        <p class="entry-card__text">
-          Browse CATBIS entities through six lenses: ecosystems, food, energy, water,
-          circular economy, and social equity.
-        </p>
-        <span class="entry-card__link">Open the priority gallery →</span>
-      </a>
-
-      <a href={`${base}territory/`} class="entry-card">
-        <span class="entry-card__eyebrow">Explore by</span>
-        <h2 class="entry-card__title">Territory</h2>
-        <p class="entry-card__text">
-          Browse CATBIS entities by comarca and climate zone across Catalunya.
-        </p>
-        <span class="entry-card__link">Open the territory gallery →</span>
-      </a>
-
-      <a href={`${base}bioeconomy/`} class="entry-card">
-        <span class="entry-card__eyebrow">Explore by</span>
-        <h2 class="entry-card__title">Bioeconomy</h2>
-        <p class="entry-card__text">
-          Browse CATBIS entities tagged Bioeconomy — biological resources, bio-based
-          production, circular value chains, and their supporting networks.
-        </p>
-        <span class="entry-card__link">Open the bioeconomy gallery →</span>
-      </a>
-    </div>
-  </section>
-
-</Layout>
-
-<style>
-  .hero {
-    padding: var(--space-16) var(--gutter) var(--space-12);
-    border-bottom: 1px solid var(--ink);
-    background: var(--paper);
-  }
-  .hero__inner {
-    max-width: var(--container-default);
-    margin: 0 auto;
-  }
-  .hero .eyebrow {
-    margin-bottom: var(--space-4);
-  }
-  .hero h1 {
-    max-width: 18ch;
-    margin-bottom: var(--space-5);
-  }
-  .hero .lede {
-    max-width: 60ch;
-  }
-
-  .entry-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: var(--space-5);
-  }
-  .entry-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-6);
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color var(--t-fast), translate var(--t-med), box-shadow var(--t-med);
-  }
-  .entry-card:hover {
-    border-color: var(--ink);
-    translate: 0 -2px;
-    box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 12%, transparent);
-  }
-  .entry-card__eyebrow {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-  }
-  .entry-card__title {
-    font-family: var(--serif);
-    font-size: var(--text-xl);
-    margin: 0;
-  }
-  .entry-card__text {
-    font-size: var(--text-base);
-    color: var(--text-muted);
-    line-height: var(--leading-body);
-    flex: 1;
-    margin: 0;
-  }
-  .entry-card__link {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--primary);
-    margin-top: var(--space-2);
-  }
-
-</style>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="refresh" content={`0; url=${base}general-view/`} />
+  <title>Regenerant Catalunya Maps</title>
+</head>
+<body>
+  <p>
+    Redirecting to <a href={`${base}general-view/`}>the ecosystem explorer</a>…
+  </p>
+</body>
+</html>

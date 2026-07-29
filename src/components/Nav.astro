@@ -16,9 +16,7 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const items = [
   { id: "home", label: "Home", href: base },
-  { id: "priorities", label: "By priority", href: `${base}priorities/` },
-  { id: "territory", label: "By territory", href: `${base}territory/` },
-  { id: "bioeconomy", label: "Bioeconomy", href: `${base}bioeconomy/` },
+  { id: "general-view", label: "Explore", href: `${base}general-view/` },
 ];
 ---
 <header class="site-nav">
