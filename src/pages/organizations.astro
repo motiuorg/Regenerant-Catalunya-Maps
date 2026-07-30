@@ -35,7 +35,7 @@ const activePriorityAreas = priorityAreaOptions.filter((p) =>
 const activeTerritories = territoryOptions.filter((t) =>
   actors.some((a) => a.area2.includes(t))
 );
-const actorRoles = uniqueValues(actors, "actorRole").filter(Boolean);
+const actorRoles = uniqueValues(actors, "actorRoles").filter(Boolean);
 const ontologyTags = uniqueValues(actors, "ontologyTags").filter(Boolean);
 const themes = uniqueValues(actors, "themes").filter(Boolean);
 
@@ -102,18 +102,6 @@ const safeJson = (obj: any) =>
           </div>
         </fieldset>
 
-        <fieldset class="filter-group filter-group--wide">
-          <legend class="filter-label">Territory</legend>
-          <div class="checkbox-list" id="territory-filters">
-            {activeTerritories.map((tag) => (
-              <label class="checkbox-item">
-                <input type="checkbox" value={tag} />
-                <span>{tag}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
         <fieldset class="filter-group">
           <legend class="filter-label">Actor role</legend>
           <div class="filter-buttons" id="role-filters">
@@ -126,6 +114,18 @@ const safeJson = (obj: any) =>
               >
                 {tag}
               </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group filter-group--wide">
+          <legend class="filter-label">Territory</legend>
+          <div class="checkbox-list" id="territory-filters">
+            {activeTerritories.map((tag) => (
+              <label class="checkbox-item">
+                <input type="checkbox" value={tag} />
+                <span>{tag}</span>
+              </label>
             ))}
           </div>
         </fieldset>
@@ -318,7 +318,7 @@ const safeJson = (obj: any) =>
       const filters = {
         thirdTags: [],
         area2: [],
-        actorRole: [],
+        actorRoles: [],
         ontologyTags: [],
         themes: [],
         search: "",
@@ -346,7 +346,7 @@ const safeJson = (obj: any) =>
           matchesSearch(actor) &&
           matches(actor, "thirdTags", filters.thirdTags) &&
           matches(actor, "area2", filters.area2) &&
-          matches(actor, "actorRole", filters.actorRole) &&
+          matches(actor, "actorRoles", filters.actorRoles) &&
           matches(actor, "ontologyTags", filters.ontologyTags) &&
           matches(actor, "themes", filters.themes)
         );
@@ -392,7 +392,7 @@ const safeJson = (obj: any) =>
       }
 
       bindButtonGroup("priority-filters", "thirdTags");
-      bindButtonGroup("role-filters", "actorRole");
+      bindButtonGroup("role-filters", "actorRoles");
       bindCheckboxGroup("territory-filters", "area2");
       bindCheckboxGroup("ontology-filters", "ontologyTags");
       bindCheckboxGroup("theme-filters", "themes");
@@ -408,7 +408,7 @@ const safeJson = (obj: any) =>
         clearBtn.addEventListener("click", () => {
           filters.thirdTags = [];
           filters.area2 = [];
-          filters.actorRole = [];
+          filters.actorRoles = [];
           filters.ontologyTags = [];
           filters.themes = [];
           filters.search = "";
@@ -526,7 +526,7 @@ const safeJson = (obj: any) =>
 
   .filter-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-6);
   }
   .filter-group {
@@ -782,6 +782,11 @@ const safeJson = (obj: any) =>
     margin-bottom: var(--space-6);
   }
 
+  @media (max-width: 1024px) {
+    .filter-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
   @media (max-width: 720px) {
     .filter-grid {
       grid-template-columns: 1fr;

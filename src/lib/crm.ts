@@ -9,7 +9,7 @@ export interface CrmActor {
   publicEmail: string | null;
   linkedin: string | null;
   actorType: string | null;
-  actorRole: string | null;
+  actorRoles: string[];
   secondTags: string[];
   thirdTags: string[];
   area2: string[];
@@ -65,6 +65,25 @@ function parseDelimitedText(value: any): string[] {
   return [];
 }
 
+function toTitleCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function parseDelimitedTitleCase(value: any): string[] {
+  if (Array.isArray(value)) return value.map((v) => toTitleCase(String(v)));
+  if (typeof value === "string") {
+    return value
+      .split(/[,;]/)
+      .map((s) => toTitleCase(s.trim()))
+      .filter(Boolean);
+  }
+  return [];
+}
+
 function toNullableString(value: any): string | null {
   if (value === null || value === undefined || value === "") return null;
   return String(value);
@@ -105,7 +124,7 @@ export function normalizeRecord(record: NormalizedRecord): CrmActor {
     publicEmail: toNullableString(props["Public Email"]),
     linkedin: toNullableString(props["LinkedIn"]),
     actorType: toNullableString(props["Agency"]),
-    actorRole: toNullableString(props["Actor Role"]),
+    actorRoles: parseDelimitedTitleCase(props["Actor Role"]),
     secondTags: toStringArray(props["2NDTAG"]),
     thirdTags: toStringArray(props["3RDTAG"]),
     area2: toStringArray(props["Area2"]),

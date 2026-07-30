@@ -34,9 +34,8 @@ const programs = rawPrograms.map((p) => ({
   priorityTags: inferPriorityTags(p),
 }));
 
-const activePriorities = priorityAreaOptions.filter((p) =>
-  programs.some((prog) => prog.priorityTags.includes(p))
-);
+// Show all 6 priority buttons even if no program matches every keyword.
+const activePriorities = priorityAreaOptions;
 const activeTerritories = territoryOptions.filter((t) =>
   programs.some((prog) => prog.area2.includes(t))
 );
