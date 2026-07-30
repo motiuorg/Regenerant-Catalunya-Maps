@@ -39,21 +39,21 @@ const exploreLinks = [
   {
     id: "organizations",
     title: "Organizations",
-    description: "Browse regenerative actors, networks, and organizations. Filter by priority area, territory, actor role, themes, and ontology tags.",
+    description: "People, networks, organizations, and projects working on regeneration.",
     href: `${base}organizations/`,
     count: actorCount,
   },
   {
     id: "programs",
     title: "Programs and Initiatives",
-    description: "Explore collective programs, networks, and initiatives driving regenerative change. Filter by priority area and territory.",
+    description: "Collective programs, networks, and initiatives driving systemic change.",
     href: `${base}programs/`,
     count: programCount,
   },
   {
     id: "events",
     title: "Events",
-    description: "Find upcoming and past gatherings, conferences, workshops, and community events. Switch between calendar and list views.",
+    description: "Gatherings, conferences, workshops, and community meetups.",
     href: `${base}events/`,
     count: eventCount,
   },
@@ -65,26 +65,30 @@ const exploreLinks = [
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Map the regenerative ecosystem of Catalunya</h1>
+      <h1 class="display">Who is regenerating Catalunya?</h1>
       <p class="lede">
-        A shared, open directory of regenerative actors, collective programs, and events across Catalunya. It gathers CATBIS-tagged records from three living databases so anyone can explore who is doing what, where, and around which themes — from ecosystem restoration and food systems to energy, water, circular economy, and social innovation.
+        A shared map of organizations, programs, and events working toward a regenerative future in Catalunya. Search, filter, and discover who is doing what — by theme, territory, and role.
       </p>
+
+      <div class="stats">
+        <span class="stats__number">{totalCount}</span>
+        <span class="stats__label">organizations, programs, and events currently mapped</span>
+      </div>
 
       <nav class="hero-actions" aria-label="Explore sections">
-        <a href={`${base}organizations/`} class="hero-cta hero-cta--primary">
-          Find organizations
+        <a href={`${base}organizations/`} class="hero-cta">
+          <span class="hero-cta__label">Organizations</span>
+          <span class="hero-cta__count">{actorCount}</span>
         </a>
         <a href={`${base}programs/`} class="hero-cta">
-          Explore programs
+          <span class="hero-cta__label">Programs</span>
+          <span class="hero-cta__count">{programCount}</span>
         </a>
         <a href={`${base}events/`} class="hero-cta">
-          Browse events
+          <span class="hero-cta__label">Events</span>
+          <span class="hero-cta__count">{eventCount}</span>
         </a>
       </nav>
-
-      <p class="stats">
-        <strong>{totalCount}</strong> organizations, programs and events currently mapped
-      </p>
 
       {error && (
         <div class="error-banner">
@@ -127,7 +131,6 @@ const exploreLinks = [
     align-items: center;
   }
 
-  .link-grid {
   .hero .eyebrow {
     margin-bottom: var(--space-3);
   }
@@ -135,55 +138,72 @@ const exploreLinks = [
     margin-bottom: var(--space-5);
   }
   .hero .lede {
-    max-width: 70ch;
+    max-width: 66ch;
     margin: 0 auto var(--space-8);
   }
 
   .stats {
-    font-family: var(--mono);
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink);
-    margin: 0;
-    padding: var(--space-4) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-8);
+    padding: var(--space-6) var(--space-8);
     border: 1px solid var(--regen);
     background: var(--surface-1);
   }
-  .stats strong {
+  .stats__number {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 500;
+    line-height: 1;
     color: var(--regen);
+  }
+  .stats__label {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    max-width: 24ch;
   }
 
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--space-3);
-    margin: var(--space-8) 0 var(--space-6);
+    gap: var(--space-4);
   }
   .hero-cta {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: var(--space-3) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 8.5rem;
+    padding: var(--space-4) var(--space-6);
     color: var(--text-primary);
     background: var(--paper);
     border: 1px solid var(--border-subtle);
     text-decoration: none;
-    transition: background-color var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+    transition: border-color var(--t-fast), background-color var(--t-fast), transform var(--t-fast);
   }
   .hero-cta:hover {
     border-color: var(--primary);
+    background: var(--surface-1);
+    transform: translateY(-2px);
   }
-  .hero-cta--primary {
-    color: var(--primary-foreground);
-    background: var(--primary);
-    border-color: var(--primary);
+  .hero-cta__label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
-  .hero-cta--primary:hover {
-    background: var(--primary-hover);
-    border-color: var(--primary-hover);
+  .hero-cta__count {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--primary);
+    line-height: 1;
   }
 
   .link-grid {
@@ -251,6 +271,17 @@ const exploreLinks = [
   @media (max-width: 720px) {
     .hero {
       padding: var(--space-10) var(--gutter) var(--space-8);
+    }
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      max-width: 20rem;
+    }
+    .hero-cta {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
     .link-grid {
       grid-template-columns: 1fr;
