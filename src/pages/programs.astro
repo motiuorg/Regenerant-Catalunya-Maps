@@ -2,7 +2,15 @@
 import Layout from "../components/Layout.astro";
 import OrganicAmbient from "../components/OrganicAmbient.astro";
 import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
-import { normalizeProgram, hasCatbis } from "../lib/crm";
+import {
+  normalizeProgram,
+  hasCatbis,
+  uniqueValues,
+  priorityAreaOptions,
+  territoryOptions,
+  priorityColor,
+  inferPriorityTags,
+} from "../lib/crm";
 import type { CrmProgram } from "../lib/crm";
 
 const sections = loadSectionConfig();
@@ -20,7 +28,24 @@ if (programsSection?.database_id) {
   error = "No database_id configured for programs section.";
 }
 
-const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
+const rawPrograms: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
+const programs = rawPrograms.map((p) => ({
+  ...p,
+  priorityTags: inferPriorityTags(p),
+}));
+
+const activePriorities = priorityAreaOptions.filter((p) =>
+  programs.some((prog) => prog.priorityTags.includes(p))
+);
+const activeTerritories = territoryOptions.filter((t) =>
+  programs.some((prog) => prog.area2.includes(t))
+);
+
+const safeJson = (obj: any) =>
+  JSON.stringify(obj)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
 ---
 
 <Layout title="Programs and Initiatives" current="programs">
@@ -31,6 +56,7 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
       <h1 class="display">Programs and Initiatives</h1>
       <p class="lede">
         Regenerative programs, networks, and collective initiatives operating across Catalunya.
+        Search by name or filter by priority area and territory.
       </p>
     </div>
   </header>
@@ -42,11 +68,60 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
       </div>
     )}
 
-    <p class="count">{programs.length} programs mapped</p>
+    <div class="filter-panel">
+      <div class="filter-panel__header">
+        <h2 class="filter-panel__title">Filters</h2>
+        <button type="button" class="filter-clear" id="clear-filters">Clear all</button>
+      </div>
 
-    <div class="item-grid">
+      <div class="filter-search">
+        <label class="filter-label" for="search-input">Search by name</label>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Type a program name…"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="filter-grid">
+        <fieldset class="filter-group">
+          <legend class="filter-label">Priority area</legend>
+          <div class="filter-buttons" id="priority-filters">
+            {activePriorities.map((tag) => (
+              <button
+                type="button"
+                class="filter-btn"
+                data-filter-value={tag}
+                style={`--filter-color: ${priorityColor(tag)}`}
+                aria-pressed="false"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group filter-group--wide">
+          <legend class="filter-label">Territory</legend>
+          <div class="checkbox-list" id="territory-filters">
+            {activeTerritories.map((tag) => (
+              <label class="checkbox-item">
+                <input type="checkbox" value={tag} />
+                <span>{tag}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <p class="count" id="gallery-count">Loading…</p>
+
+    <div class="item-grid" id="program-gallery">
       {programs.map((program) => (
-        <article class="item-card">
+        <article class="item-card" data-program={safeJson(program)}>
           <div class="item-card__header">
             <h3 class="item-name">{program.name}</h3>
             {program.agency && <span class="item-type">{program.agency}</span>}
@@ -56,13 +131,19 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
             {program.description || program.whatItIs || "No description available."}
           </p>
 
-          {program.area2.length > 0 && (
-            <div class="item-badges">
-              {program.area2.map((area) => (
-                <span class="territory-badge">{area}</span>
-              ))}
-            </div>
-          )}
+          <div class="item-badges">
+            {program.priorityTags.map((tag) => (
+              <span
+                class="priority-badge"
+                style={`--badge-color: ${priorityColor(tag)}`}
+              >
+                {tag}
+              </span>
+            ))}
+            {program.area2.map((area) => (
+              <span class="territory-badge">{area}</span>
+            ))}
+          </div>
 
           {program.website && (
             <a
@@ -78,6 +159,115 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
       ))}
     </div>
   </section>
+
+  <script is:inline>
+    (function () {
+      const cards = Array.from(document.querySelectorAll(".item-card"));
+      const programs = cards.map((el) => JSON.parse(el.dataset.program || "{}"));
+      const countLabel = document.getElementById("gallery-count");
+      const searchInput = document.getElementById("search-input");
+      const clearBtn = document.getElementById("clear-filters");
+
+      const filters = {
+        priorityTags: [],
+        area2: [],
+        search: "",
+      };
+
+      function normalize(str) {
+        return String(str || "").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+      }
+
+      function matches(program, key, values) {
+        if (values.length === 0) return true;
+        const programValues = program[key] || [];
+        return values.some((v) => programValues.includes(v));
+      }
+
+      function matchesSearch(program) {
+        const term = normalize(filters.search).trim();
+        if (!term) return true;
+        const haystack = normalize([program.name, program.description, program.whatItIs].join(" "));
+        return haystack.includes(term);
+      }
+
+      function isVisible(program) {
+        return (
+          matchesSearch(program) &&
+          matches(program, "priorityTags", filters.priorityTags) &&
+          matches(program, "area2", filters.area2)
+        );
+      }
+
+      function updateGallery() {
+        let visible = 0;
+        for (let i = 0; i < programs.length; i++) {
+          const show = isVisible(programs[i]);
+          cards[i].classList.toggle("is-hidden", !show);
+          if (show) visible++;
+        }
+        if (countLabel) {
+          countLabel.textContent = `Showing ${visible} of ${programs.length} programs`;
+        }
+      }
+
+      function bindButtonGroup(containerId, key) {
+        document.querySelectorAll(`#${containerId} .filter-btn`).forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const value = btn.dataset.filterValue;
+            const active = btn.classList.toggle("active");
+            btn.setAttribute("aria-pressed", String(active));
+            if (active) {
+              filters[key].push(value);
+            } else {
+              filters[key] = filters[key].filter((v) => v !== value);
+            }
+            updateGallery();
+          });
+        });
+      }
+
+      function bindCheckboxGroup(containerId, key) {
+        document.querySelectorAll(`#${containerId} input[type='checkbox']`).forEach((input) => {
+          input.addEventListener("change", () => {
+            filters[key] = Array.from(
+              document.querySelectorAll(`#${containerId} input[type='checkbox']:checked`)
+            ).map((el) => el.value);
+            updateGallery();
+          });
+        });
+      }
+
+      bindButtonGroup("priority-filters", "priorityTags");
+      bindCheckboxGroup("territory-filters", "area2");
+
+      if (searchInput) {
+        searchInput.addEventListener("input", () => {
+          filters.search = searchInput.value;
+          updateGallery();
+        });
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+          filters.priorityTags = [];
+          filters.area2 = [];
+          filters.search = "";
+          if (searchInput) searchInput.value = "";
+          document.querySelectorAll(".filter-btn.active").forEach((btn) => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+          });
+          document.querySelectorAll(".checkbox-list input[type='checkbox']").forEach((input) => {
+            input.checked = false;
+          });
+          updateGallery();
+        });
+      }
+
+      updateGallery();
+    })();
+  </script>
 </Layout>
 
 <style>
@@ -102,6 +292,137 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
   }
   .hero--compact .lede {
     max-width: 70ch;
+  }
+
+  .filter-panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  .filter-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .filter-panel__title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  .filter-clear {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: background-color var(--t-fast), border-color var(--t-fast);
+  }
+  .filter-clear:hover {
+    background: var(--surface-2);
+    border-color: var(--primary);
+  }
+
+  .filter-search {
+    margin-bottom: var(--space-5);
+  }
+  .filter-search .filter-label {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .search-input {
+    width: 100%;
+    max-width: 40rem;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--sans);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    background: var(--paper);
+    border: 1px solid var(--border-subtle);
+    outline: none;
+    transition: border-color var(--t-fast);
+  }
+  .search-input:focus {
+    border-color: var(--primary);
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-6);
+  }
+  .filter-group {
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-width: 0;
+  }
+  .filter-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-2) var(--space-3);
+    background: var(--paper);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  }
+  .filter-btn:hover {
+    border-color: var(--ink);
+  }
+  .filter-btn.active {
+    background: color-mix(in srgb, var(--filter-color, var(--primary)) 14%, var(--surface-1));
+    color: var(--filter-color, var(--primary));
+    border-color: var(--filter-color, var(--primary));
+  }
+
+  .checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-height: 12rem;
+    overflow-y: auto;
+    padding: var(--space-2);
+    background: var(--paper);
+    border: 1px solid var(--border-subtle);
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .checkbox-item input {
+    cursor: pointer;
   }
 
   .count {
@@ -130,6 +451,9 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
   }
   .item-card:hover {
     border-color: var(--ink);
+  }
+  .item-card.is-hidden {
+    display: none;
   }
 
   .item-card__header {
@@ -169,6 +493,16 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
     gap: 0.4rem;
     flex-wrap: wrap;
   }
+  .priority-badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.4rem;
+    background: color-mix(in srgb, var(--badge-color, var(--ink)) 14%, var(--surface-1));
+    color: var(--badge-color, var(--ink));
+    border: 1px solid var(--badge-color, var(--ink));
+  }
   .territory-badge {
     font-family: var(--mono);
     font-size: 0.62rem;
@@ -206,6 +540,9 @@ const programs: CrmProgram[] = records.filter(hasCatbis).map(normalizeProgram);
   }
 
   @media (max-width: 720px) {
+    .filter-grid {
+      grid-template-columns: 1fr;
+    }
     .item-grid {
       grid-template-columns: 1fr;
     }

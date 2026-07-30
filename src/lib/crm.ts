@@ -39,6 +39,7 @@ export interface CrmEvent {
   about: string;
   whatItIs: string;
   date: string;
+  startDate: string | null;
   location: string;
   link: string | null;
   type: string | null;
@@ -67,6 +68,30 @@ function parseDelimitedText(value: any): string[] {
 function toNullableString(value: any): string | null {
   if (value === null || value === undefined || value === "") return null;
   return String(value);
+}
+
+function formatDate(value: any): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object" && value !== null) {
+    const start = value.start ?? value.date ?? "";
+    const end = value.end ?? "";
+    if (start && end && start !== end) return `${start} → ${end}`;
+    return String(start);
+  }
+  return String(value);
+}
+
+function extractStartDate(value: any): string | null {
+  if (!value) return null;
+  if (typeof value === "object" && value !== null) {
+    return value.start ?? value.date ?? null;
+  }
+  if (typeof value === "string") {
+    const match = value.match(/^([^→]+)/);
+    if (match) return match[1].trim();
+  }
+  return null;
 }
 
 export function normalizeRecord(record: NormalizedRecord): CrmActor {
@@ -112,12 +137,14 @@ export function normalizeProgram(record: NormalizedRecord): CrmProgram {
 
 export function normalizeEvent(record: NormalizedRecord): CrmEvent {
   const props = record.properties;
+  const dateValue = props["Date"];
   return {
     id: record.id,
     name: String(props["Event"] ?? props["Name"] ?? "Untitled"),
     about: String(props["About"] ?? ""),
     whatItIs: String(props["What it is"] ?? ""),
-    date: String(props["Date"] ?? ""),
+    date: formatDate(dateValue),
+    startDate: extractStartDate(dateValue),
     location: String(props["Location"] ?? ""),
     link: toNullableString(props["Link"]),
     type: toNullableString(props["Type"]),
@@ -168,6 +195,20 @@ export const priorityAreaOptions = [
   "Circular",
   "Social",
 ];
+
+export function inferPriorityTags(record: NormalizedRecord | CrmProgram): string[] {
+  const props = "properties" in record ? record.properties : record as any;
+  const haystack = [
+    props["Name"] ?? "",
+    props["Description"] ?? "",
+    props["What it is"] ?? "",
+    props["Agency"] ?? "",
+    ...(Array.isArray(props["Memes"]) ? props["Memes"] : [props["Memes"] ?? ""]),
+  ]
+    .map((v) => String(v).toLowerCase())
+    .join(" ");
+  return priorityAreaOptions.filter((p) => haystack.includes(p.toLowerCase()));
+}
 
 export const territoryOptions = [
   "regional",

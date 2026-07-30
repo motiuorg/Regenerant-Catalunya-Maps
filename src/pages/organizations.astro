@@ -35,7 +35,9 @@ const activePriorityAreas = priorityAreaOptions.filter((p) =>
 const activeTerritories = territoryOptions.filter((t) =>
   actors.some((a) => a.area2.includes(t))
 );
-const themes = uniqueValues(actors, "themes");
+const actorRoles = uniqueValues(actors, "actorRole").filter(Boolean);
+const ontologyTags = uniqueValues(actors, "ontologyTags").filter(Boolean);
+const themes = uniqueValues(actors, "themes").filter(Boolean);
 
 const safeJson = (obj: any) =>
   JSON.stringify(obj)
@@ -49,11 +51,11 @@ const safeJson = (obj: any) =>
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Explore the ecosystem</h1>
+      <h1 class="display">Organizations</h1>
       <p class="lede">
-        Discover regenerative projects, initiatives, organizations, and networks across
-        Catalunya. Filter by priority area and territory to find actors contributing to
-        regenerative futures.
+        Discover regenerative actors, organizations, networks, and initiatives across
+        Catalunya. Search by name or filter by priority area, territory, role, themes, and
+        ontology tags.
       </p>
     </div>
   </header>
@@ -65,34 +67,92 @@ const safeJson = (obj: any) =>
       </div>
     )}
 
-    <div class="filter-bar">
-      <div class="filter-group">
-        <span class="filter-label">Priority area</span>
-        <div class="filter-buttons" id="priority-filters">
-          {activePriorityAreas.map((tag) => (
-            <button
-              type="button"
-              class="filter-btn"
-              data-filter-value={tag}
-              style={`--filter-color: ${priorityColor(tag)}`}
-              aria-pressed="false"
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
+    <div class="filter-panel">
+      <div class="filter-panel__header">
+        <h2 class="filter-panel__title">Filters</h2>
+        <button type="button" class="filter-clear" id="clear-filters">Clear all</button>
       </div>
 
-      <div class="filter-group filter-group--wide">
-        <span class="filter-label">Territory</span>
-        <div class="checkbox-list" id="territory-filters">
-          {activeTerritories.map((tag) => (
-            <label class="checkbox-item">
-              <input type="checkbox" value={tag} />
-              <span>{tag}</span>
-            </label>
-          ))}
-        </div>
+      <div class="filter-search">
+        <label class="filter-label" for="search-input">Search by name</label>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Type an organization name…"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="filter-grid">
+        <fieldset class="filter-group">
+          <legend class="filter-label">Priority area</legend>
+          <div class="filter-buttons" id="priority-filters">
+            {activePriorityAreas.map((tag) => (
+              <button
+                type="button"
+                class="filter-btn"
+                data-filter-value={tag}
+                style={`--filter-color: ${priorityColor(tag)}`}
+                aria-pressed="false"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group filter-group--wide">
+          <legend class="filter-label">Territory</legend>
+          <div class="checkbox-list" id="territory-filters">
+            {activeTerritories.map((tag) => (
+              <label class="checkbox-item">
+                <input type="checkbox" value={tag} />
+                <span>{tag}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+          <legend class="filter-label">Actor role</legend>
+          <div class="filter-buttons" id="role-filters">
+            {actorRoles.map((tag) => (
+              <button
+                type="button"
+                class="filter-btn"
+                data-filter-value={tag}
+                aria-pressed="false"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group filter-group--wide">
+          <legend class="filter-label">Ontology tags</legend>
+          <div class="checkbox-list" id="ontology-filters">
+            {ontologyTags.map((tag) => (
+              <label class="checkbox-item">
+                <input type="checkbox" value={tag} />
+                <span>{tag}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group filter-group--wide">
+          <legend class="filter-label">Themes</legend>
+          <div class="checkbox-list" id="theme-filters">
+            {themes.map((tag) => (
+              <label class="checkbox-item">
+                <input type="checkbox" value={tag} />
+                <span>{tag}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
       </div>
     </div>
 
@@ -189,6 +249,15 @@ const safeJson = (obj: any) =>
               </div>
             )}
 
+            {actor.ontologyTags.length > 0 && (
+              <div class="detail-block">
+                <h4>Ontology tags</h4>
+                <div class="detail-tags">
+                  {actor.ontologyTags.map((t) => <span class="detail-tag">{t}</span>)}
+                </div>
+              </div>
+            )}
+
             {actor.relatedInitiatives.length > 0 && (
               <div class="detail-block">
                 <h4>Related initiatives</h4>
@@ -243,11 +312,21 @@ const safeJson = (obj: any) =>
       const cards = Array.from(document.querySelectorAll(".actor-card"));
       const actors = cards.map((el) => JSON.parse(el.dataset.actor || "{}"));
       const countLabel = document.getElementById("gallery-count");
+      const searchInput = document.getElementById("search-input");
+      const clearBtn = document.getElementById("clear-filters");
 
       const filters = {
         thirdTags: [],
         area2: [],
+        actorRole: [],
+        ontologyTags: [],
+        themes: [],
+        search: "",
       };
+
+      function normalize(str) {
+        return String(str || "").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+      }
 
       function matches(actor, key, values) {
         if (values.length === 0) return true;
@@ -255,10 +334,21 @@ const safeJson = (obj: any) =>
         return values.some((v) => actorValues.includes(v));
       }
 
+      function matchesSearch(actor) {
+        const term = normalize(filters.search).trim();
+        if (!term) return true;
+        const haystack = normalize([actor.name, actor.description, actor.whyItMatters].join(" "));
+        return haystack.includes(term);
+      }
+
       function isVisible(actor) {
         return (
+          matchesSearch(actor) &&
           matches(actor, "thirdTags", filters.thirdTags) &&
-          matches(actor, "area2", filters.area2)
+          matches(actor, "area2", filters.area2) &&
+          matches(actor, "actorRole", filters.actorRole) &&
+          matches(actor, "ontologyTags", filters.ontologyTags) &&
+          matches(actor, "themes", filters.themes)
         );
       }
 
@@ -270,32 +360,69 @@ const safeJson = (obj: any) =>
           if (show) visible++;
         }
         if (countLabel) {
-          countLabel.textContent = `Showing ${visible} of ${actors.length} initiatives`;
+          countLabel.textContent = `Showing ${visible} of ${actors.length} organizations`;
         }
       }
 
-      document.querySelectorAll("#priority-filters .filter-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const value = btn.dataset.filterValue;
-          const active = btn.classList.toggle("active");
-          btn.setAttribute("aria-pressed", String(active));
-          if (active) {
-            filters.thirdTags.push(value);
-          } else {
-            filters.thirdTags = filters.thirdTags.filter((v) => v !== value);
-          }
-          updateGallery();
+      function bindButtonGroup(containerId, key) {
+        document.querySelectorAll(`#${containerId} .filter-btn`).forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const value = btn.dataset.filterValue;
+            const active = btn.classList.toggle("active");
+            btn.setAttribute("aria-pressed", String(active));
+            if (active) {
+              filters[key].push(value);
+            } else {
+              filters[key] = filters[key].filter((v) => v !== value);
+            }
+            updateGallery();
+          });
         });
-      });
+      }
 
-      document.querySelectorAll("#territory-filters input[type='checkbox']").forEach((input) => {
-        input.addEventListener("change", () => {
-          filters.area2 = Array.from(
-            document.querySelectorAll("#territory-filters input[type='checkbox']:checked")
-          ).map((el) => el.value);
+      function bindCheckboxGroup(containerId, key) {
+        document.querySelectorAll(`#${containerId} input[type='checkbox']`).forEach((input) => {
+          input.addEventListener("change", () => {
+            filters[key] = Array.from(
+              document.querySelectorAll(`#${containerId} input[type='checkbox']:checked`)
+            ).map((el) => el.value);
+            updateGallery();
+          });
+        });
+      }
+
+      bindButtonGroup("priority-filters", "thirdTags");
+      bindButtonGroup("role-filters", "actorRole");
+      bindCheckboxGroup("territory-filters", "area2");
+      bindCheckboxGroup("ontology-filters", "ontologyTags");
+      bindCheckboxGroup("theme-filters", "themes");
+
+      if (searchInput) {
+        searchInput.addEventListener("input", () => {
+          filters.search = searchInput.value;
           updateGallery();
         });
-      });
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+          filters.thirdTags = [];
+          filters.area2 = [];
+          filters.actorRole = [];
+          filters.ontologyTags = [];
+          filters.themes = [];
+          filters.search = "";
+          if (searchInput) searchInput.value = "";
+          document.querySelectorAll(".filter-btn.active").forEach((btn) => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+          });
+          document.querySelectorAll(".checkbox-list input[type='checkbox']").forEach((input) => {
+            input.checked = false;
+          });
+          updateGallery();
+        });
+      }
 
       document.querySelectorAll("[data-details-toggle]").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -336,28 +463,91 @@ const safeJson = (obj: any) =>
     max-width: 70ch;
   }
 
-  .filter-bar {
+  .filter-panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  .filter-panel__header {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .filter-panel__title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  .filter-clear {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: background-color var(--t-fast), border-color var(--t-fast);
+  }
+  .filter-clear:hover {
+    background: var(--surface-2);
+    border-color: var(--primary);
+  }
+
+  .filter-search {
+    margin-bottom: var(--space-5);
+  }
+  .filter-search .filter-label {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .search-input {
+    width: 100%;
+    max-width: 40rem;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--sans);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    background: var(--paper);
+    border: 1px solid var(--border-subtle);
+    outline: none;
+    transition: border-color var(--t-fast);
+  }
+  .search-input:focus {
+    border-color: var(--primary);
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: var(--space-6);
-    margin-bottom: var(--space-4);
   }
   .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  .filter-group--wide {
-    flex: 1 1 18rem;
-    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-width: 0;
   }
   .filter-label {
+    display: block;
     font-family: var(--mono);
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
+    margin-bottom: var(--space-2);
   }
+  .filter-group--wide {
+    grid-column: span 1;
+  }
+
   .filter-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -369,7 +559,7 @@ const safeJson = (obj: any) =>
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding: var(--space-2) var(--space-3);
-    background: var(--surface-1);
+    background: var(--paper);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
     cursor: pointer;
@@ -379,22 +569,20 @@ const safeJson = (obj: any) =>
     border-color: var(--ink);
   }
   .filter-btn.active {
-    background: color-mix(in srgb, var(--filter-color, var(--ink)) 14%, var(--surface-1));
-    color: var(--filter-color, var(--ink));
-    border-color: var(--filter-color, var(--ink));
+    background: color-mix(in srgb, var(--filter-color, var(--primary)) 14%, var(--surface-1));
+    color: var(--filter-color, var(--primary));
+    border-color: var(--filter-color, var(--primary));
   }
 
   .checkbox-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    max-height: 14rem;
+    max-height: 12rem;
     overflow-y: auto;
     padding: var(--space-2);
-    background: var(--surface-1);
+    background: var(--paper);
     border: 1px solid var(--border-subtle);
-    min-width: 14rem;
-    max-width: 100%;
   }
   .checkbox-item {
     display: flex;
@@ -595,6 +783,9 @@ const safeJson = (obj: any) =>
   }
 
   @media (max-width: 720px) {
+    .filter-grid {
+      grid-template-columns: 1fr;
+    }
     .actor-grid {
       grid-template-columns: 1fr;
     }
