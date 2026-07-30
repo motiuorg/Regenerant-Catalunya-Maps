@@ -1,5 +1,6 @@
 ---
 import Layout from "../components/Layout.astro";
+import OrganicAmbient from "../components/OrganicAmbient.astro";
 import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
 import {
   normalizeRecord,
@@ -45,6 +46,7 @@ const safeJson = (obj: any) =>
 
 <Layout title="Organizations" current="organizations">
   <header class="hero hero--compact">
+    <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
       <h1 class="display">Explore the ecosystem</h1>
@@ -312,11 +314,15 @@ const safeJson = (obj: any) =>
 
 <style>
   .hero--compact {
+    position: relative;
     padding: var(--space-12) var(--gutter) var(--space-8);
     border-bottom: 1px solid var(--ink);
     background: var(--paper);
+    overflow: hidden;
   }
   .hero__inner {
+    position: relative;
+    z-index: 1;
     max-width: var(--container-default);
     margin: 0 auto;
   }
