@@ -46,11 +46,14 @@
   --text-muted: var(--rule);
   --border-default: color-mix(in srgb, var(--ink) 45%, transparent);
   --border-subtle: color-mix(in srgb, var(--rule) 22%, transparent);
-  --primary: var(--pillar-tissue-mid);
-  --primary-hover: var(--pillar-tissue-dark);
+  --primary: var(--pillar-flow-mid);
+  --primary-hover: var(--pillar-flow-dark);
   --primary-foreground: var(--paper);
   --accent: var(--pillar-neural-mid);
   --accent-foreground: var(--paper);
+  --regen: var(--pillar-tissue-mid);
+  --regen-hover: var(--pillar-tissue-dark);
+  --regen-foreground: var(--paper);
 
   --success: var(--pillar-tissue-dark);
   --success-foreground: #F4F6F2;
