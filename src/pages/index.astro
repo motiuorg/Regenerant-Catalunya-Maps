@@ -39,21 +39,21 @@ const exploreLinks = [
   {
     id: "organizations",
     title: "Organizations",
-    description: "Discover regenerative actors, projects, networks, and organizations across Catalunya. Filter by priority area and territory.",
+    description: "Browse regenerative actors, networks, and organizations. Filter by priority area, territory, actor role, themes, and ontology tags.",
     href: `${base}organizations/`,
     count: actorCount,
   },
   {
     id: "programs",
     title: "Programs and Initiatives",
-    description: "Explore programs, collective initiatives, and networks driving regenerative change in Catalunya.",
+    description: "Explore collective programs, networks, and initiatives driving regenerative change. Filter by priority area and territory.",
     href: `${base}programs/`,
     count: programCount,
   },
   {
     id: "events",
     title: "Events",
-    description: "Find upcoming and past gatherings, conferences, workshops, and community events related to regeneration.",
+    description: "Find upcoming and past gatherings, conferences, workshops, and community events. Switch between calendar and list views.",
     href: `${base}events/`,
     count: eventCount,
   },
@@ -65,10 +65,22 @@ const exploreLinks = [
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Explore the ecosystem</h1>
+      <h1 class="display">Map the regenerative ecosystem of Catalunya</h1>
       <p class="lede">
-        A first attempt at aggregating regenerative projects, programs, and events related to regeneration in Catalunya. Use the pages below to browse by type of actor, or go directly to the Organizations page to filter by priority area and territory.
+        A shared, open directory of regenerative actors, collective programs, and events across Catalunya. It gathers CATBIS-tagged records from three living databases so anyone can explore who is doing what, where, and around which themes — from ecosystem restoration and food systems to energy, water, circular economy, and social innovation.
       </p>
+
+      <nav class="hero-actions" aria-label="Explore sections">
+        <a href={`${base}organizations/`} class="hero-cta hero-cta--primary">
+          Find organizations
+        </a>
+        <a href={`${base}programs/`} class="hero-cta">
+          Explore programs
+        </a>
+        <a href={`${base}events/`} class="hero-cta">
+          Browse events
+        </a>
+      </nav>
 
       <p class="stats">
         <strong>{totalCount}</strong> organizations, programs and events currently mapped
@@ -139,7 +151,39 @@ const exploreLinks = [
     background: var(--surface-1);
   }
   .stats strong {
-    color: var(--primary);
+    color: var(--regen);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin: var(--space-8) 0 var(--space-6);
+  }
+  .hero-cta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--space-3) var(--space-5);
+    color: var(--text-primary);
+    background: var(--paper);
+    border: 1px solid var(--border-subtle);
+    text-decoration: none;
+    transition: background-color var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  }
+  .hero-cta:hover {
+    border-color: var(--primary);
+  }
+  .hero-cta--primary {
+    color: var(--primary-foreground);
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  .hero-cta--primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
   }
 
   .link-grid {
