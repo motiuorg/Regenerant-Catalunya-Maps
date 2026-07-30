@@ -70,25 +70,9 @@ const exploreLinks = [
         A shared map of organizations, programs, and events working toward a regenerative future in Catalunya. Search, filter, and discover who is doing what — by theme, territory, and role.
       </p>
 
-      <div class="stats">
-        <span class="stats__number">{totalCount}</span>
-        <span class="stats__label">organizations, programs, and events currently mapped</span>
-      </div>
-
-      <nav class="hero-actions" aria-label="Explore sections">
-        <a href={`${base}organizations/`} class="hero-cta">
-          <span class="hero-cta__label">Organizations</span>
-          <span class="hero-cta__count">{actorCount}</span>
-        </a>
-        <a href={`${base}programs/`} class="hero-cta">
-          <span class="hero-cta__label">Programs</span>
-          <span class="hero-cta__count">{programCount}</span>
-        </a>
-        <a href={`${base}events/`} class="hero-cta">
-          <span class="hero-cta__label">Events</span>
-          <span class="hero-cta__count">{eventCount}</span>
-        </a>
-      </nav>
+      <p class="stats">
+        <strong>{totalCount}</strong> organizations, programs, and events currently mapped
+      </p>
 
       {error && (
         <div class="error-banner">
@@ -99,6 +83,7 @@ const exploreLinks = [
   </header>
 
   <section class="section section--wide">
+    <p class="section-prompt">Start exploring the map:</p>
     <div class="link-grid">
       {exploreLinks.map((link) => (
         <a href={link.href} class="explore-card">
@@ -143,67 +128,29 @@ const exploreLinks = [
   }
 
   .stats {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    margin: 0 0 var(--space-8);
-    padding: var(--space-6) var(--space-8);
-    border: 1px solid var(--regen);
-    background: var(--surface-1);
-  }
-  .stats__number {
     font-family: var(--serif);
-    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-8);
+    max-width: 60ch;
+  }
+  .stats strong {
+    font-family: var(--serif);
+    font-style: normal;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
     font-weight: 500;
-    line-height: 1;
     color: var(--regen);
   }
-  .stats__label {
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    max-width: 24ch;
-  }
 
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-4);
-  }
-  .hero-cta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-1);
-    min-width: 8.5rem;
-    padding: var(--space-4) var(--space-6);
-    color: var(--text-primary);
-    background: var(--paper);
-    border: 1px solid var(--border-subtle);
-    text-decoration: none;
-    transition: border-color var(--t-fast), background-color var(--t-fast), transform var(--t-fast);
-  }
-  .hero-cta:hover {
-    border-color: var(--primary);
-    background: var(--surface-1);
-    transform: translateY(-2px);
-  }
-  .hero-cta__label {
+  .section-prompt {
     font-family: var(--mono);
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .hero-cta__count {
-    font-family: var(--serif);
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: var(--primary);
-    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4);
   }
 
   .link-grid {
@@ -221,11 +168,12 @@ const exploreLinks = [
     border: 1px solid var(--border-subtle);
     text-decoration: none;
     color: inherit;
-    transition: border-color var(--t-fast), background-color var(--t-fast);
+    transition: border-color var(--t-fast), background-color var(--t-fast), transform var(--t-fast);
   }
   .explore-card:hover {
-    border-color: var(--ink);
+    border-color: var(--regen);
     background: var(--paper);
+    transform: translateY(-3px);
   }
 
   .explore-count {
@@ -271,17 +219,6 @@ const exploreLinks = [
   @media (max-width: 720px) {
     .hero {
       padding: var(--space-10) var(--gutter) var(--space-8);
-    }
-    .hero-actions {
-      flex-direction: column;
-      align-items: stretch;
-      width: 100%;
-      max-width: 20rem;
-    }
-    .hero-cta {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
     }
     .link-grid {
       grid-template-columns: 1fr;
