@@ -1,4 +1,9 @@
 import type { NormalizedRecord } from "./notion";
+import {
+  priorityAreaOptions as priorityAreaOptionsFromYaml,
+  priorityColor as priorityColorFromYaml,
+  loadPriorities,
+} from "./priorities";
 
 export interface CrmActor {
   id: string;
@@ -206,16 +211,14 @@ export function uniqueValues<T extends Record<string, any>>(
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 }
 
-export const priorityAreaOptions = [
-  "Ecosystems",
-  "Food",
-  "Energy",
-  "Water",
-  "Circular",
-  "Social",
-];
+export const priorityAreaOptions = priorityAreaOptionsFromYaml();
+
+export function priorityColor(priorityId: string): string {
+  return priorityColorFromYaml(priorityId);
+}
 
 export function inferPriorityTags(record: NormalizedRecord | CrmProgram): string[] {
+  const priorities = loadPriorities();
   const props = "properties" in record ? record.properties : record as any;
   const haystack = [
     props["Name"] ?? "",
@@ -226,7 +229,16 @@ export function inferPriorityTags(record: NormalizedRecord | CrmProgram): string
   ]
     .map((v) => String(v).toLowerCase())
     .join(" ");
-  return priorityAreaOptions.filter((p) => haystack.includes(p.toLowerCase()));
+  const matched = new Set<string>();
+  for (const priority of priorities) {
+    for (const keyword of priority.keywords) {
+      if (haystack.includes(keyword.toLowerCase())) {
+        matched.add(priority.id);
+        break;
+      }
+    }
+  }
+  return Array.from(matched);
 }
 
 export const territoryOptions = [
@@ -280,14 +292,4 @@ export const territoryOptions = [
   "Vallès Oriental",
 ];
 
-export function priorityColor(priorityId: string): string {
-  const map: Record<string, string> = {
-    Ecosystems: "#447932",
-    Food: "#DC7221",
-    Energy: "#C92637",
-    Water: "#4C6BC1",
-    Circular: "#8161BF",
-    Social: "#DC697F",
-  };
-  return map[priorityId] ?? "#1d1a16";
-}
+

@@ -1,0 +1,159 @@
+# Priorities registry for Regenerant Catalunya Maps
+# This is the single source of truth for priority ids, colours, and keywords.
+# Keep ids and colours identical across the directory, infographics, and map.
+
+priorities:
+  - id: Ecosystems
+    slug: ecosystems
+    order: 1
+    name:
+      en: Ecosystems
+      ca: Ecosistemes
+    shortName:
+      en: Ecosystems
+      ca: Ecosistemes
+    color: "#447932"
+    keywords:
+      - ecosystem
+      - ecosystems
+      - biodiversity
+      - forest
+      - forests
+      - habitat
+      - habitats
+      - nature
+      - ecological
+      - ecosistemes
+      - biodiversitat
+      - boscos
+      - hàbitat
+      - natura
+
+  - id: Food
+    slug: food
+    order: 2
+    name:
+      en: Food
+      ca: Alimentació
+    shortName:
+      en: Food
+      ca: Alimentació
+    color: "#DC7221"
+    keywords:
+      - food
+      - alimentació
+      - alimentacion
+      - agriculture
+      - agroecology
+      - agroecologia
+      - farming
+      - farm
+      - farms
+      - food sovereignty
+      - soberania alimentària
+      - organic
+      - ecològic
+
+  - id: Energy
+    slug: energy
+    order: 3
+    name:
+      en: Energy
+      ca: Energia
+    shortName:
+      en: Energy
+      ca: Energia
+    color: "#C92637"
+    keywords:
+      - energy
+      - energia
+      - renewable
+      - renovable
+      - renewables
+      - solar
+      - wind
+      - eòlica
+      - community energy
+      - energy communities
+      - transició energètica
+      - energy transition
+
+  - id: Water
+    slug: water
+    order: 4
+    name:
+      en: Water
+      ca: Aigua
+    shortName:
+      en: Water
+      ca: Aigua
+    color: "#4C6BC1"
+    keywords:
+      - water
+      - aigua
+      - watershed
+      - river
+      - riu
+      - reservoir
+      - embassament
+      - aquifer
+      - aqüífer
+      - drought
+      - sequera
+      - irrigation
+      - regadiu
+      - hydrology
+      - hydrological
+
+  - id: Circular
+    slug: circular
+    order: 5
+    name:
+      en: Circular
+      ca: Economia circular
+    shortName:
+      en: Circular
+      ca: Circular
+    color: "#8161BF"
+    keywords:
+      - circular
+      - waste
+      - residus
+      - recycling
+      - reciclatge
+      - reuse
+      - reutilitzar
+      - materials
+      - industrial ecology
+      - ecologia industrial
+      - zero waste
+      - residu zero
+
+  - id: Social
+    slug: social
+    order: 6
+    name:
+      en: Social
+      ca: Social
+    shortName:
+      en: Social
+      ca: Social
+    color: "#DC697F"
+    keywords:
+      - social
+      - housing
+      - habitatge
+      - cooperatives
+      - cooperative
+      - cooperativa
+      - commons
+      - comuns
+      - community
+      - comunitat
+      - justice
+      - justícia
+      - equity
+      - equity
+      - rural
+      - depopulation
+      - despoblament

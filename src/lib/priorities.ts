@@ -3,30 +3,67 @@ import * as path from "node:path";
 import * as yaml from "js-yaml";
 import type { NormalizedRecord } from "./notion";
 
+export type I18nString = { en: string; ca?: string };
+
 export interface Priority {
   id: string;
-  name: string;
-  shortName: string;
-  description: string;
+  slug: string;
+  order: number;
+  name: I18nString;
+  shortName: I18nString;
   color: string;
   keywords: string[];
+  // Expanded fields used by the priorities section; optional for the refactor step.
+  oneLiner?: I18nString;
+  diagnosis?: I18nString;
+  leverage?: I18nString;
+  headlineIndicator?: string;
+  indicators?: string[];
+  framings?: Record<string, I18nString>;
+  capital?: Array<{
+    vehicle: string;
+    instrument: string;
+    horizon: string;
+    ticket: string;
+    rationale: I18nString;
+    returns: string[];
+  }>;
+  sources?: Array<{ label: string; url: string; accessed: string }>;
+}
+
+export interface PrioritiesRegistry {
+  priorities: Priority[];
 }
 
 export function loadPriorities(): Priority[] {
   const filePath = path.join(process.cwd(), "src/data/priorities.yaml");
   const raw = fs.readFileSync(filePath, "utf8");
-  const parsed = yaml.load(raw) as { priorities: Priority[] };
+  const parsed = yaml.load(raw) as PrioritiesRegistry;
   return parsed.priorities ?? [];
+}
+
+export function getPriorityById(id: string): Priority | undefined {
+  return loadPriorities().find((p) => p.id === id);
+}
+
+export function priorityAreaOptions(): string[] {
+  return loadPriorities().map((p) => p.id);
+}
+
+export function priorityColor(id: string): string {
+  const priority = getPriorityById(id);
+  return priority?.color ?? "#1d1a16";
 }
 
 export function inferPriorities(
   record: NormalizedRecord,
-  priorities: Priority[]
+  priorities?: Priority[]
 ): string[] {
+  const list = priorities ?? loadPriorities();
   const haystack = extractSearchText(record).toLowerCase();
   const matched = new Set<string>();
 
-  for (const priority of priorities) {
+  for (const priority of list) {
     for (const keyword of priority.keywords) {
       if (haystack.includes(keyword.toLowerCase())) {
         matched.add(priority.id);
