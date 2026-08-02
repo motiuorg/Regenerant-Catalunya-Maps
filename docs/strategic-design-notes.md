@@ -156,3 +156,30 @@ lenses:
 ---
 
 _These notes are append-only. If you iterate on the lens concept, add a new section below rather than editing this one — keep the design archaeology visible._
+
+---
+
+## Implementation Note: Priorities Section (2026-08-02)
+
+The `/priorities/` section is the first concrete implementation of the lens-system idea described above. It reads the same three CRM databases (actors, programs, events) but frames them through six bioregional priorities and four audience modes.
+
+### What shipped
+
+- `src/data/priorities.yaml` — single source of truth for the six priorities (id, slug, colour, keywords, narrative, capital stack, sources).
+- `src/data/indicators-static.yaml` — headline static indicators for the scoreboard; live feeds to be wired in a later increment.
+- `/priorities/` — index page with scoreboard, six priority cards, interdependence diagram, generic capital stack, and audience switcher.
+- `/priorities/[id]/` — static pages for each priority with diagnosis, leverage, capital stack, related actors/programs, and sources.
+- `AudienceSwitcher` — segmented control that swaps framing paragraphs, persists in `sessionStorage`, and reflects in `?read=` URL.
+- Audience modes: `public`, `funder`, `administration`, `organiser`. Each mode changes the framing text and CTA order but never changes a number.
+
+### Relationship to the lens system
+
+The priorities section can be seen as a **fixed lens carousel** — the dataset is read through six priorities (a bioregional filter) and four audiences (a strategic filter). Unlike the future open lens system, the combinations are authored in YAML, not generated from rules.
+
+### Open questions carried forward
+
+- Live indicator feeds (Socrata / IDESCAT) for the scoreboard and `/state-of-the-bioregion/`.
+- Comarca-level choropleth for territorial resolution.
+- Point map for actors if `Lat`/`Lng` are populated in the CRM.
+- Priority tagging currently relies on keyword inference; recommend a dedicated `3RDTAG` multi-select in the CRM.
+- Funding-gap figures: only publish once a citable source exists.

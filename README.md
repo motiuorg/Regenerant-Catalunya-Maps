@@ -105,3 +105,49 @@ NOTION_API_KEY=secret_xxx
 | `src/styles/themes/editorial-organic.css` | Colours, fonts, radius |
 | `src/styles/theme.css` | Swap active theme |
 | `astro.config.mjs` | Site/base path for GitHub Pages |
+
+## Data files
+
+| File | Purpose |
+|------|---------|
+| `src/data/databases.yaml` | Notion database IDs for actors, programs, and events |
+| `src/data/priorities.yaml` | Six priorities registry: colours, keywords, diagnosis, leverage, framings, capital stack, sources |
+| `src/data/indicators-static.yaml` | Static headline indicators for the scoreboard; live feeds to be added |
+
+## Refresh cadence
+
+The site is statically generated. GitHub Actions rebuilds it every 6 hours (`.github/workflows/deploy.yml`), pulling fresh Notion data and regenerating the static snapshot. Indicator live feeds will be added in a later increment; until then, the scoreboard uses the static values in `src/data/indicators-static.yaml`.
+
+## Pages
+
+| Page | Purpose |
+|------|---------|
+| `/` | Landing page with total mapped count and links to the three databases |
+| `/organizations/` | Regenerative actors directory with filters by priority, territory, role, themes, and ontology tags |
+| `/programs/` | Programs and initiatives directory with priority and territory filters |
+| `/events/` | Events calendar and list view, sorted by date |
+| `/priorities/` | Six-priority scoreboard and interdependence view |
+| `/priorities/[id]/` | Individual priority page with diagnosis, leverage, capital stack, and related actors/programs |
+
+## Where to start editing
+
+| File | Purpose |
+|------|---------|
+| `src/data/site.yaml` | Site name, URL, description, legal note |
+| `src/data/databases.yaml` | Notion database mappings |
+| `src/data/priorities.yaml` | Priority identity, narrative, and capital stack |
+| `src/data/indicators-static.yaml` | Scoreboard indicator values |
+| `src/lib/notion.ts` | Notion client + record normalisation |
+| `src/lib/priorities.ts` | Priority loader and helpers |
+| `src/lib/indicators.ts` | Indicator loader |
+| `src/pages/index.astro` | Home landing page |
+| `src/pages/organizations.astro` | Organizations directory |
+| `src/pages/programs.astro` | Programs directory |
+| `src/pages/events.astro` | Events calendar/list |
+| `src/pages/priorities/index.astro` | Priorities scoreboard |
+| `src/pages/priorities/[id].astro` | Priority detail page |
+| `src/components/Nav.astro` | Navigation items |
+| `src/components/Footer.astro` | Footer links |
+| `src/styles/themes/editorial-organic.css` | Colours, fonts, radius |
+| `src/styles/theme.css` | Swap active theme |
+| `astro.config.mjs` | Site/base path for GitHub Pages |
