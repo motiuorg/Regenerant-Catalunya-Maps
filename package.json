@@ -1,9 +1,9 @@
 {
-  "name": "gqregcat",
+  "name": "rc2",
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "GQRegCat — Giulio's regenerative actors map for Catalunya. Style fork from refibcn.github.io.",
+  "description": "Regenerant Catalunya — bioregional priorities and actor directory. Style fork from refibcn.github.io.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

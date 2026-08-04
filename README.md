@@ -1,6 +1,6 @@
-# GQRegCat
+# rc2 — Regenerant Catalunya
 
-Giulio's regenerative actors map for Catalunya — a clean-slate website using the ReFi BCN editorial-organic design system.
+Bioregional priorities and regenerative actor directory for Catalunya — a clean-slate website using the ReFi BCN editorial-organic design system.
 
 ## What was copied from refibcn.github.io
 
@@ -11,21 +11,20 @@ Giulio's regenerative actors map for Catalunya — a clean-slate website using t
 
 ## What is different
 
-- No ReFi BCN content, data, or pages
-- Brand identity: GQRegCat
-- Simplified nav: Map · Actors · About · Contact
+- Brand identity: Regenerant Catalunya (rc2)
+- Simplified nav: Priorities · Organizations · Programs · Events
 - Placeholder map ready for your actor dataset + MapLibre
 
 ## Run locally
 
 ```bash
-cd projects/GQRegCat
+cd projects/rc2
 npm install
 npm run dev
-# → http://localhost:4321/GQRegCat/
+# → http://localhost:4321/rc2/
 ```
 
-> Because the site is configured for a GitHub project page (`/GQRegCat`), Astro also serves it under that base path in dev.
+> Because the site is configured for a GitHub project page (`/rc2`), Astro also serves it under that base path in dev.
 
 ## Build
 
@@ -38,39 +37,39 @@ To test the production build:
 
 ```bash
 npm run preview
-# → http://localhost:4321/GQRegCat/
+# → http://localhost:4321/rc2/
 ```
 
 ## GitHub Pages deploy
 
 The repo is set up to deploy automatically via GitHub Actions (`.github/workflows/deploy.yml`) every time you push to `main`.
 
-Target URL: `https://giulioquarta.github.io/GQRegCat/`
+Target URL: `https://refibcn.github.io/rc2/`
 
 ### Push to GitHub for the first time
 
 ```bash
-cd projects/GQRegCat
+cd projects/rc2
 
 # If you haven't initialised git yet
 git init
 
 git add .
-git commit -m "Initial GQRegCat scaffold with GitHub Pages + Notion plumbing"
+git commit -m "Initial rc2 scaffold with GitHub Pages + Notion plumbing"
 
 # Option A: GitHub CLI (creates the repo and pushes in one go)
-gh repo create giulioquarta/GQRegCat --public --source=. --push
+gh repo create refibcn/rc2 --public --source=. --push
 
-# Option B: create the repo manually on github.com/giulioquarta/GQRegCat,
+# Option B: create the repo manually on github.com/refibcn/rc2,
 # then add the remote and push
-git remote add origin git@github.com:giulioquarta/GQRegCat.git
+git remote add origin git@github.com:refibcn/rc2.git
 git branch -M main
 git push -u origin main
 ```
 
 ### Enable GitHub Pages
 
-1. Go to `https://github.com/giulioquarta/GQRegCat/settings/pages`
+1. Go to `https://github.com/refibcn/rc2/settings/pages`
 2. Under **Build and deployment** → **Source**, select **GitHub Actions**
 3. The workflow in `.github/workflows/deploy.yml` will take over from the next push
 
@@ -99,7 +98,6 @@ NOTION_API_KEY=secret_xxx
 | `src/data/databases.yaml` | Notion database mappings |
 | `src/lib/notion.ts` | Notion client + record normalisation |
 | `src/pages/index.astro` | Home / map landing page |
-| `src/pages/actors.astro` | Actor directory |
 | `src/components/Nav.astro` | Navigation items |
 | `src/components/Footer.astro` | Footer links |
 | `src/styles/themes/editorial-organic.css` | Colours, fonts, radius |

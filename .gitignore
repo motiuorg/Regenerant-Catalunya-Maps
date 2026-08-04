@@ -9,5 +9,7 @@ node_modules/
 
 # Reference docs / CRM exports (may contain personal data)
 ReFi BCN CRM *.csv
+Calendar Events *.csv
+Programs & Initiatives *.csv
 Catalunya — Comarques*.md
 CRM restructuring *.md

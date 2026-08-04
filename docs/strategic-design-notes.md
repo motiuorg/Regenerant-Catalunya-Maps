@@ -1,4 +1,4 @@
-# GQRegCat — Strategic Design Notes
+# rc2 — Strategic Design Notes
 
 _Forward-looking notes on where the map could go. Not a spec — a direction to revisit when the core directory is stable._
 
@@ -6,7 +6,7 @@ _Forward-looking notes on where the map could go. Not a spec — a direction to 
 
 ## Core Idea: The Map as a Multi-Lens Commons
 
-The GQRegCat directory is not just a list of regenerative actors. It is a **shared substrate** — the same underlying dataset (the ReFi BCN CRM) viewed through different strategic lenses. Each lens is a **filter + a narrative**: it decides which actors to surface, which properties to highlight, and what story to tell about why regeneration in Catalunya matters.
+The rc2 directory is not just a list of regenerative actors. It is a **shared substrate** — the same underlying dataset (the ReFi BCN CRM) viewed through different strategic lenses. Each lens is a **filter + a narrative**: it decides which actors to surface, which properties to highlight, and what story to tell about why regeneration in Catalunya matters.
 
 A user does not browse "the map." They browse **a perspective on the map.**
 
