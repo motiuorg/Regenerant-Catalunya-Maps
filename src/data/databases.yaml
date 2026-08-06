@@ -24,3 +24,11 @@ sections:
     route: /events
     icon: calendar
     # Properties the UI expects: Event, About, Date, Location, Link, Type, Select/2NDTAG
+  - id: bioeconomy
+    name: Bioeconomy
+    description: Bio-based, circular, regenerative value chains in Catalunya — a spotlight on actors at the intersection of environmental regeneration and biotech / life sciences / climate tech / agri-food tech.
+    database_id: ebc1441510e182638180014a4851dbb0
+    notion_view_url: https://app.notion.com/p/ebc1441510e182638180014a4851dbb0?v=3ad1441510e1806dbc9e000c90599b48&source=copy_link
+    route: /bioeconomy
+    icon: leaf
+    # Same CRM as actors, filtered by the Bioeconomy meme and Bioeconomy sub-category.

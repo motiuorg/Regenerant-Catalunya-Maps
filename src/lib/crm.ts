@@ -17,6 +17,7 @@ export interface CrmActor {
   actorRoles: string[];
   secondTags: string[];
   thirdTags: string[];
+  bioeconomySubcategories: string[];
   area2: string[];
   climateZone: string | null;
   themes: string[];
@@ -132,6 +133,7 @@ export function normalizeRecord(record: NormalizedRecord): CrmActor {
     actorRoles: parseDelimitedTitleCase(props["Actor Role"]),
     secondTags: toStringArray(props["2NDTAG"]),
     thirdTags: toStringArray(props["3RDTAG"]),
+    bioeconomySubcategories: parseDelimitedText(props["Bioeconomy sub-category"]),
     area2: toStringArray(props["Area2"]),
     climateZone: toNullableString(props["Climate zone"]),
     themes: toStringArray(props["Memes"]),
@@ -191,6 +193,23 @@ export function hasCatbis(record: NormalizedRecord | CrmRecord): boolean {
     if (value === undefined || value === null) continue;
     const tags = toStringArray(value);
     if (tags.some((t) => t.toLowerCase() === "catbis")) return true;
+  }
+  return false;
+}
+
+export function hasBioeconomyMeme(record: NormalizedRecord | CrmRecord): boolean {
+  const themes = "themes" in record && Array.isArray(record.themes)
+    ? record.themes
+    : undefined;
+  if (themes) {
+    return themes.some((t) => String(t).toLowerCase().includes("bioeconomy"));
+  }
+  const props = (record as NormalizedRecord).properties ?? {};
+  const candidates = [props["Memes"], props["memes"], props["Themes"], props["themes"]];
+  for (const value of candidates) {
+    if (value === undefined || value === null) continue;
+    const tags = Array.isArray(value) ? value.map(String) : [String(value)];
+    if (tags.some((t) => t.toLowerCase().includes("bioeconomy"))) return true;
   }
   return false;
 }
@@ -291,5 +310,3 @@ export const territoryOptions = [
   "Vallès Occidental",
   "Vallès Oriental",
 ];
-
-
