@@ -66,7 +66,7 @@ const safeJson = (obj: any) =>
     .replace(/&/g, "\\u0026");
 
 const pageDescription =
-  "Bioeconomy introduces the material-economic subsystem within the wider regeneration field in Catalunya. It asks: who is building bio-based, circular, regenerative value chains using biological resources? This spotlight surfaces entities at the intersection of environmental regeneration and biotech, life sciences, climate tech, and agri-food tech.";
+  "Bioeconomy is a subsector within the wider regeneration field in Catalunya. This page shows the Catalan entities building bio-based, circular, regenerative value chains using biological resources.";
 ---
 
 <Layout
@@ -80,14 +80,10 @@ const pageDescription =
       <p class="eyebrow">Regenerant Catalunya Maps</p>
       <h1 class="display">Bioeconomy</h1>
       <p class="lede">
-        Bioeconomy is the material-economic subsystem within the wider regeneration field in
-        Catalunya. This page asks: <em>who is building bio-based, circular, regenerative value
-        chains using biological resources here?</em>
+        Bioeconomy is a subsector within the wider regeneration field in Catalunya. This page shows the Catalan entities building bio-based, circular, regenerative value chains using biological resources, at the intersection of environmental regeneration and biotech, life sciences, climate tech and agri-food tech.
       </p>
       <p class="lede lede--secondary">
-        The spotlight below surfaces entities at the intersection of environmental regeneration
-        and biotech, life sciences, climate tech, and agri-food tech. Filter by subcategory
-        or search by name to explore the map.
+        Filter by subcategory or search by name to explore the map.
       </p>
     </div>
   </header>
@@ -114,13 +110,6 @@ const pageDescription =
           placeholder="Type an organization name…"
           autocomplete="off"
         />
-      </div>
-
-      <div class="filter-options">
-        <label class="spotlight-toggle">
-          <input type="checkbox" id="spotlight-toggle" />
-          <span>Spotlight only: biotech / life sciences / climate tech / agri-food tech</span>
-        </label>
       </div>
 
       {subcategoryOptions.length > 0 && (
@@ -263,12 +252,10 @@ const pageDescription =
       const countLabel = document.getElementById("gallery-count");
       const searchInput = document.getElementById("search-input");
       const clearBtn = document.getElementById("clear-filters");
-      const spotlightToggle = document.getElementById("spotlight-toggle");
 
       const filters = {
         subcategories: [],
         search: "",
-        spotlightOnly: false,
       };
 
       function normalize(str) {
@@ -293,18 +280,8 @@ const pageDescription =
         return filters.subcategories.some((v) => actorValues.includes(v));
       }
 
-      function matchesSpotlight(actor) {
-        if (!filters.spotlightOnly) return true;
-        const subs = actor.bioeconomySubcategories || [];
-        return subs.length > 0;
-      }
-
       function isVisible(actor) {
-        return (
-          matchesSearch(actor) &&
-          matchesSubcategories(actor) &&
-          matchesSpotlight(actor)
-        );
+        return matchesSearch(actor) && matchesSubcategories(actor);
       }
 
       function updateGallery() {
@@ -344,20 +321,11 @@ const pageDescription =
         });
       }
 
-      if (spotlightToggle) {
-        spotlightToggle.addEventListener("change", () => {
-          filters.spotlightOnly = spotlightToggle.checked;
-          updateGallery();
-        });
-      }
-
       if (clearBtn) {
         clearBtn.addEventListener("click", () => {
           filters.subcategories = [];
           filters.search = "";
-          filters.spotlightOnly = false;
           if (searchInput) searchInput.value = "";
-          if (spotlightToggle) spotlightToggle.checked = false;
           document.querySelectorAll(".filter-btn.active").forEach((btn) => {
             btn.classList.remove("active");
             btn.setAttribute("aria-pressed", "false");
@@ -468,25 +436,6 @@ const pageDescription =
   }
   .search-input:focus {
     border-color: var(--primary);
-  }
-
-  .filter-options {
-    margin-bottom: var(--space-5);
-  }
-  .spotlight-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-family: var(--sans);
-    font-size: 0.92rem;
-    color: var(--text-primary);
-    cursor: pointer;
-  }
-  .spotlight-toggle input {
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: var(--primary);
-    cursor: pointer;
   }
 
   .filter-group {
