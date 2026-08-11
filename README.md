@@ -111,6 +111,8 @@ NOTION_API_KEY=secret_xxx
 | `src/data/databases.yaml` | Notion database IDs for actors, programs, and events |
 | `src/data/priorities.yaml` | Six priorities registry: colours, keywords, diagnosis, leverage, framings, capital stack, sources |
 | `src/data/indicators-static.yaml` | Static headline indicators for the scoreboard; live feeds to be added |
+| `src/data/contribute.yaml` | Contribution modalities registry: time / attention / money / land / capital, each with links (bilingual en/ca) |
+| `src/data/funding-needs.yaml` | Part 2 — restoration initiatives funding needs registry: public programmes, entity-led asks, structural gaps (dated snapshot) |
 
 ## Refresh cadence
 
@@ -126,6 +128,8 @@ The site is statically generated. GitHub Actions rebuilds it every 6 hours (`.gi
 | `/events/` | Events calendar and list view, sorted by date |
 | `/priorities/` | Six-priority scoreboard and interdependence view |
 | `/priorities/[id]/` | Individual priority page with diagnosis, leverage, capital stack, and related actors/programs |
+| `/contribute/` | Every modality for contributing time / attention / money / land / capital to regenerating Catalunya, with direct links and provenance |
+| `/contribute/#funding-needs` | Part 2: funding needs of restoration initiatives — public programmes, live asks, and structural gaps |
 
 ## Where to start editing
 
@@ -135,6 +139,8 @@ The site is statically generated. GitHub Actions rebuilds it every 6 hours (`.gi
 | `src/data/databases.yaml` | Notion database mappings |
 | `src/data/priorities.yaml` | Priority identity, narrative, and capital stack |
 | `src/data/indicators-static.yaml` | Scoreboard indicator values |
+| `src/data/contribute.yaml` | Contribution modalities, links, and copy |
+| `src/lib/contribute.ts` | Contribution data loader |
 | `src/lib/notion.ts` | Notion client + record normalisation |
 | `src/lib/priorities.ts` | Priority loader and helpers |
 | `src/lib/indicators.ts` | Indicator loader |
@@ -144,6 +150,7 @@ The site is statically generated. GitHub Actions rebuilds it every 6 hours (`.gi
 | `src/pages/events.astro` | Events calendar/list |
 | `src/pages/priorities/index.astro` | Priorities scoreboard |
 | `src/pages/priorities/[id].astro` | Priority detail page |
+| `src/pages/contribute.astro` | Contribution modalities page |
 | `src/components/Nav.astro` | Navigation items |
 | `src/components/Footer.astro` | Footer links |
 | `src/styles/themes/editorial-organic.css` | Colours, fonts, radius |

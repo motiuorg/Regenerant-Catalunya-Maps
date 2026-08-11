@@ -1,0 +1,626 @@
+---
+import Layout from "../components/Layout.astro";
+import OrganicAmbient from "../components/OrganicAmbient.astro";
+import { loadContribute } from "../lib/contribute";
+import { loadFundingNeeds } from "../lib/fundingNeeds";
+import type { ContributeLink } from "../lib/contribute";
+
+const data = loadContribute();
+const funding = loadFundingNeeds();
+const t = (obj?: { en: string }) => obj?.en ?? "";
+const modalities = data.modalities.sort((a, b) => a.order - b.order);
+
+const statusLabels: Record<string, string> = {
+  running: "In motion",
+  "open-ask": "Open ask",
+  funded: "Funded",
+  closed: "Closed",
+};
+
+const kindLabels: Record<string, string> = {
+  portal: "Portal",
+  platform: "Platform",
+  public: "Public programme",
+  finance: "Cooperative finance",
+  funder: "Funder",
+};
+
+function badges(link: ContributeLink): string[] {
+  const badges: string[] = [];
+  if (link.kind && kindLabels[link.kind]) badges.push(kindLabels[link.kind]);
+  if (link.mapped) badges.push("On the map");
+  return badges;
+}
+
+const linkCount = modalities.reduce((acc, m) => acc + m.links.length, 0);
+const mappedCount = modalities.reduce(
+  (acc, m) => acc + m.links.filter((l) => l.mapped).length,
+  0
+);
+---
+
+<Layout
+  title="Contribute"
+  current="contribute"
+  description="Every way to contribute time, attention or money to regenerating Catalunya — volunteering, citizen science, donations, land custody and cooperative finance, with direct links."
+>
+  <header class="hero hero--compact">
+    <OrganicAmbient />
+    <div class="hero__inner section">
+      <p class="eyebrow">Regenerant Catalunya Maps</p>
+      <h1 class="display">Ways to contribute</h1>
+      <p class="lede">
+        Every known modality for contributing time, attention or money to regenerating
+        Catalunya — {modalities.length} routes, {linkCount} direct links, {mappedCount} of
+        them to entities already mapped on this site.{" "}
+        <a class="lede-anchor" href="#funding-needs">Part 2: funding needs of
+        restoration initiatives →</a>
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--wide">
+    <div class="content-block">
+      <p class="content-block__text">{t(data.intro)}</p>
+    </div>
+
+    <p class="section-prompt">Legend — what the badges mean:</p>
+    <ul class="legend-list">
+      <li><span class="badge">Portal</span> Aggregator or gateway for a whole category</li>
+      <li><span class="badge">Platform</span> Digital tool you participate in directly</li>
+      <li><span class="badge">Public programme</span> Official Catalan government channel</li>
+      <li><span class="badge">Cooperative finance</span> Cooperative / ethical money vehicles</li>
+      <li><span class="badge">Funder</span> Philanthropy or impact capital</li>
+      <li><span class="badge badge--mapped">On the map</span> Entity already in this site's directory</li>
+    </ul>
+
+    {modalities.map((modality) => (
+      <section class="modality" id={modality.id}>
+        <div class="modality__heading">
+          <span class="modality__number">{String(modality.order).padStart(2, "0")}</span>
+          <div class="modality__titles">
+            <h2 class="modality__name">{t(modality.name)}</h2>
+            <p class="modality__one-liner">{t(modality.oneLiner)}</p>
+          </div>
+        </div>
+
+        <p class="modality__description">{t(modality.description)}</p>
+
+        <ul class="link-list">
+          {modality.links.map((link) => (
+            <li class="link-item">
+              <div class="link-item__row">
+                <a
+                  class="link-item__label"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+                <span class="link-item__badges">
+                  {badges(link).map((b) => (
+                    <span
+                      class:list={["badge", { "badge--mapped": b === "On the map" }]}
+                    >
+                      {b}
+                    </span>
+                  ))}
+                </span>
+              </div>
+              {link.note && <p class="link-item__note">{t(link.note)}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </section>
+
+  <section class="section section--wide section--alt">
+    <h2 class="section-title">{t(data.taxCallout?.title)}</h2>
+    <p class="section-lede">{t(data.taxCallout?.body)}</p>
+  </section>
+
+  <section class="section section--wide">
+    <h2 class="section-title">{t(data.howToChoose?.title)}</h2>
+    <p class="section-lede">{t(data.howToChoose?.lede)}</p>
+    <div class="decision-grid">
+      {data.howToChoose?.options?.map((option) => (
+        <div class="decision-card">
+          <h3 class="decision-card__when">{t(option.when)}</h3>
+          <p class="decision-card__then">{t(option.then)}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--wide section--alt" id="funding-needs">
+    <p class="section-prompt">Part 2</p>
+    <h2 class="section-title">{t(funding.title)}</h2>
+    <p class="section-lede">{t(funding.intro)}</p>
+
+    {funding.tiers.map((tier) => (
+      <div class="tier">
+        <h3 class="tier__name">{t(tier.name)}</h3>
+        <p class="tier__lede">{t(tier.lede)}</p>
+        <div class="initiative-grid">
+          {tier.items.map((item) => (
+            <div class="initiative-card">
+              <div class="initiative-card__head">
+                <span class={`badge badge--status badge--${item.status}`}>
+                  {statusLabels[item.status] ?? item.status}
+                </span>
+              </div>
+              <h4 class="initiative-card__name">{t(item.name)}</h4>
+              <p class="initiative-card__lead">{t(item.lead)}</p>
+              {item.territory && (
+                <p class="initiative-card__meta">
+                  <span class="initiative-card__meta-label">Territory</span>
+                  {t(item.territory)}
+                </p>
+              )}
+              {item.budget && (
+                <p class="initiative-card__meta">
+                  <span class="initiative-card__meta-label">Money</span>
+                  {t(item.budget)}
+                </p>
+              )}
+              {item.note && <p class="initiative-card__note">{t(item.note)}</p>}
+              {item.channel && (
+                <a
+                  class="initiative-card__channel"
+                  href={item.channel.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t(item.channel.label)} →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    <p class="section-body section-body--footnote">{t(funding.footnote)}</p>
+  </section>
+
+  <section class="section section--wide section--alt">
+    <h2 class="section-title">Method and provenance</h2>
+    <p class="section-body">
+      This page was drafted from a research file on ecological restoration and
+      socio-environmental contribution in Catalunya (2026-08-11) and from the entity
+      registry behind this map (ReFi BCN CRM). Every link was verified on 2026-08-11;
+      where a domain could not be reached (e.g. the Associació Cetàcea site), the entity
+      is mentioned in prose but not linked. Entity websites marked "On the map" come from
+      the CRM records shown in the organizations directory. Part 2 is a dated snapshot of
+      funding needs — asks change weekly, so each card carries a status and a source.
+    </p>
+
+    <h3 class="section-title section-title--sub">Sources — Part 1 (contribution modalities)</h3>
+    <ul class="source-list">
+      {data.sources?.map((source) => (
+        <li>
+          <a href={source.url} target="_blank" rel="noopener noreferrer">
+            {source.label}
+          </a>
+          <span class="source-list__date">accessed {source.accessed}</span>
+        </li>
+      ))}
+    </ul>
+
+    <h3 class="section-title section-title--sub">Sources — Part 2 (funding needs)</h3>
+    <ul class="source-list">
+      {funding.sources?.map((source) => (
+        <li>
+          <a href={source.url} target="_blank" rel="noopener noreferrer">
+            {source.label}
+          </a>
+          <span class="source-list__date">accessed {source.accessed}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .hero--compact {
+    position: relative;
+    padding: var(--space-12) var(--gutter) var(--space-8);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--container-default);
+    margin: 0 auto;
+  }
+  .hero--compact .eyebrow {
+    margin-bottom: var(--space-3);
+  }
+  .hero--compact h1 {
+    margin-bottom: var(--space-4);
+  }
+  .hero--compact .lede {
+    max-width: 70ch;
+  }
+  .lede-anchor {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast);
+    white-space: nowrap;
+  }
+  .lede-anchor:hover {
+    border-bottom-color: var(--primary);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: var(--space-10) 0 var(--space-4);
+    color: var(--ink);
+  }
+  .section-title--sub {
+    font-size: 1.2rem;
+    margin: var(--space-8) 0 var(--space-3);
+  }
+  .section--alt {
+    background: var(--surface-1);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .section--alt .section-title {
+    margin-top: 0;
+  }
+  .section-lede {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 70ch;
+    margin: 0 0 var(--space-6);
+  }
+  .section-body {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 70ch;
+    margin: 0 0 var(--space-4);
+  }
+
+  .content-block {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-5);
+    margin-bottom: var(--space-8);
+  }
+  .content-block__text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+
+  .section-prompt {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+  }
+  .legend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-10);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    max-width: 70ch;
+  }
+  .legend-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.18rem 0.4rem;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+    white-space: nowrap;
+  }
+  .badge--mapped {
+    background: color-mix(in srgb, var(--regen) 12%, var(--surface-2));
+    color: var(--regen);
+    border-color: color-mix(in srgb, var(--regen) 40%, var(--border-subtle));
+  }
+
+  .modality {
+    border-top: 1px solid var(--ink);
+    padding: var(--space-8) 0 var(--space-10);
+  }
+  .modality:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .modality__heading {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+    margin-bottom: var(--space-4);
+  }
+  .modality__number {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--regen);
+    flex-shrink: 0;
+  }
+  .modality__name {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 var(--space-2);
+  }
+  .modality__one-liner {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0;
+    max-width: 70ch;
+  }
+  .modality__description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    max-width: 70ch;
+    margin: 0 0 var(--space-6);
+  }
+
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+    gap: var(--space-4);
+  }
+  .link-item {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: border-color var(--t-fast);
+  }
+  .link-item:hover {
+    border-color: var(--ink);
+  }
+  .link-item__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .link-item__label {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast);
+  }
+  .link-item__label:hover {
+    border-bottom-color: var(--primary);
+    color: var(--primary);
+  }
+  .link-item__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+  .link-item__note {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: var(--space-4);
+  }
+  .decision-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-5);
+  }
+  .decision-card__when {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 var(--space-3);
+  }
+  .decision-card__then {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .tier {
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .tier:first-of-type {
+    border-top: 0;
+  }
+  .tier__name {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 var(--space-3);
+  }
+  .tier__lede {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 70ch;
+    margin: 0 0 var(--space-5);
+  }
+
+  .initiative-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+    gap: var(--space-4);
+  }
+  .initiative-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: border-color var(--t-fast);
+  }
+  .initiative-card:hover {
+    border-color: var(--ink);
+  }
+  .initiative-card__head {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: var(--space-2);
+  }
+  .badge--status {
+    border-color: var(--border-subtle);
+  }
+  .badge--open-ask {
+    background: color-mix(in srgb, var(--regen) 14%, var(--surface-2));
+    color: var(--regen);
+    border-color: color-mix(in srgb, var(--regen) 45%, var(--border-subtle));
+  }
+  .badge--funded {
+    background: color-mix(in srgb, var(--pillar-tissue-mid, #8a9a5b) 12%, var(--surface-2));
+    color: var(--pillar-tissue-dark, #4d5b2e);
+    border-color: var(--border-subtle);
+  }
+  .initiative-card__name {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0;
+  }
+  .initiative-card__lead {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .initiative-card__meta {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .initiative-card__meta-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-right: var(--space-2);
+  }
+  .initiative-card__note {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+    flex: 1 1 auto;
+  }
+  .initiative-card__channel {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    align-self: flex-start;
+    margin-top: var(--space-2);
+    transition: border-color var(--t-fast);
+  }
+  .initiative-card__channel:hover {
+    border-bottom-color: var(--primary);
+  }
+  .section-body--footnote {
+    margin-top: var(--space-8);
+    font-style: italic;
+  }
+
+  .source-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 70ch;
+  }
+  .source-list li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .source-list a {
+    font-size: 0.95rem;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast);
+  }
+  .source-list a:hover {
+    border-bottom-color: var(--primary);
+  }
+  .source-list__date {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 720px) {
+    .link-list,
+    .decision-grid,
+    .initiative-grid {
+      grid-template-columns: 1fr;
+    }
+    .link-item__row {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .link-item__badges {
+      justify-content: flex-start;
+    }
+  }
+</style>
