@@ -37,11 +37,33 @@ export async function fetchDatabaseRecords(databaseId: string): Promise<Normaliz
   const results: any[] = [];
   let cursor: string | undefined = undefined;
 
+  // Notion's new data-source architecture: for integrations on the new schema,
+  // querying by database_id returns object_not_found. Fall back to querying the
+  // database's data source (discovered via databases.retrieve) on the first 404.
+  let dataSourceId: string | null = null;
+  const queryPage = async (startCursor?: string): Promise<any> => {
+    try {
+      return await notion.databases.query({
+        database_id: databaseId,
+        start_cursor: startCursor,
+      });
+    } catch (err: any) {
+      if (err?.code !== "object_not_found") throw err;
+      if (dataSourceId === null) {
+        const db: any = await notion.databases.retrieve({ database_id: databaseId });
+        dataSourceId = db?.data_sources?.[0]?.id ?? null;
+        if (!dataSourceId) throw err;
+      }
+      return await notion.request({
+        path: `/data_sources/${dataSourceId}/query`,
+        method: "post",
+        body: { start_cursor: startCursor },
+      });
+    }
+  };
+
   do {
-    const response: any = await notion.databases.query({
-      database_id: databaseId,
-      start_cursor: cursor,
-    });
+    const response = await queryPage(cursor);
     results.push(...response.results);
     cursor = response.next_cursor;
   } while (cursor);
