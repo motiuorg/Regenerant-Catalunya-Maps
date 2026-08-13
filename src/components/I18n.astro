@@ -84,10 +84,12 @@ const safeJson = (obj: any) =>
       apply: apply,
     };
 
-    document.querySelectorAll("[data-lang-btn]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        setLang(btn.getAttribute("data-lang-btn"));
-      });
+    // Event delegation: the buttons live in the body, but this engine runs in
+    // <head> before the body is parsed — direct binding would find no buttons.
+    document.addEventListener("click", function (e) {
+      var target = e.target;
+      var btn = target && target.closest ? target.closest("[data-lang-btn]") : null;
+      if (btn) setLang(btn.getAttribute("data-lang-btn"));
     });
 
     if (document.readyState === "loading") {
