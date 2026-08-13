@@ -1,11 +1,12 @@
 ---
 import type { Indicator } from "../lib/indicators";
+import type { I18nString } from "../lib/i18n";
 
 interface Props {
   source: Indicator["source"];
   lastVerified: string;
   confidence?: string;
-  note?: { en: string };
+  note?: I18nString;
 }
 
 const { source, lastVerified, confidence, note } = Astro.props;
@@ -13,28 +14,30 @@ const { source, lastVerified, confidence, note } = Astro.props;
 
 <details class="provenance">
   <summary class="provenance__summary">
-    <span class="provenance__label">Source and method</span>
+    <span class="provenance__label" data-i18n="prov.summary">Source and method</span>
     {confidence && (
-      <span class={`provenance__badge provenance__badge--${confidence}`}>{confidence} confidence</span>
+      <span class={`provenance__badge provenance__badge--${confidence}`}>
+        {confidence} <span data-i18n="prov.confidence">confidence</span>
+      </span>
     )}
   </summary>
   <div class="provenance__body">
     <p class="provenance__item">
-      <span class="provenance__key">Source</span>
+      <span class="provenance__key" data-i18n="prov.source">Source</span>
       <a href={source.url} target="_blank" rel="noopener noreferrer" class="provenance__link">
         {source.label}
       </a>
     </p>
     <p class="provenance__item">
-      <span class="provenance__key">Licence</span>
+      <span class="provenance__key" data-i18n="prov.licence">Licence</span>
       <span>{source.license}</span>
     </p>
     <p class="provenance__item">
-      <span class="provenance__key">Last verified</span>
+      <span class="provenance__key" data-i18n="prov.lastVerified">Last verified</span>
       <span>{lastVerified}</span>
     </p>
     {note && (
-      <p class="provenance__note">{note.en}</p>
+      <p class="provenance__note" data-i18n-html="ind-note">{note.en}</p>
     )}
   </div>
 </details>

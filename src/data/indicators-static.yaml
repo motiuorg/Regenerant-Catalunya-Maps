@@ -8,6 +8,7 @@ indicators:
     label:
       en: Habitats of EU interest in unfavourable status
       ca: Hàbitats d'interès comunitari en estat desfavorable
+      es: Hábitats de interés comunitario en estado desfavorable
     value: "65"
     unit: "%"
     status: in_overshoot
@@ -16,6 +17,7 @@ indicators:
     thresholdLabel:
       en: Favourable status target
       ca: Objectiu d'estat favorable
+      es: Objetivo de estado favorable
     confidence: medium
     source:
       type: static
@@ -27,12 +29,14 @@ indicators:
     note:
       en: Live feed to be wired to the Catalan biodiversity monitoring programme.
       ca: La connexió en temps real s'ha de connectar al programa de monitoratge de biodiversitat català.
+      es: El feed en tiempo real debe conectarse al programa de monitoreo de biodiversidad catalán.
 
   - id: food_import_dependency
     priority: Food
     label:
       en: Caloric import dependency
       ca: Dependència calòrica d'importacions
+      es: Dependencia calórica de importaciones
     value: "75"
     unit: "%"
     status: under_strain
@@ -41,6 +45,7 @@ indicators:
     thresholdLabel:
       en: Regional food security threshold
       ca: Llindar de seguretat alimentària regional
+      es: Umbral de seguridad alimentaria regional
     confidence: medium
     source:
       type: static
@@ -52,12 +57,14 @@ indicators:
     note:
       en: Source and method to be verified against Catalan agricultural accounts.
       ca: La font i el mètode s'han de verificar amb els comptes agrícoles catalans.
+      es: La fuente y el método deben verificarse con las cuentas agrícolas catalanas.
 
   - id: energy_renewable_share
     priority: Energy
     label:
       en: Share of electricity from renewables
       ca: Quota d'electricitat d'origen renovable
+      es: Cuota de electricidad de origen renovable
     value: "28"
     unit: "%"
     status: under_strain
@@ -66,6 +73,7 @@ indicators:
     thresholdLabel:
       en: 2030 climate target
       ca: Objectiu climàtic 2030
+      es: Objetivo climático 2030
     confidence: high
     source:
       type: static
@@ -77,12 +85,14 @@ indicators:
     note:
       en: Live daily data available from Red Eléctrica; to be wired in next increment.
       ca: Dades diàries disponibles de Red Eléctrica; es connectaran en el següent increment.
+      es: Datos diarios disponibles de Red Eléctrica; se conectarán en el siguiente incremento.
 
   - id: water_reservoir_status
     priority: Water
     label:
       en: Reservoir storage, internal basins
       ca: Embassaments, conques internes
+      es: Embalses, cuencas internas
     value: "42"
     unit: "%"
     status: under_strain
@@ -91,6 +101,7 @@ indicators:
     thresholdLabel:
       en: Drought emergency threshold
       ca: Llindar d'emergència per sequera
+      es: Umbral de emergencia por sequía
     confidence: high
     source:
       type: socrata
@@ -104,12 +115,14 @@ indicators:
     note:
       en: Snapshot value; live Socrata feed to be implemented in next increment.
       ca: Valor d'instantània; feed Socrata en viu per implementar en el següent increment.
+      es: Valor instantáneo; feed de Socrata en vivo por implementar en el siguiente incremento.
 
   - id: circular_waste_recycling
     priority: Circular
     label:
       en: Municipal waste selectively collected
       ca: Residus municipals recollits selectivament
+      es: Residuos municipales recogidos selectivamente
     value: "41"
     unit: "%"
     status: holding
@@ -118,6 +131,7 @@ indicators:
     thresholdLabel:
       en: EU target for 2025
       ca: Objectiu UE 2025
+      es: Objetivo UE 2025
     confidence: medium
     source:
       type: static
@@ -129,12 +143,14 @@ indicators:
     note:
       en: Construction and demolition waste indicators to be added.
       ca: S'han d'afegir indicadors de residus de construcció i demolició.
+      es: Se deben añadir indicadores de residuos de construcción y demolición.
 
   - id: social_energy_poverty
     priority: Social
     label:
       en: Households in energy poverty
       ca: Habitatges en pobresa energètica
+      es: Hogares en pobreza energética
     value: "13"
     unit: "%"
     status: under_strain
@@ -143,6 +159,7 @@ indicators:
     thresholdLabel:
       en: Just transition floor
       ca: Pis de transició justa
+      es: Suelo de transición justa
     confidence: medium
     source:
       type: static
@@ -154,3 +171,4 @@ indicators:
     note:
       en: Definition and most recent survey year to be verified.
       ca: S'ha de verificar la definició i l'any d'enquesta més recent.
+      es: Se debe verificar la definición y el año de encuesta más reciente.

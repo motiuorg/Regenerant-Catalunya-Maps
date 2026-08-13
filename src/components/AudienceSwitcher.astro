@@ -6,15 +6,15 @@ interface Props {
 const { current = "public" } = Astro.props;
 
 const audiences = [
-  { id: "public", label: "Curious public" },
-  { id: "funder", label: "Funder" },
-  { id: "administration", label: "Public administration" },
-  { id: "organiser", label: "Movement / organiser" },
+  { id: "public", label: "Curious public", key: "pri.audience.public" },
+  { id: "funder", label: "Funder", key: "pri.audience.funder" },
+  { id: "administration", label: "Public administration", key: "pri.audience.administration" },
+  { id: "organiser", label: "Movement / organiser", key: "pri.audience.organiser" },
 ];
 ---
 
 <div class="audience-switcher" role="group" aria-label="Reading this as">
-  <span class="audience-switcher__label">Reading this as:</span>
+  <span class="audience-switcher__label" data-i18n="pri.audienceLabel">Reading this as:</span>
   <div class="audience-switcher__options" role="tablist" aria-label="Audience">
     {audiences.map((audience) => (
       <button
@@ -23,6 +23,7 @@ const audiences = [
         role="tab"
         aria-selected={audience.id === current ? "true" : "false"}
         data-audience={audience.id}
+        data-i18n={audience.key}
       >
         {audience.label}
       </button>

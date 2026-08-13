@@ -39,21 +39,27 @@ const exploreLinks = [
   {
     id: "organizations",
     title: "Organizations",
+    titleKey: "home.orgTitle",
     description: "People, networks, organizations, and projects working on regeneration.",
+    descriptionKey: "home.orgDesc",
     href: `${base}organizations/`,
     count: actorCount,
   },
   {
     id: "programs",
     title: "Programs and Initiatives",
+    titleKey: "home.progTitle",
     description: "Collective programs, networks, and initiatives driving systemic change.",
+    descriptionKey: "home.progDesc",
     href: `${base}programs/`,
     count: programCount,
   },
   {
     id: "events",
     title: "Events",
+    titleKey: "home.evTitle",
     description: "Gatherings, conferences, workshops, and community meetups.",
+    descriptionKey: "home.evDesc",
     href: `${base}events/`,
     count: eventCount,
   },
@@ -65,32 +71,35 @@ const exploreLinks = [
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Who is regenerating Catalunya?</h1>
-      <p class="lede">
-        A shared map of organizations, programs, and events working toward a regenerative future in Catalunya. Search, filter, and discover who is doing what — by theme, territory, and role.
+      <h1 class="display" data-i18n="home.title">Who is regenerating Catalunya?</h1>
+      <p class="lede" data-i18n="home.lede">
+        Collaborative maps and mapping processes focused on organizations and initiatives
+        working toward a regenerative Catalunya. Search, filter, and discover who is doing
+        what, as well as what you can contribute to this movement!
       </p>
 
       <p class="stats">
-        <strong>{totalCount}</strong> organizations, programs, and events currently mapped
+        <strong>{totalCount}</strong>{" "}
+        <span data-i18n="home.stats">organizations, programs, and events currently mapped</span>
       </p>
 
       {error && (
         <div class="error-banner">
-          <p><strong>Data error:</strong> {error}</p>
+          <p><strong data-i18n="common.dataError">Data error:</strong> {error}</p>
         </div>
       )}
     </div>
   </header>
 
   <section class="section section--wide">
-    <p class="section-prompt">Start exploring the map:</p>
+    <p class="section-prompt" data-i18n="home.prompt">Start exploring the map:</p>
     <div class="link-grid">
       {exploreLinks.map((link) => (
         <a href={link.href} class="explore-card">
           <span class="explore-count">{link.count}</span>
-          <h2 class="explore-title">{link.title}</h2>
-          <p class="explore-description">{link.description}</p>
-          <span class="explore-action">Browse →</span>
+          <h2 class="explore-title" data-i18n={link.titleKey}>{link.title}</h2>
+          <p class="explore-description" data-i18n={link.descriptionKey}>{link.description}</p>
+          <span class="explore-action" data-i18n="home.browse">Browse →</span>
         </a>
       ))}
     </div>

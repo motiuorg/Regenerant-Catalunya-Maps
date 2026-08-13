@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as yaml from "js-yaml";
 
-export type I18nString = { en: string; ca?: string };
+export type I18nString = { en: string; ca?: string; es?: string };
 
 export interface FundingItem {
   name: I18nString;

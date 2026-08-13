@@ -78,11 +78,11 @@ const pageDescription =
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Bioeconomy</h1>
-      <p class="lede">
+      <h1 class="display" data-i18n="nav.bioeconomy">Bioeconomy</h1>
+      <p class="lede" data-i18n="bio.heroLede">
         Bioeconomy is a subsector within the wider regeneration field in Catalunya. This page shows the Catalan entities building bio-based, circular, regenerative value chains using biological resources, at the intersection of environmental regeneration and biotech, life sciences, climate tech and agri-food tech.
       </p>
-      <p class="lede lede--secondary">
+      <p class="lede lede--secondary" data-i18n="bio.heroLede2">
         Filter by subcategory or search by name to explore the map.
       </p>
     </div>
@@ -91,30 +91,31 @@ const pageDescription =
   <section class="section section--wide">
     {error && (
       <div class="error-banner">
-        <p><strong>Data error:</strong> {error}</p>
+        <p><strong data-i18n="common.dataError">Data error:</strong> {error}</p>
       </div>
     )}
 
     <div class="filter-panel">
       <div class="filter-panel__header">
-        <h2 class="filter-panel__title">Explore the bioeconomy map</h2>
-        <button type="button" class="filter-clear" id="clear-filters">Clear all</button>
+        <h2 class="filter-panel__title" data-i18n="bio.filterTitle">Explore the bioeconomy map</h2>
+        <button type="button" class="filter-clear" id="clear-filters" data-i18n="common.clearAll">Clear all</button>
       </div>
 
       <div class="filter-search">
-        <label class="filter-label" for="search-input">Search by name</label>
+        <label class="filter-label" for="search-input" data-i18n="common.searchByName">Search by name</label>
         <input
           type="search"
           id="search-input"
           class="search-input"
           placeholder="Type an organization name…"
+          data-i18n-placeholder="bio.searchPlaceholder"
           autocomplete="off"
         />
       </div>
 
       {subcategoryOptions.length > 0 && (
         <fieldset class="filter-group">
-          <legend class="filter-label">Filter by subcategory</legend>
+          <legend class="filter-label" data-i18n="bio.filterSubcategory">Filter by subcategory</legend>
           <div class="filter-buttons" id="subcategory-filters">
             {subcategoryOptions.map((tag) => (
               <button
@@ -123,6 +124,7 @@ const pageDescription =
                 data-filter-value={tag}
                 style={`--filter-color: ${subcategoryColors[tag] ?? "var(--primary)"}`}
                 aria-pressed="false"
+                data-i18n={`bio.subcategories.${tag}`}
               >
                 {subcategoryLabel(tag)}
               </button>
@@ -132,7 +134,7 @@ const pageDescription =
       )}
     </div>
 
-    <p class="count" id="gallery-count">Loading…</p>
+    <p class="count" id="gallery-count" data-i18n="common.loading">Loading…</p>
 
     <div class="actor-grid" id="actor-gallery">
       {actors.map((actor) => (
@@ -144,7 +146,7 @@ const pageDescription =
             </div>
 
             <p class="actor-description">
-              {actor.description || "No description available."}
+              {actor.description || <span data-i18n="common.noDescription">No description available.</span>}
             </p>
 
             <div class="actor-badges">
@@ -154,6 +156,7 @@ const pageDescription =
                   <span
                     class="subcategory-badge"
                     style={`--badge-color: ${subcategoryColors[tag] ?? "var(--primary)"}`}
+                    data-i18n={`bio.subcategories.${tag}`}
                   >
                     {subcategoryLabel(tag)}
                   </span>
@@ -171,10 +174,10 @@ const pageDescription =
                   rel="noopener noreferrer"
                   class="actor-link"
                 >
-                  Website →
+                  <span data-i18n="common.website">Website →</span>
                 </a>
               )}
-              <button type="button" class="details-toggle" data-details-toggle>
+              <button type="button" class="details-toggle" data-details-toggle data-i18n="common.details">
                 Details
               </button>
             </div>
@@ -183,14 +186,14 @@ const pageDescription =
           <div class="actor-card__details" hidden>
             {actor.whyItMatters && (
               <div class="detail-block">
-                <h4>Why it matters</h4>
+                <h4 data-i18n="common.whyItMatters">Why it matters</h4>
                 <p>{actor.whyItMatters}</p>
               </div>
             )}
 
             {actor.publicEmail && (
               <div class="detail-block">
-                <h4>Public contact</h4>
+                <h4 data-i18n="common.publicContact">Public contact</h4>
                 <a href={`mailto:${actor.publicEmail}`} class="actor-link">
                   {actor.publicEmail}
                 </a>
@@ -213,7 +216,7 @@ const pageDescription =
 
             {actor.themes.length > 0 && (
               <div class="detail-block">
-                <h4>Themes</h4>
+                <h4 data-i18n="common.themes">Themes</h4>
                 <div class="detail-tags">
                   {actor.themes.map((t) => <span class="detail-tag">{t}</span>)}
                 </div>
@@ -222,18 +225,18 @@ const pageDescription =
 
             {actor.bioeconomySubcategories.length > 0 && (
               <div class="detail-block">
-                <h4>Bioeconomy subcategories</h4>
+                <h4 data-i18n="bio.bioSubcategories">Bioeconomy subcategories</h4>
                 <div class="detail-tags">
                   {actor.bioeconomySubcategories
                     .filter((tag) => tag.length < 60)
-                    .map((t) => <span class="detail-tag">{subcategoryLabel(t)}</span>)}
+                    .map((t) => <span class="detail-tag" data-i18n={`bio.subcategories.${t}`}>{subcategoryLabel(t)}</span>)}
                 </div>
               </div>
             )}
 
             {actor.ontologyTags.length > 0 && (
               <div class="detail-block">
-                <h4>Ontology tags</h4>
+                <h4 data-i18n="common.ontologyTags">Ontology tags</h4>
                 <div class="detail-tags">
                   {actor.ontologyTags.map((t) => <span class="detail-tag">{t}</span>)}
                 </div>
@@ -292,7 +295,11 @@ const pageDescription =
           if (show) visible++;
         }
         if (countLabel) {
-          countLabel.textContent = `Showing ${visible} of ${actors.length} bioeconomy actors`;
+          const shown = visible;
+          const total = actors.length;
+          countLabel.textContent = window.rc2I18n
+            ? window.rc2I18n.t("bio.count", { shown: shown, total: total })
+            : `Showing ${shown} of ${total} bioeconomy actors`;
         }
       }
 
@@ -340,7 +347,9 @@ const pageDescription =
           const details = card.querySelector(".actor-card__details");
           const hidden = details.hidden;
           details.hidden = !hidden;
-          btn.textContent = hidden ? "Hide details" : "Details";
+          btn.textContent = hidden
+            ? (window.rc2I18n ? window.rc2I18n.t("common.hideDetails") : "Hide details")
+            : (window.rc2I18n ? window.rc2I18n.t("common.details") : "Details");
         });
       });
 

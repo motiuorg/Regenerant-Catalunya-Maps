@@ -3,7 +3,7 @@ import * as path from "node:path";
 import * as yaml from "js-yaml";
 import type { NormalizedRecord } from "./notion";
 
-export type I18nString = { en: string; ca?: string };
+export type I18nString = { en: string; ca?: string; es?: string };
 
 export interface Priority {
   id: string;

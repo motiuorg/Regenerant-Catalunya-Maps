@@ -4,6 +4,7 @@ import OrganicAmbient from "../components/OrganicAmbient.astro";
 import { loadContribute } from "../lib/contribute";
 import { loadFundingNeeds } from "../lib/fundingNeeds";
 import type { ContributeLink } from "../lib/contribute";
+import type { I18nString } from "../lib/i18n";
 
 const data = loadContribute();
 const funding = loadFundingNeeds();
@@ -25,10 +26,12 @@ const kindLabels: Record<string, string> = {
   funder: "Funder",
 };
 
-function badges(link: ContributeLink): string[] {
-  const badges: string[] = [];
-  if (link.kind && kindLabels[link.kind]) badges.push(kindLabels[link.kind]);
-  if (link.mapped) badges.push("On the map");
+function badges(link: ContributeLink): { text: string; key?: string }[] {
+  const badges: { text: string; key?: string }[] = [];
+  if (link.kind && kindLabels[link.kind]) {
+    badges.push({ text: kindLabels[link.kind], key: `cont.badges.${link.kind}` });
+  }
+  if (link.mapped) badges.push({ text: "On the map", key: "cont.badges.mapped" });
   return badges;
 }
 
@@ -37,23 +40,68 @@ const mappedCount = modalities.reduce(
   (acc, m) => acc + m.links.filter((l) => l.mapped).length,
   0
 );
+
+// Content dictionary for the i18n engine: contribute + funding-needs content,
+// merged with the shared UI strings by Layout.
+const contentDict: Record<string, I18nString> = {};
+contentDict["c.heroLede"] = {
+  en: `Every known modality for contributing time, attention or money to regenerating Catalunya — ${modalities.length} routes, ${linkCount} direct links, ${mappedCount} of them to entities already mapped on this site.`,
+  ca: `Totes les modalitats conegudes per contribuir amb temps, atenció o diners a la regeneració de Catalunya — ${modalities.length} vies, ${linkCount} enllaços directes, ${mappedCount} d'ells a entitats ja mapejades en aquest web.`,
+  es: `Todas las modalidades conocidas para contribuir con tiempo, atención o dinero a la regeneración de Cataluña — ${modalities.length} vías, ${linkCount} enlaces directos, ${mappedCount} de ellos a entidades ya mapeadas en este sitio.`,
+};
+if (data.intro) contentDict["c.intro"] = data.intro;
+for (const m of modalities) {
+  contentDict[`c.${m.id}.name`] = m.name;
+  if (m.oneLiner) contentDict[`c.${m.id}.oneliner`] = m.oneLiner;
+  if (m.description) contentDict[`c.${m.id}.desc`] = m.description;
+  m.links.forEach((l, i) => {
+    contentDict[`c.${m.id}.link.${i}.label`] = { en: l.label, ca: l.label, es: l.label };
+    if (l.note) contentDict[`c.${m.id}.link.${i}.note`] = l.note;
+  });
+}
+if (data.howToChoose?.title) contentDict["c.choice.title"] = data.howToChoose.title;
+if (data.howToChoose?.lede) contentDict["c.choice.lede"] = data.howToChoose.lede;
+data.howToChoose?.options?.forEach((o, i) => {
+  if (o.when) contentDict[`c.choice.${i}.when`] = o.when;
+  if (o.then) contentDict[`c.choice.${i}.then`] = o.then;
+});
+if (data.taxCallout?.title) contentDict["c.tax.title"] = data.taxCallout.title;
+if (data.taxCallout?.body) contentDict["c.tax.body"] = data.taxCallout.body;
+if (funding.title) contentDict["fn.title"] = funding.title;
+if (funding.intro) contentDict["fn.intro"] = funding.intro;
+for (const tier of funding.tiers) {
+  contentDict[`fn.${tier.id}.name`] = tier.name;
+  if (tier.lede) contentDict[`fn.${tier.id}.lede`] = tier.lede;
+  tier.items.forEach((item, i) => {
+    contentDict[`fn.${tier.id}.${i}.name`] = item.name;
+    contentDict[`fn.${tier.id}.${i}.lead`] = item.lead;
+    if (item.territory) contentDict[`fn.${tier.id}.${i}.territory`] = item.territory;
+    if (item.budget) contentDict[`fn.${tier.id}.${i}.budget`] = item.budget;
+    if (item.note) contentDict[`fn.${tier.id}.${i}.note`] = item.note;
+    if (item.channel) contentDict[`fn.${tier.id}.${i}.channel`] = item.channel.label;
+  });
+}
+if (funding.footnote) contentDict["fn.footnote"] = funding.footnote;
 ---
 
 <Layout
   title="Contribute"
   current="contribute"
   description="Every way to contribute time, attention or money to regenerating Catalunya — volunteering, citizen science, donations, land custody and cooperative finance, with direct links."
+  i18nDict={contentDict}
 >
   <header class="hero hero--compact">
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Ways to contribute</h1>
+      <h1 class="display" data-i18n="cont.heroTitle">Ways to contribute</h1>
       <p class="lede">
-        Every known modality for contributing time, attention or money to regenerating
-        Catalunya — {modalities.length} routes, {linkCount} direct links, {mappedCount} of
-        them to entities already mapped on this site.{" "}
-        <a class="lede-anchor" href="#funding-needs">Part 2: funding needs of
+        <span data-i18n-html="c.heroLede">
+          Every known modality for contributing time, attention or money to regenerating
+          Catalunya — {modalities.length} routes, {linkCount} direct links, {mappedCount} of
+          them to entities already mapped on this site.{" "}
+        </span>
+        <a class="lede-anchor" href="#funding-needs" data-i18n="cont.toPart2">Part 2: funding needs of
         restoration initiatives →</a>
       </p>
     </div>
@@ -61,17 +109,17 @@ const mappedCount = modalities.reduce(
 
   <section class="section section--wide">
     <div class="content-block">
-      <p class="content-block__text">{t(data.intro)}</p>
+      <p class="content-block__text" data-i18n-html="c.intro">{t(data.intro)}</p>
     </div>
 
-    <p class="section-prompt">Legend — what the badges mean:</p>
+    <p class="section-prompt" data-i18n="cont.legendPrompt">Legend — what the badges mean:</p>
     <ul class="legend-list">
-      <li><span class="badge">Portal</span> Aggregator or gateway for a whole category</li>
-      <li><span class="badge">Platform</span> Digital tool you participate in directly</li>
-      <li><span class="badge">Public programme</span> Official Catalan government channel</li>
-      <li><span class="badge">Cooperative finance</span> Cooperative / ethical money vehicles</li>
-      <li><span class="badge">Funder</span> Philanthropy or impact capital</li>
-      <li><span class="badge badge--mapped">On the map</span> Entity already in this site's directory</li>
+      <li><span class="badge" data-i18n="cont.badges.portal">Portal</span> <span data-i18n="cont.legend.portal">Aggregator or gateway for a whole category</span></li>
+      <li><span class="badge" data-i18n="cont.badges.platform">Platform</span> <span data-i18n="cont.legend.platform">Digital tool you participate in directly</span></li>
+      <li><span class="badge" data-i18n="cont.badges.public">Public programme</span> <span data-i18n="cont.legend.public">Official Catalan government channel</span></li>
+      <li><span class="badge" data-i18n="cont.badges.finance">Cooperative finance</span> <span data-i18n="cont.legend.finance">Cooperative / ethical money vehicles</span></li>
+      <li><span class="badge" data-i18n="cont.badges.funder">Funder</span> <span data-i18n="cont.legend.funder">Philanthropy or impact capital</span></li>
+      <li><span class="badge badge--mapped" data-i18n="cont.badges.mapped">On the map</span> <span data-i18n="cont.legend.mapped">Entity already in this site's directory</span></li>
     </ul>
 
     {modalities.map((modality) => (
@@ -79,15 +127,15 @@ const mappedCount = modalities.reduce(
         <div class="modality__heading">
           <span class="modality__number">{String(modality.order).padStart(2, "0")}</span>
           <div class="modality__titles">
-            <h2 class="modality__name">{t(modality.name)}</h2>
-            <p class="modality__one-liner">{t(modality.oneLiner)}</p>
+            <h2 class="modality__name" data-i18n-html={`c.${modality.id}.name`}>{t(modality.name)}</h2>
+            <p class="modality__one-liner" data-i18n-html={`c.${modality.id}.oneliner`}>{t(modality.oneLiner)}</p>
           </div>
         </div>
 
-        <p class="modality__description">{t(modality.description)}</p>
+        <p class="modality__description" data-i18n-html={`c.${modality.id}.desc`}>{t(modality.description)}</p>
 
         <ul class="link-list">
-          {modality.links.map((link) => (
+          {modality.links.map((link, i) => (
             <li class="link-item">
               <div class="link-item__row">
                 <a
@@ -95,20 +143,22 @@ const mappedCount = modalities.reduce(
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-i18n={`c.${modality.id}.link.${i}.label`}
                 >
                   {link.label}
                 </a>
                 <span class="link-item__badges">
                   {badges(link).map((b) => (
                     <span
-                      class:list={["badge", { "badge--mapped": b === "On the map" }]}
+                      class:list={["badge", { "badge--mapped": b.key === "cont.badges.mapped" }]}
+                      data-i18n={b.key}
                     >
-                      {b}
+                      {b.text}
                     </span>
                   ))}
                 </span>
               </div>
-              {link.note && <p class="link-item__note">{t(link.note)}</p>}
+              {link.note && <p class="link-item__note" data-i18n-html={`c.${modality.id}.link.${i}.note`}>{t(link.note)}</p>}
             </li>
           ))}
         </ul>
@@ -117,61 +167,62 @@ const mappedCount = modalities.reduce(
   </section>
 
   <section class="section section--wide section--alt">
-    <h2 class="section-title">{t(data.taxCallout?.title)}</h2>
-    <p class="section-lede">{t(data.taxCallout?.body)}</p>
+    <h2 class="section-title" data-i18n-html="c.tax.title">{t(data.taxCallout?.title)}</h2>
+    <p class="section-lede" data-i18n-html="c.tax.body">{t(data.taxCallout?.body)}</p>
   </section>
 
   <section class="section section--wide">
-    <h2 class="section-title">{t(data.howToChoose?.title)}</h2>
-    <p class="section-lede">{t(data.howToChoose?.lede)}</p>
+    <h2 class="section-title" data-i18n-html="c.choice.title">{t(data.howToChoose?.title)}</h2>
+    <p class="section-lede" data-i18n-html="c.choice.lede">{t(data.howToChoose?.lede)}</p>
     <div class="decision-grid">
-      {data.howToChoose?.options?.map((option) => (
+      {data.howToChoose?.options?.map((option, i) => (
         <div class="decision-card">
-          <h3 class="decision-card__when">{t(option.when)}</h3>
-          <p class="decision-card__then">{t(option.then)}</p>
+          <h3 class="decision-card__when" data-i18n-html={`c.choice.${i}.when`}>{t(option.when)}</h3>
+          <p class="decision-card__then" data-i18n-html={`c.choice.${i}.then`}>{t(option.then)}</p>
         </div>
       ))}
     </div>
   </section>
 
   <section class="section section--wide section--alt" id="funding-needs">
-    <p class="section-prompt">Part 2</p>
-    <h2 class="section-title">{t(funding.title)}</h2>
-    <p class="section-lede">{t(funding.intro)}</p>
+    <p class="section-prompt" data-i18n="cont.part2">Part 2</p>
+    <h2 class="section-title" data-i18n-html="fn.title">{t(funding.title)}</h2>
+    <p class="section-lede" data-i18n-html="fn.intro">{t(funding.intro)}</p>
 
     {funding.tiers.map((tier) => (
       <div class="tier">
-        <h3 class="tier__name">{t(tier.name)}</h3>
-        <p class="tier__lede">{t(tier.lede)}</p>
+        <h3 class="tier__name" data-i18n-html={`fn.${tier.id}.name`}>{t(tier.name)}</h3>
+        <p class="tier__lede" data-i18n-html={`fn.${tier.id}.lede`}>{t(tier.lede)}</p>
         <div class="initiative-grid">
-          {tier.items.map((item) => (
+          {tier.items.map((item, i) => (
             <div class="initiative-card">
               <div class="initiative-card__head">
-                <span class={`badge badge--status badge--${item.status}`}>
+                <span class={`badge badge--status badge--${item.status}`} data-i18n={`cont.status.${item.status}`}>
                   {statusLabels[item.status] ?? item.status}
                 </span>
               </div>
-              <h4 class="initiative-card__name">{t(item.name)}</h4>
-              <p class="initiative-card__lead">{t(item.lead)}</p>
+              <h4 class="initiative-card__name" data-i18n-html={`fn.${tier.id}.${i}.name`}>{t(item.name)}</h4>
+              <p class="initiative-card__lead" data-i18n-html={`fn.${tier.id}.${i}.lead`}>{t(item.lead)}</p>
               {item.territory && (
                 <p class="initiative-card__meta">
-                  <span class="initiative-card__meta-label">Territory</span>
-                  {t(item.territory)}
+                  <span class="initiative-card__meta-label" data-i18n="cont.territory">Territory</span>
+                  <span data-i18n-html={`fn.${tier.id}.${i}.territory`}>{t(item.territory)}</span>
                 </p>
               )}
               {item.budget && (
                 <p class="initiative-card__meta">
-                  <span class="initiative-card__meta-label">Money</span>
-                  {t(item.budget)}
+                  <span class="initiative-card__meta-label" data-i18n="cont.money">Money</span>
+                  <span data-i18n-html={`fn.${tier.id}.${i}.budget`}>{t(item.budget)}</span>
                 </p>
               )}
-              {item.note && <p class="initiative-card__note">{t(item.note)}</p>}
+              {item.note && <p class="initiative-card__note" data-i18n-html={`fn.${tier.id}.${i}.note`}>{t(item.note)}</p>}
               {item.channel && (
                 <a
                   class="initiative-card__channel"
                   href={item.channel.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-i18n-html={`fn.${tier.id}.${i}.channel`}
                 >
                   {t(item.channel.label)} →
                 </a>
@@ -182,12 +233,12 @@ const mappedCount = modalities.reduce(
       </div>
     ))}
 
-    <p class="section-body section-body--footnote">{t(funding.footnote)}</p>
+    <p class="section-body section-body--footnote" data-i18n-html="fn.footnote">{t(funding.footnote)}</p>
   </section>
 
   <section class="section section--wide section--alt">
-    <h2 class="section-title">Method and provenance</h2>
-    <p class="section-body">
+    <h2 class="section-title" data-i18n="cont.methodTitle">Method and provenance</h2>
+    <p class="section-body" data-i18n-html="cont.methodBody">
       This page was drafted from a research file on ecological restoration and
       socio-environmental contribution in Catalunya (2026-08-11) and from the entity
       registry behind this map (ReFi BCN CRM). Every link was verified on 2026-08-11;
@@ -197,26 +248,26 @@ const mappedCount = modalities.reduce(
       funding needs — asks change weekly, so each card carries a status and a source.
     </p>
 
-    <h3 class="section-title section-title--sub">Sources — Part 1 (contribution modalities)</h3>
+    <h3 class="section-title section-title--sub" data-i18n="cont.sources1">Sources — Part 1 (contribution modalities)</h3>
     <ul class="source-list">
       {data.sources?.map((source) => (
         <li>
           <a href={source.url} target="_blank" rel="noopener noreferrer">
             {source.label}
           </a>
-          <span class="source-list__date">accessed {source.accessed}</span>
+          <span class="source-list__date"><span data-i18n="priority.accessedLabel">accessed</span> {source.accessed}</span>
         </li>
       ))}
     </ul>
 
-    <h3 class="section-title section-title--sub">Sources — Part 2 (funding needs)</h3>
+    <h3 class="section-title section-title--sub" data-i18n="cont.sources2">Sources — Part 2 (funding needs)</h3>
     <ul class="source-list">
       {funding.sources?.map((source) => (
         <li>
           <a href={source.url} target="_blank" rel="noopener noreferrer">
             {source.label}
           </a>
-          <span class="source-list__date">accessed {source.accessed}</span>
+          <span class="source-list__date"><span data-i18n="priority.accessedLabel">accessed</span> {source.accessed}</span>
         </li>
       ))}
     </ul>

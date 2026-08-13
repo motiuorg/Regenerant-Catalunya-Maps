@@ -24,7 +24,7 @@ const edges = [
 
 <figure class="interdependence">
   <svg viewBox="0 0 300 300" class="interdependence__svg" role="img" aria-label="Interdependence of the six priorities">
-    <title>Six priorities as an interdependent system</title>
+    <title data-i18n="pri.interdepTitle">Six priorities as an interdependent system</title>
     {edges.map(([a, b]) => (
       <line
         x1={nodes[a].x}
@@ -43,7 +43,7 @@ const edges = [
       </a>
     ))}
   </svg>
-  <figcaption class="interdependence__caption">
+  <figcaption class="interdependence__caption" data-i18n="pri.interdepCaption">
     The six priorities compound. Restore watersheds → food resilience; reduce energy demand → less pressure on water; social commons → capacity to act across all.
   </figcaption>
 </figure>

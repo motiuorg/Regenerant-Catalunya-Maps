@@ -38,9 +38,9 @@ const scoreboardItems = priorities.map((priority) => {
       style={`--priority-color: ${priority.color}`}
     >
       <div class="scoreboard-item__header">
-        <span class="scoreboard-item__name">{t(priority.shortName)}</span>
+        <span class="scoreboard-item__name" data-i18n-html={`p-${priority.slug}-shortname`}>{t(priority.shortName)}</span>
         {indicator && (
-          <span class={`scoreboard-item__status status-${indicator.status}`}>
+          <span class={`scoreboard-item__status status-${indicator.status}`} data-i18n={`priority.status.${indicator.status}`}>
             {statusLabels[indicator.status]}
           </span>
         )}
@@ -52,11 +52,11 @@ const scoreboardItems = priorities.map((priority) => {
         </div>
       ) : (
         <div class="scoreboard-item__value">
-          <span class="scoreboard-item__missing">No data yet</span>
+          <span class="scoreboard-item__missing" data-i18n="priority.noData">No data yet</span>
         </div>
       )}
       {indicator && (
-        <p class="scoreboard-item__label">{t(indicator.label)}</p>
+        <p class="scoreboard-item__label" data-i18n-html={`ind-${indicator.id}-label`}>{t(indicator.label)}</p>
       )}
       {indicator && (
         <span class="scoreboard-item__trend" aria-label={`Trend: ${indicator.trend}`}>

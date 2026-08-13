@@ -4,9 +4,11 @@ import type { Priority } from "../lib/priorities";
 interface Props {
   capital: Priority["capital"];
   color: string;
+  /** Prefix for content dict keys ({prefix}-{vehicle}-rationale). */
+  dictKeyPrefix?: string;
 }
 
-const { capital, color } = Astro.props;
+const { capital, color, dictKeyPrefix = "cap" } = Astro.props;
 
 if (!capital || capital.length === 0) return null;
 
@@ -30,7 +32,11 @@ const returnLabels: Record<string, string> = {
   {capital.map((item) => (
     <div class="capital-stack__item">
       <div class="capital-stack__meta">
-        <span class="capital-stack__vehicle" style={`--vehicle-color: ${color}`}>
+        <span
+          class="capital-stack__vehicle"
+          style={`--vehicle-color: ${color}`}
+          data-i18n={`capital.${item.vehicle}`}
+        >
           {vehicleLabels[item.vehicle] ?? item.vehicle}
         </span>
         <span class="capital-stack__instrument">{item.instrument}</span>
@@ -39,10 +45,17 @@ const returnLabels: Record<string, string> = {
         <span class="capital-stack__horizon">{item.horizon}</span>
         <span class="capital-stack__ticket">{item.ticket}</span>
       </div>
-      <p class="capital-stack__rationale">{item.rationale?.en ?? ""}</p>
+      <p
+        class="capital-stack__rationale"
+        data-i18n-html={`${dictKeyPrefix}-${item.vehicle}-rationale`}
+      >
+        {item.rationale?.en ?? ""}
+      </p>
       <div class="capital-stack__returns">
         {item.returns.map((r) => (
-          <span class="capital-stack__return">{returnLabels[r] ?? r}</span>
+          <span class="capital-stack__return" data-i18n={`capital.returns.${r}`}>
+            {returnLabels[r] ?? r}
+          </span>
         ))}
       </div>
     </div>

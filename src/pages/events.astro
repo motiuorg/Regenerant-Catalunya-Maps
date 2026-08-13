@@ -78,8 +78,8 @@ function eventDateLabel(dateStr: string | null): string {
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Events</h1>
-      <p class="lede">
+      <h1 class="display" data-i18n="nav.events">Events</h1>
+      <p class="lede" data-i18n="events.heroLede">
         Gatherings, conferences, workshops, and community events related to regeneration in Catalunya.
       </p>
     </div>
@@ -88,7 +88,7 @@ function eventDateLabel(dateStr: string | null): string {
   <section class="section section--wide">
     {error && (
       <div class="error-banner">
-        <p><strong>Data error:</strong> {error}</p>
+        <p><strong data-i18n="common.dataError">Data error:</strong> {error}</p>
       </div>
     )}
 
@@ -98,6 +98,7 @@ function eventDateLabel(dateStr: string | null): string {
         class="view-toggle__btn active"
         data-view="calendar"
         aria-pressed="true"
+        data-i18n="events.calendar"
       >
         Calendar
       </button>
@@ -106,16 +107,17 @@ function eventDateLabel(dateStr: string | null): string {
         class="view-toggle__btn"
         data-view="list"
         aria-pressed="false"
+        data-i18n="events.list"
       >
         List
       </button>
     </div>
 
-    <p class="count">{sortedEvents.length} events mapped</p>
+    <p class="count"><strong>{sortedEvents.length}</strong> <span data-i18n="events.mapped">events mapped</span></p>
 
     <div class="calendar-view view" data-view-panel="calendar">
       {calendarGroups.length === 0 && (
-        <p class="empty-state">No dated events found.</p>
+        <p class="empty-state" data-i18n="events.noDated">No dated events found.</p>
       )}
       {calendarGroups.map((group) => (
         <div class="month-block">
@@ -130,11 +132,15 @@ function eventDateLabel(dateStr: string | null): string {
                     {event.type && <span class="item-type">{event.type}</span>}
                   </div>
                   <p class="event-meta">
-                    {eventDateLabel(event.startDate)}
+                    {eventDateLabel(event.startDate) === "Date TBC" ? (
+                      <span data-i18n="events.dateTbc">Date TBC</span>
+                    ) : (
+                      eventDateLabel(event.startDate)
+                    )}
                     {event.location && <span> · {event.location}</span>}
                   </p>
                   <p class="item-description">
-                    {event.about || event.whatItIs || "No description available."}
+                    {event.about || event.whatItIs || <span data-i18n="common.noDescription">No description available.</span>}
                   </p>
                   {event.link && (
                     <a
@@ -143,7 +149,7 @@ function eventDateLabel(dateStr: string | null): string {
                       rel="noopener noreferrer"
                       class="item-link"
                     >
-                      Link →
+                      <span data-i18n="common.link">Link →</span>
                     </a>
                   )}
                 </div>
@@ -166,20 +172,20 @@ function eventDateLabel(dateStr: string | null): string {
             <div class="item-meta">
               {event.startDate && (
                 <span class="meta-item">
-                  <span class="meta-label">Date</span>
+                  <span class="meta-label" data-i18n="events.date">Date</span>
                   <span class="meta-value">{eventDateLabel(event.startDate)}</span>
                 </span>
               )}
               {event.location && (
                 <span class="meta-item">
-                  <span class="meta-label">Location</span>
+                  <span class="meta-label" data-i18n="events.location">Location</span>
                   <span class="meta-value">{event.location}</span>
                 </span>
               )}
             </div>
 
             <p class="item-description">
-              {event.about || event.whatItIs || "No description available."}
+              {event.about || event.whatItIs || <span data-i18n="common.noDescription">No description available.</span>}
             </p>
 
             {event.link && (
@@ -189,7 +195,7 @@ function eventDateLabel(dateStr: string | null): string {
                 rel="noopener noreferrer"
                 class="item-link"
               >
-                Link →
+                <span data-i18n="common.link">Link →</span>
               </a>
             )}
           </article>

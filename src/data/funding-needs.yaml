@@ -11,6 +11,7 @@ schema_version: "1.0"
 title:
   en: "Part 2 — Funding needs of restoration initiatives"
   ca: "Part 2 — Necessitats de finançament de les iniciatives de restauració"
+  es: "Parte 2 — Necesidades de financiación de las iniciativas de restauración"
 
 intro:
   en: >-
@@ -27,359 +28,463 @@ intro:
     l'11 d'agost de 2026; les demandes de restauració canvien ràpid, per tant tracta-ho
     com una fotografia datada. La part 1 explica els canals (temps, atenció, diners,
     terra, capital) — la part 2 apunta aquests canals a iniciatives concretes.
+  es: >-
+    Esta sección cartografía la parte monetaria de la restauración ecológica en
+    Cataluña: qué se está financiando, qué pide apoyo ahora mismo y dónde están los vacíos
+    visibles. Las cifras provienen de las fuentes citadas en cada tarjeta y se verificaron
+    el 11 de agosto de 2026; las demandas de restauración cambian rápido, por tanto trátalo
+    como una fotografía fechada. La parte 1 explica los canales (tiempo, atención, dinero,
+    tierra, capital) — la parte 2 apunta esos canales a iniciativas concretas.
 
 tiers:
   - id: public
     name:
       en: "Public programmes in motion"
       ca: "Programes públics en marxa"
+      es: "Programas públicos en marcha"
     lede:
       en: "The largest money in Catalan restoration is public. These are the main programmes running now — the channels to support them are political (citizen pressure, procurement, votes) rather than donations."
       ca: "El gruix dels diners de la restauració catalana és públic. Aquests són els principals programes en marxa — els canals per donar-los suport són polítics (pressió ciutadana, compra pública, vot) més que no pas donatius."
+      es: "El grueso del dinero de la restauración catalana es público. Estos son los principales programas en marcha — los canales para apoyarlos son políticos (presión ciudadana, compra pública, voto) más que donativos."
     items:
       - name:
           en: "Protected-area grants (Natura 2000)"
           ca: "Subvencions per a espais naturals protegits (Xarxa Natura 2000)"
+          es: "Subvenciones para espacios naturales protegidos (Red Natura 2000)"
         lead:
           en: "Departament de Territori, Habitatge i Transició Ecològica"
           ca: "Departament de Territori, Habitatge i Transició Ecològica"
+          es: "Departament de Territori, Habitatge i Transició Ecològica"
         territory:
           en: "35 protected natural areas, all of Catalunya"
           ca: "35 espais naturals protegits, arreu de Catalunya"
+          es: "35 espacios naturales protegidos, en toda Cataluña"
         budget:
           en: "~€10M to 31 environmental entities (2024–2027); regional tranches: €2.4M Lleida, €1.4M Tarragona"
           ca: "Prop de 10 M€ a 31 entitats ambientals (2024–2027); trams regionals: 2,4 M€ Lleida i 1,4 M€ Tarragona"
+          es: "Cerca de 10 M€ a 31 entidades ambientales (2024–2027); tramos regionales: 2,4 M€ Lleida y 1,4 M€ Tarragona"
         status: running
         note:
           en: "The main public mechanism funding NGOs to manage and restore protected spaces."
           ca: "El principal mecanisme públic que finança entitats per gestionar i restaurar espais protegits."
+          es: "El principal mecanismo público que financia a las entidades para gestionar y restaurar espacios protegidos."
         channel:
           label:
             en: "Departament de Territori — Medi Ambient"
             ca: "Departament de Territori — Medi Ambient"
+            es: "Departament de Territori — Medi Ambient"
           url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/"
       - name:
           en: "Fluvial restoration & river custody"
           ca: "Restauració fluvial i custòdia fluvial"
+          es: "Restauración fluvial y custodia fluvial"
         lead:
           en: "Agència Catalana de l'Aigua (ACA)"
           ca: "Agència Catalana de l'Aigua (ACA)"
+          es: "Agència Catalana de l'Aigua (ACA)"
         territory:
           en: "Internal basins; 30 river-custody agreements"
           ca: "Conques internes; 30 convenis de custòdia fluvial"
+          es: "Cuencas internas; 30 convenios de custodia fluvial"
         budget:
           en: "Grant lines for riparian entities: €642k (2019), €1.15M + €908k (2020 calls), €150k wetlands"
           ca: "Línies de subvenció per a entitats de ribera: 642 k€ (2019), 1,15 M€ + 908 k€ (convocatòries de 2020), 150 k€ zones humides"
+          es: "Líneas de subvención para entidades ribereñas: 642 k€ (2019), 1,15 M€ + 908 k€ (convocatorias de 2020), 150 k€ humedales"
         status: running
         note:
           en: "Connectivity works (70 km since 2020), riparian restoration, LIFE Alnus, and invasive-species control."
           ca: "Obres de connectivitat (70 km des del 2020), restauració de riberes, LIFE Alnus i control d'espècies invasores."
+          es: "Obras de conectividad (70 km desde 2020), restauración de riberas, LIFE Alnus y control de especies invasoras."
         channel:
           label:
             en: "ACA — fluvial restoration overview"
             ca: "ACA — panoràmica de restauració fluvial"
+            es: "ACA — panorámica de restauración fluvial"
           url: "https://aigua.blog.gencat.cat/2023/02/09/la-restauracio-ecologica-dels-ecosistemes-fluvials-a-catalunya/"
       - name:
           en: "Marine ecosystems restoration plan"
           ca: "Pla de restauració d'ecosistemes marins"
+          es: "Plan de restauración de ecosistemas marinos"
         lead:
           en: "Generalitat de Catalunya (new programme)"
           ca: "Generalitat de Catalunya (programa nou)"
+          es: "Generalitat de Catalunya (programa nuevo)"
         territory:
           en: "Costa Brava, 4 key habitats"
           ca: "Costa Brava, 4 hàbitats clau"
+          es: "Costa Brava, 4 hábitats clave"
         budget:
           en: ">€3M; sampling already underway"
           ca: "Més de 3 M€; mostrejos ja en marxa"
+          es: "Más de 3 M€; muestreos ya en marcha"
         status: running
         note:
           en: "Evolves from passive restoration (reducing pressures) to active actions such as macroalgae and seagrass plantings."
           ca: "Evoluciona de la restauració passiva (reduir pressions) a accions actives com plantacions de macroalgues i fanerògames."
+          es: "Evoluciona de la restauración pasiva (reducir presiones) a acciones activas como plantaciones de macroalgas y fanerógamas."
         channel:
           label:
             en: "Departament de Territori — Medi Ambient"
             ca: "Departament de Territori — Medi Ambient"
+            es: "Departament de Territori — Medi Ambient"
           url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/"
       - name:
           en: "Fincas purchase fund (land for conservation)"
           ca: "Fons de compra de finques (terra per a la conservació)"
+          es: "Fondo de compra de fincas (tierra para la conservación)"
         lead:
           en: "Generalitat de Catalunya"
           ca: "Generalitat de Catalunya"
+          es: "Generalitat de Catalunya"
         territory:
           en: "Estates with community-interest habitats"
           ca: "Finques amb hàbitats d'interès comunitari"
+          es: "Fincas con hábitats de interés comunitario"
         budget:
           en: "€5M (2025)"
           ca: "5 M€ (2025)"
+          es: "5 M€ (2025)"
         status: running
         note:
           en: "Lets nonprofits, municipalities and consortia buy land — on condition of conservation or restoration work. First acquisition: Fundació Alive, Empordà ponds (July 2026)."
           ca: "Permet a entitats sense ànim de lucre, ajuntaments i consorcis comprar terra — amb la condició de dur-hi a terme mesures de conservació o restauració. Primera adquisició: Fundació Alive, estanys de l'Empordà (juliol de 2026)."
+          es: "Permite a entidades sin ánimo de lucro, ayuntamientos y consorcios comprar tierra — con la condición de llevar a cabo medidas de conservación o restauración. Primera adquisición: Fundació Alive, estanys de l'Empordà (julio de 2026)."
         channel:
           label:
             en: "Custòdia del territori — Gencat"
             ca: "Custòdia del territori — Gencat"
+            es: "Custòdia del territori — Gencat"
           url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/custodia_del_territori/"
 
   - id: entity-led
     name:
       en: "Entity-led asks you can fund today"
       ca: "Demandes de les entitats que pots finançar avui"
+      es: "Demandas de las entidades que puedes financiar hoy"
     lede:
       en: "The most direct way to put money into a specific restoration project. These asks are live on the platforms listed; each card gives the channel and status."
       ca: "La manera més directa de posar diners en un projecte de restauració concret. Aquestes demandes són obertes a les plataformes indicades; cada targeta dona el canal i l'estat."
+      es: "La forma más directa de poner dinero en un proyecto de restauración concreto. Estas demandas están abiertas en las plataformas indicadas; cada tarjeta da el canal y el estado."
     items:
       - name:
           en: "L'Aube — the white goat of Rasquera & agroforestry spaces"
           ca: "L'Aube — la cabra blanca de Rasquera i els espais agroforestals"
+          es: "L'Aube — la cabra blanca de Rasquera y los espacios agroforestales"
         lead:
           en: "Associació L'Aube"
           ca: "Associació L'Aube"
+          es: "Associació L'Aube"
         territory:
           en: "Terres de l'Ebre"
           ca: "Terres de l'Ebre"
+          es: "Terres de l'Ebre"
         status: open-ask
         note:
           en: "Featured campaign on the environmental donation platform: defends the white goat of Rasquera and the agroforestry spaces of the Ebre lands."
           ca: "Campanya destacada a la plataforma de donació ambiental: defensa la cabra blanca de Rasquera i els espais agroforestals de les Terres de l'Ebre."
+          es: "Campaña destacada en la plataforma de donación ambiental: defiende la cabra blanca de Rasquera y los espacios agroforestales de las Terres de l'Ebre."
         channel:
           label:
             en: "donantambiental.cat — donate"
             ca: "donantambiental.cat — dona-hi"
+            es: "donantambiental.cat — dona aquí"
           url: "https://donantambiental.cat/"
       - name:
           en: "NatMont — Montnegre & Tordera conservation fund"
           ca: "NatMont — fons patrimonial Montnegre i Tordera"
+          es: "NatMont — fondo patrimonial Montnegre y Tordera"
         lead:
           en: "NatMont"
           ca: "NatMont"
+          es: "NatMont"
         territory:
           en: "Massís del Montnegre / Tordera basin"
           ca: "Massís del Montnegre / conca de la Tordera"
+          es: "Macizo del Montnegre / cuenca de la Tordera"
         status: open-ask
         note:
           en: "Patrimonial fund endowing the conservation of natural spaces in the Montnegre massif and the Tordera basin."
           ca: "Fons patrimonial que dota la conservació dels espais naturals del massís del Montnegre i la conca de la Tordera."
+          es: "Fondo patrimonial que dota la conservación de los espacios naturales del macizo del Montnegre y la cuenca de la Tordera."
         channel:
           label:
             en: "donantambiental.cat — donate"
             ca: "donantambiental.cat — dona-hi"
+            es: "donantambiental.cat — dona aquí"
           url: "https://donantambiental.cat/"
       - name:
           en: "Acció al riu Anoia — a clean, living river"
           ca: "Acció al riu Anoia — un riu net i viu"
+          es: "Acció al riu Anoia — un río limpio y vivo"
         lead:
           en: "Local entities of the Anoia basin"
           ca: "Entitats locals de la conca de l'Anoia"
+          es: "Entidades locales de la cuenca del Anoia"
         territory:
           en: "Anoia river"
           ca: "Riu Anoia"
+          es: "Río Anoia"
         status: open-ask
         note:
           en: "Featured campaign for the restoration and defence of the Anoia river."
           ca: "Campanya destacada per a la restauració i defensa del riu Anoia."
+          es: "Campaña destacada para la restauración y defensa del río Anoia."
         channel:
           label:
             en: "donantambiental.cat — donate"
             ca: "donantambiental.cat — dona-hi"
+            es: "donantambiental.cat — dona aquí"
           url: "https://donantambiental.cat/"
       - name:
           en: "Arrela't Delta de l'Ebre"
           ca: "Arrela't Delta de l'Ebre"
+          es: "Arrela't Delta de l'Ebre"
         lead:
           en: "Goteo matchfunding convocatòria"
           ca: "Convocatòria de matchfunding de Goteo"
+          es: "Convocatoria de matchfunding de Goteo"
         territory:
           en: "Delta de l'Ebre"
           ca: "Delta de l'Ebre"
+          es: "Delta de l'Ebre"
         status: open-ask
         note:
           en: "Matchfunding round that doubles citizen donations with public money for rooted projects in the Ebre delta."
           ca: "Ronda de matchfunding que duplica les donacions ciutadanes amb diner públic per a projectes arrelats al delta de l'Ebre."
+          es: "Ronda de matchfunding que duplica las donaciones ciudadanas con dinero público para proyectos arraigados en el delta de l'Ebre."
         channel:
           label:
             en: "goteo.org — Arrela't"
             ca: "goteo.org — Arrela't"
+            es: "goteo.org — Arrela't"
           url: "https://www.goteo.org/"
       - name:
           en: "Arrela't Alt Pirineu i Aran"
           ca: "Arrela't Alt Pirineu i Aran"
+          es: "Arrela't Alt Pirineu i Aran"
         lead:
           en: "Goteo + comarcal councils of Alt Pirineu i Aran"
           ca: "Goteo + consells comarcals de l'Alt Pirineu i Aran"
+          es: "Goteo + consejos comarcales del Alt Pirineu i Aran"
         territory:
           en: "Alt Pirineu i Aran"
           ca: "Alt Pirineu i Aran"
+          es: "Alt Pirineu i Aran"
         status: funded
         note:
           en: "2024 edition: €24k of matchfunding, 6 projects, 100% success — the reference model for territorial crowdfunding in Catalunya."
           ca: "Edició 2024: 24 k€ de matchfunding, 6 projectes, 100% d'èxit — el model de referència del micromecenatge territorial a Catalunya."
+          es: "Edición 2024: 24 k€ de matchfunding, 6 proyectos, 100% de éxito — el modelo de referencia del micromecenazgo territorial en Cataluña."
         channel:
           label:
             en: "goteo.org — Arrela't channel"
             ca: "goteo.org — canal Arrela't"
+            es: "goteo.org — canal Arrela't"
           url: "https://www.goteo.org/"
       - name:
           en: "Empordà ponds restoration finca"
           ca: "Finca de restauració dels estanys de l'Empordà"
+          es: "Finca de restauración de los estanys de l'Empordà"
         lead:
           en: "Fundació Alive"
           ca: "Fundació Alive"
+          es: "Fundació Alive"
         territory:
           en: "Alt Empordà"
           ca: "Alt Empordà"
+          es: "Alt Empordà"
         status: running
         note:
           en: "First acquisition under the fincas fund (July 2026); the restoration works phase is the next ask to follow."
           ca: "Primera adquisició amb el fons de finques (juliol de 2026); la fase d'obres de restauració és la propera demanda a seguir."
+          es: "Primera adquisición con el fondo de fincas (julio de 2026); la fase de obras de restauración es la próxima demanda a seguir."
         channel:
           label:
             en: "XCN — news"
             ca: "XCN — notícies"
+            es: "XCN — noticias"
           url: "https://xcn.cat/"
       - name:
           en: "River monitoring — Projecte Rius"
           ca: "Seguiment de rius — Projecte Rius"
+          es: "Seguimiento de ríos — Projecte Rius"
         lead:
           en: "Associació Hàbitats"
           ca: "Associació Hàbitats"
+          es: "Associació Hàbitats"
         territory:
           en: "All Catalan basins"
           ca: "Totes les conques catalanes"
+          es: "Todas las cuencas catalanas"
         status: open-ask
         note:
           en: "Volunteer river sampling that feeds yearly ecological results; funded by donations and institutional support."
           ca: "Mostrejos fluvials voluntaris que alimenten resultats ecològics anuals; es finança amb donacions i suport institucional."
+          es: "Muestreos fluviales voluntarios que alimentan resultados ecológicos anuales; se financia con donaciones y apoyo institucional."
         channel:
           label:
             en: "projecterius.cat — donate"
             ca: "projecterius.cat — dona-hi"
+            es: "projecterius.cat — dona aquí"
           url: "https://www.projecterius.cat/"
       - name:
           en: "Singulars — rural food-system round"
           ca: "Singulars — ronda pel sistema alimentari rural"
+          es: "Singulars — ronda por el sistema alimentario rural"
         lead:
           en: "Eixarcolant"
           ca: "Eixarcolant"
+          es: "Eixarcolant"
         territory:
           en: "Catalunya (regional)"
           ca: "Catalunya (regional)"
+          es: "Cataluña (regional)"
         status: funded
         note:
           en: "Collective investment round closed at €2.5M (target €2M) — an example of a completed ask; membership sustains the ongoing work."
           ca: "Ronda d'inversió col·lectiva tancada amb 2,5 M€ (objectiu 2 M€) — un exemple de demanda completada; la quota de soci sosté la feina en curs."
+          es: "Ronda de inversión colectiva cerrada con 2,5 M€ (objetivo 2 M€) — un ejemplo de demanda completada; la cuota de socio sostiene el trabajo en curso."
         channel:
           label:
             en: "eixarcolant.cat — membership"
             ca: "eixarcolant.cat — fes-te soci"
+            es: "eixarcolant.cat — hazte socio"
           url: "https://eixarcolant.cat/"
 
   - id: gaps
     name:
       en: "Where the gaps are"
       ca: "On són els buits"
+      es: "Dónde están los vacíos"
     lede:
       en: "What the numbers suggest is missing — the structural gaps behind the individual asks."
       ca: "El que les xifres suggereixen que falta — els buits estructurals darrere de les demandes individuals."
+      es: "Lo que las cifras sugieren que falta — los vacíos estructurales detrás de las demandas individuales."
     items:
       - name:
           en: "Custody covers 1.3% of the territory"
           ca: "La custòdia cobreix l'1,3% del territori"
+          es: "La custodia cubre el 1,3% del territorio"
         lead:
           en: "XCN inventory (2025 edition)"
           ca: "Inventari de la XCN (edició 2025)"
+          es: "Inventario de la XCN (edición 2025)"
         territory:
           en: "796 active initiatives, 41,744 ha"
           ca: "796 iniciatives actives, 41.744 ha"
+          es: "796 iniciativas activas, 41.744 ha"
         status: running
         note:
           en: "Relative to the territory and to accumulated pressures (drought, fire, fragmentation), stewardship coverage remains thin — the inventory itself is the tool to size the gap."
           ca: "En relació al territori i a les pressions acumulades (sequera, foc, fragmentació), la cobertura de custòdia és encara prima — l'inventari mateix és l'eina per dimensionar el buit."
+          es: "En relación con el territorio y con las presiones acumuladas (sequía, fuego, fragmentación), la cobertura de custodia es todavía escasa — el propio inventario es la herramienta para dimensionar el vacío."
         channel:
           label:
             en: "XCN — land stewardship"
             ca: "XCN — custòdia del territori"
+            es: "XCN — custodia del territorio"
           url: "https://xcn.cat/"
       - name:
           en: "Citizen donations are an order of magnitude below public programmes"
           ca: "Les donacions ciutadanes són un ordre de magnitud per sota dels programes públics"
+          es: "Las donaciones ciudadanas están un orden de magnitud por debajo de los programas públicos"
         lead:
           en: "Registre d'Entitats de Medi Ambient (2024 data)"
           ca: "Registre d'Entitats de Medi Ambient (dades 2024)"
+          es: "Registre d'Entitats de Medi Ambient (datos 2024)"
         territory:
           en: "Catalunya"
           ca: "Catalunya"
+          es: "Cataluña"
         budget:
           en: "€5.3M donated by 76,634 donors in 2024"
           ca: "5,3 M€ donats per 76.634 donants el 2024"
+          es: "5,3 M€ donados por 76.634 donantes en 2024"
         status: running
         note:
           en: "Against €10M+ of public grants for protected areas alone, recurring giving is the underused lever — membership of an entity multiplies the sector's predictability."
           ca: "Davant dels més de 10 M€ de subvencions públiques només per a espais protegits, la donació recurrent és la palanca poc aprofitada — la quota de soci multiplica la previsibilitat del sector."
+          es: "Frente a los más de 10 M€ de subvenciones públicas solo para espacios protegidos, la donación recurrente es la palanca poco aprovechada — la cuota de socio multiplica la previsibilidad del sector."
         channel:
           label:
             en: "Registre d'Entitats de Medi Ambient"
             ca: "Registre d'Entitats de Medi Ambient"
+            es: "Registre d'Entitats de Medi Ambient"
           url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/persones-i-natura/entitats-ambientals/registre-entitats-medi-ambient/"
       - name:
           en: "Rivers need more public investment"
           ca: "Els rius necessiten més inversió pública"
+          es: "Los ríos necesitan más inversión pública"
         lead:
           en: "XCN citizen campaign (22 July 2026)"
           ca: "Campanya ciutadana de la XCN (22 de juliol de 2026)"
+          es: "Campaña ciudadana de la XCN (22 de julio de 2026)"
         territory:
           en: "Catalan rivers"
           ca: "Rius catalans"
+          es: "Ríos catalanes"
         status: running
         note:
           en: "Citizen organisations publicly demand more public investment to protect and conserve rivers — the political channel for the fluvial tier."
           ca: "Les organitzacions ciutadanes exigeixen públicament més inversió pública per protegir i conservar els rius — el canal polític per a la capa fluvial."
+          es: "Las organizaciones ciudadanas exigen públicamente más inversión pública para proteger y conservar los ríos — el canal político para la capa fluvial."
         channel:
           label:
             en: "XCN — news"
             ca: "XCN — notícies"
+            es: "XCN — noticias"
           url: "https://xcn.cat/"
       - name:
           en: "Private finance for nature restoration is an open frontier"
           ca: "El finançament privat per a la restauració de la natura és una frontera oberta"
+          es: "La financiación privada para la restauración de la naturaleza es una frontera abierta"
         lead:
           en: "XCN at European meeting on private financing (July 2026)"
           ca: "XCN a la trobada europea sobre finançament privat (juliol de 2026)"
+          es: "XCN en el encuentro europeo sobre financiación privada (julio de 2026)"
         territory:
           en: "Europe / Catalunya"
           ca: "Europa / Catalunya"
+          es: "Europa / Cataluña"
         status: running
         note:
           en: "Blended and private instruments for restoration are being designed at European level; Catalunya's stewardship network is positioning itself — early territory for capital in Part 1."
           ca: "Els instruments privats i combinats per a la restauració es dissenyen a escala europea; la xarxa de custòdia catalana s'hi està posicionant — territori primerenc per al capital de la part 1."
+          es: "Los instrumentos privados y combinados para la restauración se diseñan a escala europea; la red de custodia catalana se está posicionando — territorio temprano para el capital de la parte 1."
         channel:
           label:
             en: "XCN — news"
             ca: "XCN — notícies"
+            es: "XCN — noticias"
           url: "https://xcn.cat/"
       - name:
           en: "No shared pipeline for restoration funding asks"
           ca: "No hi ha un pipeline compartit de demandes de finançament de la restauració"
+          es: "No hay un pipeline compartido de demandas de financiación de la restauración"
         lead:
           en: "ReFi BCN operating system"
           ca: "Sistema operatiu de ReFi BCN"
+          es: "Sistema operativo de ReFi BCN"
         territory:
           en: "Catalunya"
           ca: "Catalunya"
+          es: "Cataluña"
         status: running
         note:
           en: "Individual asks live on entity pages and platforms. ReFi BCN tracks an internal funding pipeline (LIFE, Horizon Europe, Gitcoin rounds and more) and can connect grant-seeking entities — this map is a first public attempt at making the asks visible."
           ca: "Les demandes individuals viuen a les pàgines i plataformes de cada entitat. ReFi BCN fa seguiment d'un pipeline intern de finançament (LIFE, Horizon Europe, rondes de Gitcoin i més) i pot connectar entitats que cerquen ajuts — aquest mapa és un primer intent públic de fer visibles les demandes."
+          es: "Las demandas individuales viven en las páginas y plataformas de cada entidad. ReFi BCN hace seguimiento de un pipeline interno de financiación (LIFE, Horizon Europe, rondas de Gitcoin y más) y puede conectar entidades que buscan ayudas — este mapa es un primer intento público de hacer visibles las demandas."
         channel:
           label:
             en: "ReFi BCN"
             ca: "ReFi BCN"
+            es: "ReFi BCN"
           url: "https://refibcn.github.io/"
 
 footnote:
   en: "Grant-seeking? The ReFi BCN operating system maintains an internal pipeline of funding opportunities for entities (LIFE, Horizon Europe, Gitcoin, local grants). This page is a dated snapshot — asks change weekly."
   ca: "Cerques ajuts? El sistema operatiu de ReFi BCN manté un pipeline intern d'oportunitats de finançament per a entitats (LIFE, Horizon Europe, Gitcoin, ajuts locals). Aquesta pàgina és una fotografia datada — les demandes canvien cada setmana."
+  es: "¿Buscas ayudas? El sistema operativo de ReFi BCN mantiene un pipeline interno de oportunidades de financiación para entidades (LIFE, Horizon Europe, Gitcoin, ayudas locales). Esta página es una fotografía fechada — las demandas cambian cada semana."
 
 sources:
   - label: "Restauració ecològica i contribució socioambiental a Catalunya — research file (2026-08-11)"

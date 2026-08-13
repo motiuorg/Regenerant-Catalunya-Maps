@@ -1,0 +1,99 @@
+---
+import type { I18nDict } from "../lib/i18n";
+
+interface Props {
+  dict: I18nDict;
+}
+
+const { dict } = Astro.props;
+
+const safeJson = (obj: any) =>
+  JSON.stringify(obj)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+---
+
+<!-- i18n dictionary + engine. Rendered in <head> so window.rc2I18n exists
+     before page scripts run (dynamic strings use window.rc2I18n.t(key, vars)).
+     The language switcher buttons live in Nav.astro (data-lang-btn). -->
+<script is:inline type="application/json" id="rc2-i18n-dict" set:html={safeJson(dict)}></script>
+<script is:inline>
+  (function () {
+    var DICT = {};
+    try {
+      DICT = JSON.parse(document.getElementById("rc2-i18n-dict").textContent || "{}");
+    } catch (e) {}
+    var LANGS = ["en", "ca", "es"];
+    var lang = "en";
+    try {
+      var stored = localStorage.getItem("rc2-lang");
+      if (LANGS.indexOf(stored) !== -1) lang = stored;
+    } catch (e) {}
+
+    function raw(key) {
+      var entry = DICT[key];
+      if (!entry) return "";
+      return entry[lang] || entry.en || "";
+    }
+
+    function apply() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = raw(el.getAttribute("data-i18n"));
+        if (v) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+        var v = raw(el.getAttribute("data-i18n-html"));
+        if (v) el.innerHTML = v.replace(/\n/g, "<br/>");
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+        var v = raw(el.getAttribute("data-i18n-placeholder"));
+        if (v) el.setAttribute("placeholder", v);
+      });
+      document.querySelectorAll("[data-lang-btn]").forEach(function (btn) {
+        var active = btn.getAttribute("data-lang-btn") === lang;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-pressed", String(active));
+      });
+    }
+
+    function setLang(next) {
+      if (LANGS.indexOf(next) === -1) return;
+      lang = next;
+      try {
+        localStorage.setItem("rc2-lang", next);
+      } catch (e) {}
+      apply();
+    }
+
+    window.rc2I18n = {
+      lang: function () {
+        return lang;
+      },
+      set: setLang,
+      t: function (key, vars) {
+        var v = raw(key);
+        if (vars) {
+          Object.keys(vars).forEach(function (k) {
+            v = v.split("{" + k + "}").join(String(vars[k]));
+          });
+        }
+        return v;
+      },
+      apply: apply,
+    };
+
+    document.querySelectorAll("[data-lang-btn]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setLang(btn.getAttribute("data-lang-btn"));
+      });
+    });
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", apply);
+    } else {
+      apply();
+    }
+  })();
+</script>

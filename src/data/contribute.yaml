@@ -34,6 +34,18 @@ intro:
     ajuts públics) passa pel programa o l'entitat concreta. Aquesta pàgina recull totes
     les modalitats conegudes amb enllaços directes, i marca les que ja estan mapejades
     en aquest web.
+  es: >-
+    No hay una única puerta para contribuir a la regeneración de Cataluña — el sector
+    se organiza como una red de centenares de entidades ambientales, agroecológicas y
+    cooperativas, y cada una abre su propio camino de entrada. Lo más parecido a una
+    puerta compartida es la Xarxa per a la Conservació de la Natura (XCN): la red de 205
+    entidades de conservación que custodian colectivamente 41.744 hectáreas y publican
+    unas 1.000 acciones de voluntariado al año. La XCN divide su puerta de entrada en
+    dos — voluntariatambiental.cat para el tiempo y donantambiental.cat para el dinero.
+    Todo lo demás (ciencia ciudadana, custodia del territorio, finanzas cooperativas,
+    ayudas públicas) pasa por el programa o la entidad concreta. Esta página recoge
+    todas las modalidades conocidas con enlaces directos, y marca las que ya están
+    mapeadas en este sitio web.
 
 modalities:
   - id: time
@@ -41,9 +53,11 @@ modalities:
     name:
       en: "Time — volunteering"
       ca: "Temps — voluntariat"
+      es: "Tiempo — voluntariado"
     oneLiner:
       en: "Hands-on work: one-off actions or long-term commitments, from beach clean-ups to forest stays."
       ca: "Feina de camp: accions puntuals o compromisos de llarga durada, de les neteges de platja a les estades al bosc."
+      es: "Trabajo de campo: acciones puntuales o compromisos de larga duración, desde las limpiezas de playas hasta las estancias en el bosque."
     description:
       en: >-
         Catalunya's volunteer infrastructure is organised around the Portal de Voluntariat
@@ -63,6 +77,15 @@ modalities:
         Delta de l'Ebre) i els centres de fauna (Torreferrussa, Vallcalent, Aiguamolls
         de l'Empordà) mantenen programes estables lligats a llocs concrets. El
         voluntariat corporatiu es gestiona explícitament des del portal i des de la XCN.
+      es: >-
+        La infraestructura de voluntariado de Cataluña se organiza en torno al Portal
+        de Voluntariat Ambiental, que agrega acciones puntuales y plazas de larga duración
+        de entidades ambientales de todo el territorio — filtrable por duración, público
+        (escuelas, empresas), ciencia ciudadana, espacios naturales protegidos y centros de
+        fauna. Las mesas de voluntariado de los parques (p. ej. Terres de l'Ebre, Ports,
+        Delta de l'Ebre) y los centros de fauna (Torreferrussa, Vallcalent, Aiguamolls
+        de l'Empordà) mantienen programas estables ligados a lugares concretos. El
+        voluntariado corporativo se gestiona explícitamente desde el portal y desde la XCN.
     links:
       - label: "Portal de Voluntariat Ambiental"
         url: "https://voluntariatambiental.cat/"
@@ -70,51 +93,60 @@ modalities:
         note:
           en: "The central volunteer marketplace: filter by duration (one-off / long-term), audience (schools, companies), citizen science, protected natural areas and wildlife centres. Contact: info@voluntariatambiental.cat."
           ca: "El mercat central del voluntariat: filtra per durada (puntual / llarga durada), públic (educació, empreses), ciència ciutadana, espais naturals protegits i centres de fauna. Contacte: info@voluntariatambiental.cat."
+          es: "El mercado central del voluntariado: filtra por duración (puntual / larga duración), público (educación, empresas), ciencia ciudadana, espacios naturales protegidos y centros de fauna. Contacto: info@voluntariatambiental.cat."
       - label: "XCN — Voluntariat Ambiental"
         url: "https://xcn.cat/que-puc-fer/sigues-voluntari-ambiental/"
         kind: portal
         note:
           en: "XCN's own volunteer gateway into the same network of 205 entities."
           ca: "La porta de voluntariat de la XCN dins la mateixa xarxa de 205 entitats."
+          es: "La puerta de voluntariado de la XCN dentro de la misma red de 205 entidades."
       - label: "Eixarcolant"
         url: "https://eixarcolant.cat/"
         mapped: true
         note:
           en: "Seed-collective cooperative; runs an annual volunteer call for its Jornada Gastronòmica de les Plantes Oblidades (120+ activities)."
           ca: "Cooperativa col·lectora de llavors; convoca voluntariat cada any per a la seva Jornada Gastronòmica de les Plantes Oblidades (més de 120 activitats)."
+          es: "Cooperativa recolectora de semillas; convoca voluntariado cada año para su Jornada Gastronòmica de les Plantes Oblidades (más de 120 actividades)."
       - label: "Arran de Terra"
         url: "https://arrandeterra.org/"
         mapped: true
         note:
           en: "Agroecology cooperative with projects in several comarques: territorial dynamization, farmer support, research and advocacy."
           ca: "Cooperativa d'agroecologia amb projectes en diverses comarques: dinamització territorial, suport a la pagesia, recerca i incidència."
+          es: "Cooperativa de agroecología con proyectos en varias comarcas: dinamización territorial, apoyo a la pagesía, investigación e incidencia."
       - label: "Associació GENS"
         url: "https://associaciogens.org/"
         mapped: true
         note:
           en: "Environmental association with long-running volunteer programmes."
           ca: "Associació ambientalista amb programes de voluntariat consolidats."
+          es: "Asociación ecologista con programas de voluntariado consolidados."
       - label: "Aigua és Vida"
         url: "https://www.aiguaesvida.org/"
         mapped: true
         note:
           en: "Social and environmental platform defending public water; volunteer actions linked to water defence."
           ca: "Plataforma social i ambiental per la defensa de l'aigua pública; accions de voluntariat lligades a la defensa de l'aigua."
+          es: "Plataforma social y ambiental por la defensa del agua pública; acciones de voluntariado ligadas a la defensa del agua."
       - label: "Cambium Permacultura"
         url: "https://www.permacultura-es.org/"
         mapped: true
         note:
           en: "Permaculture school offering courses and hands-on volunteering."
           ca: "Escola de permacultura amb cursos i voluntariat pràctic."
+          es: "Escuela de permacultura con cursos y voluntariado práctico."
 
   - id: attention
     order: 2
     name:
       en: "Attention — citizen science & monitoring"
       ca: "Atenció — ciència ciutadana i seguiments"
+      es: "Atención — ciencia ciudadana y seguimientos"
     oneLiner:
       en: "A lighter, distributed way to contribute: observations and measurements that feed real research and management."
       ca: "Una manera més lleugera i distribuïda de contribuir: observacions i mesures que alimenten recerca i gestió reals."
+      es: "Una forma más ligera y distribuida de contribuir: observaciones y mediciones que alimentan investigación y gestión reales."
     description:
       en: >-
         Citizen-science schemes turn attention into data. Most require short training but
@@ -133,6 +165,15 @@ modalities:
         (BioMARató). Diversos els acull o els impulsa entitats ja mapejades en aquest
         web. Les sortides de foto-identificació de cetacis (Associació Cetàcea) són una
         variant marítima.
+      es: >-
+        Los programas de ciencia ciudadana convierten la atención en datos. La mayoría
+        requieren una formación breve pero no presencia continuada: observas, fotografías
+        o mides, y los resultados alimentan programas de seguimiento que usan
+        investigadores y gestores públicos. Los ejemplos van de la acústica de murciélagos
+        y los transectos de mariposas al muestreo de ríos y los biomaratones costeros
+        (BioMARató). Varios los acogen o impulsan entidades ya mapeadas en este sitio
+        web. Las salidas de foto-identificación de cetáceos (Associació Cetàcea) son una
+        variante marítima.
     links:
       - label: "Natusfera"
         url: "https://natusfera.gbif.es/"
@@ -140,45 +181,53 @@ modalities:
         note:
           en: "The Spanish node of the global iNaturalist network, driven by CREAF (mapped on this site): photograph any species and the observations flow into GBIF."
           ca: "El node espanyol de la xarxa global iNaturalist, impulsat pel CREAF (mapejat en aquest web): fotografia qualsevol espècie i les observacions flueixen cap a GBIF."
+          es: "El nodo español de la red global iNaturalist, impulsado por el CREAF (mapeado en este sitio web): fotografía cualquier especie y las observaciones fluyen hacia GBIF."
       - label: "Ratpenats.org — Programa de Seguiment de Ratpenats"
         url: "https://www.ratpenats.org/"
         kind: platform
         note:
           en: "Bat monitoring platform (Granollers Natural Sciences Museum): acoustic surveys, roost censuses, river transects, nest-boxes and advanced working groups."
           ca: "Plataforma de seguiment de ratpenats (Museu de Ciències Naturals de Granollers): mostreigs acústics, censos de refugis, transsectes fluvials, caixes niu i grups de treball avançats."
+          es: "Plataforma de seguimiento de murciélagos (Museu de Ciències Naturals de Granollers): muestreos acústicos, censos de refugios, transectos fluviales, cajas nido y grupos de trabajo avanzados."
       - label: "Museu de Ciències Naturals de Granollers — citizen science"
         url: "https://www.museugranollersciencies.org/"
         kind: platform
         note:
           en: "Hosts the Catalan Butterfly Monitoring Scheme (butterfly transects), the bat platform, SEMICE (small mammals) and the Liró project."
           ca: "Acull el Catalan Butterfly Monitoring Scheme (transsectes de papallones), la plataforma de ratpenats, el projecte SEMICE (petits mamífers) i el Projecte Liró."
+          es: "Acoge el Catalan Butterfly Monitoring Scheme (transectos de mariposas), la plataforma de murciélagos, el proyecto SEMICE (pequeños mamíferos) y el Projecte Liró."
       - label: "Projecte Rius"
         url: "https://www.projecterius.cat/"
         kind: platform
         note:
           en: "Volunteer river monitoring by Associació Hàbitats: sample water and riparian life; results published yearly; training and donations welcomed."
           ca: "Seguiment fluvial voluntari de l'Associació Hàbitats: mostrejos d'aigua i vida de ribera; resultats publicats cada any; amb formació i donacions."
+          es: "Seguimiento fluvial voluntario de la Associació Hàbitats: muestreos de agua y vida ribereña; resultados publicados cada año; con formación y donaciones."
       - label: "Observatori del Paisatge"
         url: "https://www.catpaisatge.net/en"
         mapped: true
         note:
           en: "Landscape Observatory of Catalunya: participatory landscape observation and citizen initiatives feeding landscape policy."
           ca: "Observatori del Paisatge de Catalunya: observació participativa del paisatge i iniciatives ciutadanes que alimenten la política de paisatge."
+          es: "Observatori del Paisatge de Catalunya: observación participativa del paisaje e iniciativas ciudadanas que alimentan la política de paisaje."
       - label: "BioMARató Catalunya"
         url: "https://voluntariatambiental.cat/"
         kind: portal
         note:
           en: "Coastal bioblitz run by the Institut de Ciències del Mar (ICM-CSIC), listed every year on the volunteer portal."
           ca: "Biomarató costaner de l'Institut de Ciències del Mar (ICM-CSIC), convocat cada any al portal de voluntariat."
+          es: "Biomaratón costero del Institut de Ciències del Mar (ICM-CSIC), convocado cada año en el portal de voluntariado."
 
   - id: money
     order: 3
     name:
       en: "Money — donations & philanthropy"
       ca: "Diners — donacions i filantropia"
+      es: "Dinero — donaciones y filantropía"
     oneLiner:
       en: "From one-off gifts to recurring memberships, with a 15% regional income-tax deduction as the standard route."
       ca: "De les donacions puntuals a les quotes periòdiques de soci, amb la deducció autonòmica del 15% a l'IRPF com a via estàndard."
+      es: "Desde las donaciones puntuales hasta las cuotas periódicas de socio, con la deducción autonómica del 15% en el IRPF como vía estándar."
     description:
       en: >-
         Two parallel rails exist: the dedicated environmental donation platform
@@ -197,6 +246,15 @@ modalities:
         Les plataformes de micromecenatge afegeixen rondes per projectes concrets, sovint
         amb matchfunding d'institucions públiques, i la quota de soci és la columna
         vertebral de la donació recurrent de la majoria d'entitats.
+      es: >-
+        Hay dos vías paralelas: la plataforma dedicada de donación ambiental
+        (donantambiental.cat — elige un proyecto por hábitat) y la donación directa a
+        cualquier entidad inscrita en el Registre d'Entitats de Medi Ambient, que
+        desbloquea la deducción autonómica del 15% en el IRPF (Llei 16/2008, art. 34). En
+        2024 el registro anotó 76.634 donantes que aportaron 5,3 M€ a 69 entidades.
+        Las plataformas de micromecenazgo añaden rondas para proyectos concretos, a menudo
+        con matchfunding de instituciones públicas, y la cuota de socio es la columna
+        vertebral de la donación recurrente de la mayoría de entidades.
     links:
       - label: "Jo sóc donant ambiental"
         url: "https://donantambiental.cat/"
@@ -204,51 +262,60 @@ modalities:
         note:
           en: "Donate to a specific project by habitat (terrestrial, aquatic, marine-coastal, fauna, other) via PayPal, BIZUM (code 03963) or bank transfer; 200+ entities participate."
           ca: "Dona a un projecte concret per hàbitat (terrestre, aquàtic, marí i litoral, fauna, altres) via PayPal, BIZUM (codi 03963) o transferència; hi participen més de 200 entitats."
+          es: "Dona a un proyecto concreto por hábitat (terrestre, acuático, marino y litoral, fauna, otros) mediante PayPal, BIZUM (código 03963) o transferencia; participan más de 200 entidades."
       - label: "XCN — Donant Ambiental"
         url: "https://xcn.cat/que-puc-fer/fes-el-teu-donatiu-en-favor-de-la-conservacio-de-la-natura/"
         kind: portal
         note:
           en: "XCN's donation gateway into the same network of conservation entities."
           ca: "La porta de donació de la XCN cap a la mateixa xarxa d'entitats de conservació."
+          es: "La puerta de donación de la XCN hacia la misma red de entidades de conservación."
       - label: "Registre d'Entitats de Medi Ambient"
         url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/persones-i-natura/entitats-ambientals/registre-entitats-medi-ambient/"
         kind: public
         note:
           en: "Official register (Decret 2/2022): check that an entity is registered — the requirement for the 15% deduction — and download the data as open data."
           ca: "Registre oficial (Decret 2/2022): comprova que una entitat hi és inscrita — requisit per a la deducció del 15% — i descarrega les dades com a dades obertes."
+          es: "Registro oficial (Decret 2/2022): comprueba que una entidad está inscrita — requisito para la deducción del 15% — y descarga los datos como datos abiertos."
       - label: "Goteo"
         url: "https://www.goteo.org/"
         kind: platform
         note:
           en: "Civic crowdfunding with donation certificates and a fiscal calculator; matchfunding convocatories such as Arrela't Alt Pirineu i Aran and Arrela't Delta de l'Ebre multiply citizen contributions with public money."
           ca: "Micromecenatge cívic amb certificats de donació i calculadora fiscal; convocatòries de matchfunding com Arrela't Alt Pirineu i Aran i Arrela't Delta de l'Ebre multipliquen les aportacions ciutadanes amb diner públic."
+          es: "Micromecenazgo cívico con certificados de donación y calculadora fiscal; convocatorias de matchfunding como Arrela't Alt Pirineu i Aran y Arrela't Delta de l'Ebre multiplican las aportaciones ciudadanas con dinero público."
       - label: "Xarxanet — 39 environmental projects to collaborate with"
         url: "https://xarxanet.org/ambiental/noticies/coneix-34-projectes-dentitats-ambientals-poder-collaborar"
         kind: portal
         note:
           en: "The classic curated list of NGO projects seeking support (Donant Ambiental campaign)."
           ca: "La llista clàssica de projectes d'ONG que cerquen suport (campanya Donant Ambiental)."
+          es: "La lista clásica de proyectos de ONG que buscan apoyo (campaña Donant Ambiental)."
       - label: "Eixarcolant — Fes-te'n soci"
         url: "https://eixarcolant.cat/"
         mapped: true
         note:
           en: "Recurring membership sustains the seed collective; its Singulars project raised €2.5M in a recent investment round."
           ca: "La quota de soci sosté el col·lectiu de llavors; el seu projecte Singulars va recaptar 2,5 M€ en una ronda recent."
+          es: "La cuota de socio sostiene el colectivo de semillas; su proyecto Singulars recaudó 2,5 M€ en una ronda reciente."
       - label: "XCN — Fes-te'n soci"
         url: "https://xcn.cat/"
         kind: portal
         note:
           en: "Membership sustains the network and its coordination role (205 entities, 41,744 ha under stewardship)."
           ca: "Fer-se soci sosté la xarxa i el seu paper de coordinació (205 entitats, 41.744 ha en custòdia)."
+          es: "Hacerse socio sostiene la red y su papel de coordinación (205 entidades, 41.744 ha en custodia)."
 
   - id: land
     order: 4
     name:
       en: "Land — custody & long-term commitment"
       ca: "Terra — custòdia i compromís de llarg termini"
+      es: "Tierra — custodia y compromiso a largo plazo"
     oneLiner:
       en: "Catalunya's land-conservation mechanism: agreements, inventories and public funds to take land out of speculative use."
       ca: "El mecanisme català de conservació de la terra: acords, inventaris i fons públics per treure terra del mercat especulatiu."
+      es: "El mecanismo catalán de conservación de la tierra: acuerdos, inventarios y fondos públicos para sacar tierra del mercado especulativo."
     description:
       en: >-
         Land stewardship (custòdia del territori) is the main Catalan instrument for
@@ -270,6 +337,16 @@ modalities:
         i consorcis comprin finques amb hàbitats d'interès comunitari — la primera
         adquisició (Fundació Alive, estanys de l'Empordà) es va anunciar el juliol de
         2026. L'agència de l'aigua manté 30 convenis de custòdia fluvial.
+      es: >-
+        La custodia del territorio es el principal instrumento catalán de conservación de
+        tierras privadas: una entidad y un propietario firman un acuerdo para gestionar la
+        finca con fines de conservación, restauración o valor cultural. La red XCN
+        mantiene el inventario (796 iniciativas activas, 41.744 ha, aproximadamente el 1,3%
+        del territorio) y un mapa interactivo. La Generalitat financia programas de custodia
+        y, desde 2025, un fondo de 5 M€ para que entidades sin ánimo de lucro, ayuntamientos
+        y consorcios compren fincas con hábitats de interés comunitario — la primera
+        adquisición (Fundació Alive, estanys de l'Empordà) se anunció en julio de
+        2026. La agencia del agua mantiene 30 convenios de custodia fluvial.
     links:
       - label: "Custòdia del territori — Gencat"
         url: "https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/custodia_del_territori/"
@@ -277,33 +354,39 @@ modalities:
         note:
           en: "Official gateway: the stewardship concept, aid programmes, the custody inventory and its cartographic viewer, and private natural areas."
           ca: "Portal oficial: el concepte de custòdia, els programes d'ajuts, l'inventari d'acords i el seu visor cartogràfic, i els espais naturals privats."
+          es: "Portal oficial: el concepto de custodia, los programas de ayudas, el inventario de acuerdos y su visor cartográfico, y los espacios naturales privados."
       - label: "XCN — Land stewardship network"
         url: "https://xcn.cat/"
         kind: portal
         note:
           en: "The network of custody entities: 205 members, 41,744 ha under stewardship, and the biennial inventory of 796 initiatives. The place to find a custody partner if you own or manage land."
           ca: "La xarxa d'entitats de custòdia: 205 membres, 41.744 ha en custòdia i l'inventari biennal de 796 iniciatives. El lloc on trobar una entitat de custòdia si tens o gestiones terra."
+          es: "La red de entidades de custodia: 205 miembros, 41.744 ha en custodia y el inventario bienal de 796 iniciativas. El lugar donde encontrar una entidad de custodia si tienes o gestionas tierra."
       - label: "ACA — La restauració ecològica dels ecosistemes fluvials"
         url: "https://aigua.blog.gencat.cat/2023/02/09/la-restauracio-ecologica-dels-ecosistemes-fluvials-a-catalunya/"
         kind: public
         note:
           en: "River-restoration overview: 30 river-custody agreements, connectivity works, LIFE Alnus, and grant lines for riparian entities."
           ca: "Panoràmica de la restauració fluvial: 30 convenis de custòdia fluvial, obres de connectivitat, LIFE Alnus i línies de subvenció per a entitats de ribera."
+          es: "Panorámica de la restauración fluvial: 30 convenios de custodia fluvial, obras de conectividad, LIFE Alnus y líneas de subvención para entidades ribereñas."
       - label: "XCN — news: Fundació Alive acquires its first finca (2026-07-22)"
         url: "https://xcn.cat/"
         kind: portal
         note:
           en: "First acquisition under the new finques purchase fund: a property to restore the Empordà ponds. See the news section on the XCN homepage."
           ca: "Primera adquisició amb el nou fons de compra de finques: una propietat per recuperar els estanys de l'Empordà. Vegeu la secció de notícies de la portada de la XCN."
+          es: "Primera adquisición con el nuevo fondo de compra de fincas: una propiedad para recuperar los estanys de l'Empordà. Véase la sección de noticias de la portada de la XCN."
 
   - id: capital
     order: 5
     name:
       en: "Capital — cooperative finance & ethical banking"
       ca: "Capital — finances cooperatives i banca ètica"
+      es: "Capital — finanzas cooperativas y banca ética"
     oneLiner:
       en: "Align where your savings, energy bill and investments sit — the cooperative economy regenerates from inside the money system."
       ca: "Alinea on són els teus estalvis, la factura de la llum i les inversions — l'economia cooperativa regenera des de dins del sistema monetari."
+      es: "Alinea dónde están tus ahorros, tu factura de la luz y tus inversiones — la economía cooperativa regenera desde dentro del sistema monetario."
     description:
       en: >-
         Regeneration needs patient capital. The Catalan solidarity economy has built its
@@ -324,6 +407,16 @@ modalities:
         (energia, banca, assegurances) a través del Mercat Social de la XES és la forma
         amb el llindar més baix d'aquesta modalitat, i diversos inversors d'impacte
         mapejats en aquest web operen des de Catalunya.
+      es: >-
+        La regeneración necesita capital paciente. La economía solidaria catalana ha
+        construido su propia capa financiera: cooperativas de crédito y ahorro
+        (Coop57), una banca cooperativa ética (Fiare Banca Etica) y cooperativas
+        energéticas (Som Energia) a las que cualquiera puede afiliarse con una aportación
+        de capital. Para las organizaciones hay instrumentos públicos: los préstamos
+        verdes Ecoverda del ICF y los créditos sectoriales de Coop57. Cambiar el consumo
+        (energía, banca, seguros) a través del Mercat Social de la XES es la forma
+        con el umbral más bajo de esta modalidad, y varios inversores de impacto
+        mapeados en este sitio web operan desde Cataluña.
     links:
       - label: "Coop57"
         url: "https://www.coop57.coop/"
@@ -331,36 +424,42 @@ modalities:
         note:
           en: "Cooperative ethical finance: become a member (person or entity), put savings to work in the social economy, or request financing. New guarantee agreements with the European Investment Fund (InvestEU)."
           ca: "Finances ètiques cooperatives: fes-te soci (persona o entitat), posa els estalvis al servei de l'economia social o sol·licita finançament. Nous acords de garantia amb el Fons Europeu d'Inversions (InvestEU)."
+          es: "Finanzas éticas cooperativas: hazte socio (persona o entidad), pon los ahorros al servicio de la economía social o solicita financiación. Nuevos acuerdos de garantía con el Fondo Europeo de Inversiones (InvestEU)."
       - label: "Fiare Banca Etica"
         url: "https://www.fiarebancaetica.coop/"
         kind: finance
         note:
           en: "Cooperative ethical bank: 110,000+ clients and 47,000+ socios in Spain/Italy; zero financing of fossil fuels or arms; deposits fund positive-impact projects."
           ca: "Banca cooperativa ètica: més de 110.000 clients i 47.000 sòcies a Espanya i Itàlia; zero finançament de combustibles fòssils o armament; els dipòsits financen projectes d'impacte positiu."
+          es: "Banca cooperativa ética: más de 110.000 clientes y 47.000 socias en España e Italia; cero financiación de combustibles fósiles o armamento; los depósitos financian proyectos de impacto positivo."
       - label: "Som Energia"
         url: "https://www.somenergia.coop/"
         kind: finance
         note:
           en: "Renewable energy cooperative, 87,480 socias: join with a capital contribution, switch your contract, or invest in shared generation (Generation kWh)."
           ca: "Cooperativa d'energies renovables, 87.480 sòcies: afilia't amb una aportació de capital, canvia el contracte o inverteix en generació compartida (Generation kWh)."
+          es: "Cooperativa de energías renovables, 87.480 socias: afíliate con una aportación de capital, cambia el contrato o invierte en generación compartida (Generation kWh)."
       - label: "Barcelona Energia"
         url: "https://www.barcelonaenergia.cat/ca/home"
         mapped: true
         note:
           en: "The 100% public electricity marketer of Barcelona and its metropolitan area: switching supplier is an immediate, cost-free contribution."
           ca: "La comercialitzadora 100% pública de Barcelona i la seva àrea metropolitana: canviar de companyia és una contribució immediata i sense cost."
+          es: "La comercializadora 100% pública de Barcelona y su área metropolitana: cambiar de compañía es una contribución inmediata y sin coste."
       - label: "XES — Xarxa d'Economia Solidària"
         url: "https://xes.cat/"
         kind: portal
         note:
           en: "The solidarity-economy network and its Mercat Social: route consumption, finance and services through ESS entities."
           ca: "La xarxa d'economia solidària i el seu Mercat Social: reconduïu consum, finances i serveis cap a entitats d'ESS."
+          es: "La red de economía solidaria y su Mercat Social: reconduce el consumo, las finanzas y los servicios hacia entidades de ESS."
       - label: "ICF — Institut Català de Finances (Ecoverda)"
         url: "https://www.icf.cat/"
         kind: public
         note:
           en: "Catalan public finance institute: green loans (Ecoverda, up to €5M / 20 years) and sector loans for primary, social and sustainability projects."
           ca: "Institut públic de finances de Catalunya: préstecs verds (Ecoverda, fins a 5 M€ / 20 anys) i préstecs sectorials per a projectes de sector primari, social i sostenibilitat."
+          es: "Instituto público de finanzas de Cataluña: préstamos verdes (Ecoverda, hasta 5 M€ / 20 años) y préstamos sectoriales para proyectos del sector primario, social y de sostenibilidad."
       - label: "Oikocredit"
         url: "https://www.oikocredit.org/"
         mapped: true
@@ -368,6 +467,7 @@ modalities:
         note:
           en: "Impact investor mapped on this site: cooperative finance for agriculture, energy and inclusion worldwide, with a strong cooperative base."
           ca: "Inversor d'impacte mapejat en aquest web: finances cooperatives per a agricultura, energia i inclusió arreu del món, amb una base cooperativa forta."
+          es: "Inversor de impacto mapeado en este sitio web: finanzas cooperativas para agricultura, energía e inclusión en todo el mundo, con una base cooperativa fuerte."
       - label: "Ship2B Foundation"
         url: "https://www.ship2b.org/"
         mapped: true
@@ -375,21 +475,25 @@ modalities:
         note:
           en: "Venture philanthropy and impact acceleration for social innovation in Catalonia and Spain."
           ca: "Filantropia de risc i acceleració d'impacte per a la innovació social a Catalunya i Espanya."
+          es: "Filantropía de riesgo y aceleración de impacto para la innovación social en Cataluña y España."
       - label: "CEL COOP"
         url: "https://xes.cat/2024/02/14/neix-cel-coop-el-segell-de-qualitat-per-impulsar-les-comunitats-denergia-local-cooperatives/"
         mapped: true
         note:
           en: "Quality seal for cooperative local energy communities — the entry point for joining or creating one."
           ca: "Segell de qualitat per impulsar comunitats d'energia local cooperatives — el punt d'entrada per unir-s'hi o crear-ne una."
+          es: "Sello de calidad para impulsar comunidades de energía local cooperativas — el punto de entrada para unirse a una o crear una."
 
   - id: organizations
     order: 6
     name:
       en: "Organizations & companies"
       ca: "Organitzacions i empreses"
+      es: "Organizaciones y empresas"
     oneLiner:
       en: "Corporate volunteering, sponsorship, procurement and tax-efficient giving — the institutional routes."
       ca: "Voluntariat corporatiu, mecenatge, compra pública i donacions amb incentiu fiscal — les vies institucionals."
+      es: "Voluntariado corporativo, mecenazgo, compra pública y donaciones con incentivo fiscal — las vías institucionales."
     description:
       en: >-
         Companies can register volunteering days through the same volunteer portal — its
@@ -408,6 +512,15 @@ modalities:
         convocatòries de matchfunding de Goteo, i les administracions tenen les seves
         pròpies línies d'ajut (subvencions de custòdia, fons de finques, línies de
         custòdia fluvial).
+      es: >-
+        Las empresas pueden registrar jornadas de voluntariado en el mismo portal de
+        voluntariado — su filtro «empresas» es explícito — hacer donaciones con desgravación
+        según la Llei 49/2002 (impuesto de sociedades, además del régimen autonómico) o
+        patrocinar eventos y programas. La XCN mantiene una puerta dedicada a las
+        empresas. Las instituciones pueden multiplicar las donaciones ciudadanas con las
+        convocatorias de matchfunding de Goteo, y las administraciones tienen sus propias
+        líneas de ayuda (subvenciones de custodia, fondo de fincas, líneas de
+        custodia fluvial).
     links:
       - label: "XCN — Empreses"
         url: "https://xcn.cat/que-puc-fer/empreses/"
@@ -415,68 +528,86 @@ modalities:
         note:
           en: "Dedicated gateway for companies: volunteering, sponsorship and collaboration with the network."
           ca: "Portal específic per a empreses: voluntariat, mecenatge i col·laboració amb la xarxa."
+          es: "Portal específico para empresas: voluntariado, mecenazgo y colaboración con la red."
       - label: "Portal de Voluntariat Ambiental — corporate filter"
         url: "https://voluntariatambiental.cat/"
         kind: portal
         note:
           en: "The portal explicitly handles corporate volunteering requests, not only individual ones."
           ca: "El portal gestiona explícitament peticions de voluntariat corporatiu, no només individual."
+          es: "El portal gestiona explícitamente peticiones de voluntariado corporativo, no solo individual."
       - label: "Goteo — Matchfunding"
         url: "https://www.goteo.org/"
         kind: platform
         note:
           en: "Institutions and companies multiply citizen donations through matchfunding convocatories (€1.1M already matched)."
           ca: "Institucions i empreses multipliquen les donacions ciutadanes amb convocatòries de matchfunding (1,1 M€ ja aportats)."
+          es: "Instituciones y empresas multiplican las donaciones ciudadanas con convocatorias de matchfunding (1,1 M€ ya aportados)."
 
 howToChoose:
   title:
     en: "How to choose"
     ca: "Com triar"
+    es: "Cómo elegir"
   lede:
     en: "Match the modality to your time horizon, your assets and your appetite. A practical rule of thumb:"
     ca: "Fes correspondre la modalitat amb el teu horitzó temporal, els teus actius i la teva gana. Una regla pràctica:"
+    es: "Haz corresponder la modalidad con tu horizonte temporal, tus activos y tu apetencia. Una regla práctica:"
   options:
     - when:
         en: "A free afternoon"
         ca: "Una tarda lliure"
+        es: "Una tarde libre"
       then:
         en: "Filter 'one-off activities' on the volunteer portal — beach clean-ups, planting days — or open Natusfera and contribute from anywhere."
         ca: "Filtra «activitats puntuals» al portal de voluntariat — neteges de platja, jornades de plantació — o obre Natusfera i contribueix des de qualsevol lloc."
+        es: "Filtra «actividades puntuales» en el portal de voluntariado — limpiezas de playa, jornadas de plantación — o abre Natusfera y contribuye desde cualquier lugar."
     - when:
         en: "An ongoing commitment"
         ca: "Un compromís continuat"
+        es: "Un compromiso continuado"
       then:
         en: "Long-term volunteering in a protected area or wildlife centre, or become a member (soci) of an entity or cooperative."
         ca: "Voluntariat de llarga durada en un espai protegit o centre de fauna, o fes-te soci d'una entitat o cooperativa."
+        es: "Voluntariado de larga duración en un espacio protegido o centro de fauna, o hazte socio de una entidad o cooperativa."
     - when:
         en: "You prefer observation to shovels"
         ca: "Prefereixes observar a remenar"
+        es: "Prefieres observar a remover"
       then:
         en: "Citizen science: bats, butterflies, rivers, species photography — short training, no fixed schedule."
         ca: "Ciència ciutadana: ratpenats, papallones, rius, fotografia d'espècies — formació breu, sense horari fix."
+        es: "Ciencia ciudadana: murciélagos, mariposas, ríos, fotografía de especies — formación breve, sin horario fijo."
     - when:
         en: "Money, one-off or recurring"
         ca: "Diners, puntuals o recurrents"
+        es: "Dinero, puntual o recurrente"
       then:
         en: "One-off: donantambiental.cat or a crowdfunding round (check the 15% deduction first). Recurring: membership of an entity or cooperative."
         ca: "Puntuals: donantambiental.cat o una ronda de micromecenatge (comprova abans la deducció del 15%). Recurrents: quota de soci d'una entitat o cooperativa."
+        es: "Puntuales: donantambiental.cat o una ronda de micromecenazgo (comprueba antes la deducción del 15%). Recurrentes: cuota de socio de una entidad o cooperativa."
     - when:
         en: "You own or manage land"
         ca: "Tens o gestiones terra"
+        es: "Tienes o gestionas tierra"
       then:
         en: "Sign a stewardship agreement with a custody entity in the XCN network, or work with entities using the finques purchase fund."
         ca: "Signa un acord de custòdia amb una entitat de la xarxa XCN, o treballa amb entitats que fan servir el fons de compra de finques."
+        es: "Firma un acuerdo de custodia con una entidad de la red XCN, o trabaja con entidades que usan el fondo de compra de fincas."
     - when:
         en: "You are an organization or company"
         ca: "Ets una organització o empresa"
+        es: "Eres una organización o empresa"
       then:
         en: "Corporate volunteering, matchfunding, ICF or Coop57 financing, and EU programmes (LIFE, Horizon Europe) for larger restoration projects."
         ca: "Voluntariat corporatiu, matchfunding, finançament de l'ICF o Coop57, i programes europeus (LIFE, Horizon Europe) per a projectes de restauració més grans."
+        es: "Voluntariado corporativo, matchfunding, financiación del ICF o Coop57, y programas europeos (LIFE, Horizon Europe) para proyectos de restauración más grandes."
 
 taxCallout:
   title:
     en: "The tax route"
     ca: "La via fiscal"
+    es: "La vía fiscal"
   body:
     en: >-
       If you are a tax resident in Catalunya, donations to entities registered in the
@@ -494,6 +625,14 @@ taxCallout:
       podria elevar aquests límits — les micro-donacions de fins a 250 € podrien arribar
       a ser deduïbles fins al 95%. Goteo emet certificats de donació i ofereix una
       calculadora fiscal per a les seves campanyes.
+    es: >-
+      Si eres residente fiscal en Cataluña, las donaciones a entidades inscritas en el Registre
+      d'Entitats de Medi Ambient son deducibles al 15% en la cuota autonómica del IRPF
+      (Llei 16/2008, art. 34; límite del 5% de la cuota), además de cualquier deducción
+      estatal de la Llei 49/2002. Una ley catalana de mecenazgo actualmente en tramitación
+      podría elevar estos límites — las micro-donaciones de hasta 250 € podrían llegar
+      a ser deducibles hasta el 95%. Goteo emite certificados de donación y ofrece una
+      calculadora fiscal para sus campañas.
 
 sources:
   - label: "XCN — Xarxa per a la Conservació de la Natura"

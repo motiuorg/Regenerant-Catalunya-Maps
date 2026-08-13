@@ -14,17 +14,17 @@ const t = (obj: { en: string }) => obj.en;
 
 <a href={href} class="priority-card" style={`--priority-color: ${priority.color}`}>
   <span class="priority-card__accent" aria-hidden="true"></span>
-  <h3 class="priority-card__title">{t(priority.name)}</h3>
-  <p class="priority-card__one-liner">{t(priority.oneLiner || { en: "" })}</p>
+  <h3 class="priority-card__title" data-i18n-html={`p-${priority.slug}-name`}>{t(priority.name)}</h3>
+  <p class="priority-card__one-liner" data-i18n-html={`p-${priority.slug}-oneliner`}>{t(priority.oneLiner || { en: "" })}</p>
   <div class="priority-card__counts">
     <span class="priority-card__count">
-      <strong>{actorCount}</strong> organizations
+      <strong>{actorCount}</strong> <span data-i18n="card.organizations">organizations</span>
     </span>
     <span class="priority-card__count">
-      <strong>{programCount}</strong> programs
+      <strong>{programCount}</strong> <span data-i18n="card.programs">programs</span>
     </span>
   </div>
-  <span class="priority-card__action">Explore →</span>
+  <span class="priority-card__action" data-i18n="card.explore">Explore →</span>
 </a>
 
 <style>

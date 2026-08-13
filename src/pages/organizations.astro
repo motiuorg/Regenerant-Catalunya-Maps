@@ -51,8 +51,8 @@ const safeJson = (obj: any) =>
     <OrganicAmbient />
     <div class="hero__inner section">
       <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display">Organizations</h1>
-      <p class="lede">
+      <h1 class="display" data-i18n="home.orgTitle">Organizations</h1>
+      <p class="lede" data-i18n="orgs.heroLede">
         Discover regenerative actors, organizations, networks, and initiatives across
         Catalunya. Search by name or filter by priority area, territory, role, themes, and
         ontology tags.
@@ -63,30 +63,31 @@ const safeJson = (obj: any) =>
   <section class="section section--wide">
     {error && (
       <div class="error-banner">
-        <p><strong>Data error:</strong> {error}</p>
+        <p><strong data-i18n="common.dataError">Data error:</strong> {error}</p>
       </div>
     )}
 
     <div class="filter-panel">
       <div class="filter-panel__header">
-        <h2 class="filter-panel__title">Filters</h2>
-        <button type="button" class="filter-clear" id="clear-filters">Clear all</button>
+        <h2 class="filter-panel__title" data-i18n="common.filters">Filters</h2>
+        <button type="button" class="filter-clear" id="clear-filters" data-i18n="common.clearAll">Clear all</button>
       </div>
 
       <div class="filter-search">
-        <label class="filter-label" for="search-input">Search by name</label>
+        <label class="filter-label" for="search-input" data-i18n="common.searchByName">Search by name</label>
         <input
           type="search"
           id="search-input"
           class="search-input"
           placeholder="Type an organization name…"
+          data-i18n-placeholder="orgs.searchPlaceholder"
           autocomplete="off"
         />
       </div>
 
       <div class="filter-grid">
         <fieldset class="filter-group">
-          <legend class="filter-label">Priority area</legend>
+          <legend class="filter-label" data-i18n="common.priorityArea">Priority area</legend>
           <div class="filter-buttons" id="priority-filters">
             {activePriorityAreas.map((tag) => (
               <button
@@ -103,7 +104,7 @@ const safeJson = (obj: any) =>
         </fieldset>
 
         <fieldset class="filter-group">
-          <legend class="filter-label">Actor role</legend>
+          <legend class="filter-label" data-i18n="common.actorRole">Actor role</legend>
           <div class="filter-buttons" id="role-filters">
             {actorRoles.map((tag) => (
               <button
@@ -119,7 +120,7 @@ const safeJson = (obj: any) =>
         </fieldset>
 
         <fieldset class="filter-group filter-group--wide">
-          <legend class="filter-label">Territory</legend>
+          <legend class="filter-label" data-i18n="common.territory">Territory</legend>
           <div class="checkbox-list" id="territory-filters">
             {activeTerritories.map((tag) => (
               <label class="checkbox-item">
@@ -131,7 +132,7 @@ const safeJson = (obj: any) =>
         </fieldset>
 
         <fieldset class="filter-group filter-group--wide">
-          <legend class="filter-label">Ontology tags</legend>
+          <legend class="filter-label" data-i18n="common.ontologyTags">Ontology tags</legend>
           <div class="checkbox-list" id="ontology-filters">
             {ontologyTags.map((tag) => (
               <label class="checkbox-item">
@@ -143,7 +144,7 @@ const safeJson = (obj: any) =>
         </fieldset>
 
         <fieldset class="filter-group filter-group--wide">
-          <legend class="filter-label">Themes</legend>
+          <legend class="filter-label" data-i18n="common.themes">Themes</legend>
           <div class="checkbox-list" id="theme-filters">
             {themes.map((tag) => (
               <label class="checkbox-item">
@@ -156,7 +157,7 @@ const safeJson = (obj: any) =>
       </div>
     </div>
 
-    <p class="count" id="gallery-count">Loading…</p>
+    <p class="count" id="gallery-count" data-i18n="common.loading">Loading…</p>
 
     <div class="actor-grid" id="actor-gallery">
       {actors.map((actor) => (
@@ -168,7 +169,7 @@ const safeJson = (obj: any) =>
             </div>
 
             <p class="actor-description">
-              {actor.description || actor.whyItMatters || "No description available."}
+              {actor.description || actor.whyItMatters || <span data-i18n="common.noDescription">No description available.</span>}
             </p>
 
             <div class="actor-badges">
@@ -193,10 +194,10 @@ const safeJson = (obj: any) =>
                   rel="noopener noreferrer"
                   class="actor-link"
                 >
-                  Website →
+                  <span data-i18n="common.website">Website →</span>
                 </a>
               )}
-              <button type="button" class="details-toggle" data-details-toggle>
+              <button type="button" class="details-toggle" data-details-toggle data-i18n="common.details">
                 Details
               </button>
             </div>
@@ -205,14 +206,14 @@ const safeJson = (obj: any) =>
           <div class="actor-card__details" hidden>
             {actor.whyItMatters && (
               <div class="detail-block">
-                <h4>Why it matters</h4>
+                <h4 data-i18n="common.whyItMatters">Why it matters</h4>
                 <p>{actor.whyItMatters}</p>
               </div>
             )}
 
             {actor.publicEmail && (
               <div class="detail-block">
-                <h4>Public contact</h4>
+                <h4 data-i18n="common.publicContact">Public contact</h4>
                 <a href={`mailto:${actor.publicEmail}`} class="actor-link">
                   {actor.publicEmail}
                 </a>
@@ -235,14 +236,14 @@ const safeJson = (obj: any) =>
 
             {actor.climateZone && (
               <div class="detail-block">
-                <h4>Climate context</h4>
+                <h4 data-i18n="common.climateContext">Climate context</h4>
                 <p>{actor.climateZone}</p>
               </div>
             )}
 
             {actor.themes.length > 0 && (
               <div class="detail-block">
-                <h4>Themes</h4>
+                <h4 data-i18n="common.themes">Themes</h4>
                 <div class="detail-tags">
                   {actor.themes.map((t) => <span class="detail-tag">{t}</span>)}
                 </div>
@@ -251,7 +252,7 @@ const safeJson = (obj: any) =>
 
             {actor.ontologyTags.length > 0 && (
               <div class="detail-block">
-                <h4>Ontology tags</h4>
+                <h4 data-i18n="common.ontologyTags">Ontology tags</h4>
                 <div class="detail-tags">
                   {actor.ontologyTags.map((t) => <span class="detail-tag">{t}</span>)}
                 </div>
@@ -260,7 +261,7 @@ const safeJson = (obj: any) =>
 
             {actor.relatedInitiatives.length > 0 && (
               <div class="detail-block">
-                <h4>Related initiatives</h4>
+                <h4 data-i18n="common.relatedInitiatives">Related initiatives</h4>
                 <ul>
                   {actor.relatedInitiatives.map((item) => (
                     <li>{item}</li>
@@ -271,7 +272,7 @@ const safeJson = (obj: any) =>
 
             {actor.relatedProjects.length > 0 && (
               <div class="detail-block">
-                <h4>Related projects or areas</h4>
+                <h4 data-i18n="common.relatedProjects">Related projects or areas</h4>
                 <ul>
                   {actor.relatedProjects.map((item) => (
                     <li>{item}</li>
@@ -282,7 +283,7 @@ const safeJson = (obj: any) =>
 
             {actor.relatedEvents.length > 0 && (
               <div class="detail-block">
-                <h4>Related events</h4>
+                <h4 data-i18n="common.relatedEvents">Related events</h4>
                 <ul>
                   {actor.relatedEvents.map((item) => (
                     <li>{item}</li>
@@ -293,7 +294,7 @@ const safeJson = (obj: any) =>
 
             {actor.relatedResources.length > 0 && (
               <div class="detail-block">
-                <h4>Related resources</h4>
+                <h4 data-i18n="common.relatedResources">Related resources</h4>
                 <ul>
                   {actor.relatedResources.map((item) => (
                     <li>{item}</li>
@@ -360,7 +361,11 @@ const safeJson = (obj: any) =>
           if (show) visible++;
         }
         if (countLabel) {
-          countLabel.textContent = `Showing ${visible} of ${actors.length} organizations`;
+          const shown = visible;
+          const total = actors.length;
+          countLabel.textContent = window.rc2I18n
+            ? window.rc2I18n.t("orgs.count", { shown: shown, total: total })
+            : `Showing ${shown} of ${total} organizations`;
         }
       }
 
@@ -430,7 +435,9 @@ const safeJson = (obj: any) =>
           const details = card.querySelector(".actor-card__details");
           const hidden = details.hidden;
           details.hidden = !hidden;
-          btn.textContent = hidden ? "Hide details" : "Details";
+          btn.textContent = hidden
+            ? (window.rc2I18n ? window.rc2I18n.t("common.hideDetails") : "Hide details")
+            : (window.rc2I18n ? window.rc2I18n.t("common.details") : "Details");
         });
       });
 

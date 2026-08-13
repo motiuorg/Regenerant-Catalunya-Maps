@@ -66,15 +66,39 @@ const safeJson = (obj: any) =>
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
+
+// Content dictionary for the i18n engine: this priority's names, framings,
+// diagnosis/leverage, capital rationales and the indicator note.
+const contentDict: Record<string, { en: string; ca?: string; es?: string }> = {};
+contentDict[`p-${priority.slug}-name`] = priority.name;
+contentDict[`p-${priority.slug}-oneliner`] = priority.oneLiner || { en: "" };
+contentDict[`p-${priority.slug}-diagnosis`] = priority.diagnosis || { en: "" };
+contentDict[`p-${priority.slug}-leverage`] = priority.leverage || { en: "" };
+contentDict[`p-${priority.slug}-eyebrow`] = {
+  en: `Priority ${priority.order} of 6`,
+  ca: `Prioritat ${priority.order} de 6`,
+  es: `Prioridad ${priority.order} de 6`,
+};
+for (const audience of ["public", "funder", "administration", "organiser"]) {
+  const framing = priority.framings?.[audience];
+  if (framing) contentDict[`p-${priority.slug}-frame-${audience}`] = framing;
+}
+for (const item of priority.capital ?? []) {
+  contentDict[`p-${priority.slug}-${item.vehicle}-rationale`] = item.rationale;
+}
+if (headlineIndicator) {
+  contentDict[`ind-${headlineIndicator.id}-label`] = headlineIndicator.label;
+  if (headlineIndicator.note) contentDict["ind-note"] = headlineIndicator.note;
+}
 ---
 
-<Layout title={t(priority.name)} current="priorities" description={t(priority.oneLiner)}>
+<Layout title={t(priority.name)} current="priorities" description={t(priority.oneLiner)} i18nDict={contentDict}>
   <header class="hero hero--priority" style={`--priority-color: ${priority.color}`}>
     <OrganicAmbient />
     <div class="hero__inner section">
-      <p class="eyebrow">Priority · {priority.order} of 6</p>
-      <h1 class="display">{t(priority.name)}</h1>
-      <p class="lede">{t(priority.oneLiner)}</p>
+      <p class="eyebrow" data-i18n={`p-${priority.slug}-eyebrow`}>Priority · {priority.order} of 6</p>
+      <h1 class="display" data-i18n-html={`p-${priority.slug}-name`}>{t(priority.name)}</h1>
+      <p class="lede" data-i18n-html={`p-${priority.slug}-oneliner`}>{t(priority.oneLiner)}</p>
     </div>
   </header>
 
@@ -88,20 +112,20 @@ const safeJson = (obj: any) =>
     )}
 
     <div class="framing" data-audience-block="public">
-      <p>{t(priority.framings?.public)}</p>
+      <p data-i18n-html={`p-${priority.slug}-frame-public`}>{t(priority.framings?.public)}</p>
     </div>
     <div class="framing is-hidden" data-audience-block="funder">
-      <p>{t(priority.framings?.funder)}</p>
+      <p data-i18n-html={`p-${priority.slug}-frame-funder`}>{t(priority.framings?.funder)}</p>
     </div>
     <div class="framing is-hidden" data-audience-block="administration">
-      <p>{t(priority.framings?.administration)}</p>
+      <p data-i18n-html={`p-${priority.slug}-frame-administration`}>{t(priority.framings?.administration)}</p>
     </div>
     <div class="framing is-hidden" data-audience-block="organiser">
-      <p>{t(priority.framings?.organiser)}</p>
+      <p data-i18n-html={`p-${priority.slug}-frame-organiser`}>{t(priority.framings?.organiser)}</p>
     </div>
 
-    <h2 class="section-title">Diagnosis</h2>
-    <div class="diagnosis" set:html={t(priority.diagnosis)?.replace(/\n/g, "<br/>")}></div>
+    <h2 class="section-title" data-i18n="priority.diagnosis">Diagnosis</h2>
+    <div class="diagnosis" data-i18n-html={`p-${priority.slug}-diagnosis`} set:html={t(priority.diagnosis)?.replace(/\n/g, "<br/>")}></div>
 
     {headlineIndicator && (
       <>
@@ -111,12 +135,14 @@ const safeJson = (obj: any) =>
             <span class="indicator-tile__number">{headlineIndicator.value}</span>
             <span class="indicator-tile__unit">{headlineIndicator.unit}</span>
           </div>
-          <p class="indicator-tile__label">{t(headlineIndicator.label)}</p>
+          <p class="indicator-tile__label" data-i18n-html={`ind-${headlineIndicator.id}-label`}>{t(headlineIndicator.label)}</p>
           <div class="indicator-tile__meta">
-            <span class={`indicator-tile__status status-${headlineIndicator.status}`}>
+            <span class={`indicator-tile__status status-${headlineIndicator.status}`} data-i18n={`priority.status.${headlineIndicator.status}`}>
               {headlineIndicator.status.replace(/_/g, " ")}
             </span>
-            <span class="indicator-tile__trend">Trend: {headlineIndicator.trend}</span>
+            <span class="indicator-tile__trend">
+              <span data-i18n="priority.trendLabel">Trend:</span> {headlineIndicator.trend}
+            </span>
           </div>
           <DataProvenance
             source={headlineIndicator.source}
@@ -128,39 +154,40 @@ const safeJson = (obj: any) =>
       </>
     )}
 
-    <h2 class="section-title">Leverage</h2>
-    <div class="leverage" set:html={t(priority.leverage)?.replace(/\n/g, "<br/>")}></div>
+    <h2 class="section-title" data-i18n="priority.leverage">Leverage</h2>
+    <div class="leverage" data-i18n-html={`p-${priority.slug}-leverage`} set:html={t(priority.leverage)?.replace(/\n/g, "<br/>")}></div>
 
-    <h2 class="section-title">Capital stack</h2>
-    <CapitalStack capital={priority.capital} color={priority.color} />
+    <h2 class="section-title" data-i18n="priority.capital">Capital stack</h2>
+    <CapitalStack capital={priority.capital} color={priority.color} dictKeyPrefix={`p-${priority.slug}`} />
 
-    <h2 class="section-title">Who is already doing it</h2>
+    <h2 class="section-title" data-i18n="priority.whosDoing">Who is already doing it</h2>
     <p class="section-lede">
-      {relatedActors.length} organizations and {relatedPrograms.length} programs mapped on this site are tagged with this priority.
+      {relatedActors.length} <span data-i18n="card.organizations">organizations</span> and {relatedPrograms.length} <span data-i18n="card.programs">programs</span>{" "}
+      <span data-i18n="priority.whoTail">mapped on this site are tagged with this priority.</span>
     </p>
     <div class="related-grid">
       {relatedActors.slice(0, 6).map((actor) => (
         <a href={`${base}organizations/`} class="related-card">
-          <span class="related-card__type">Organization</span>
+          <span class="related-card__type" data-i18n="priority.organization">Organization</span>
           <h3 class="related-card__name">{actor.name}</h3>
           <p class="related-card__desc">{actor.description || actor.whyItMatters || "No description available."}</p>
         </a>
       ))}
       {relatedPrograms.slice(0, 6).map((program) => (
         <a href={`${base}programs/`} class="related-card">
-          <span class="related-card__type">Program</span>
+          <span class="related-card__type" data-i18n="priority.program">Program</span>
           <h3 class="related-card__name">{program.name}</h3>
           <p class="related-card__desc">{program.description || program.whatItIs || "No description available."}</p>
         </a>
       ))}
     </div>
 
-    <h2 class="section-title">Sources</h2>
+    <h2 class="section-title" data-i18n="priority.sources">Sources</h2>
     <ul class="source-list">
       {priority.sources?.map((source) => (
         <li>
           <a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a>
-          <span class="source-list__date">accessed {source.accessed}</span>
+          <span class="source-list__date"><span data-i18n="priority.accessedLabel">accessed</span> {source.accessed}</span>
         </li>
       ))}
     </ul>

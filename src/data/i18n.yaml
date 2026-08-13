@@ -1,0 +1,269 @@
+# UI strings dictionary for rc2 — en / ca / es.
+# Loaded by src/lib/i18n.ts, embedded per page by src/components/I18n.astro,
+# applied client-side via the language switcher (data-i18n / data-i18n-html).
+# Page-level content dictionaries (priorities, contribute, funding needs) are
+# built in each page's frontmatter and merged with this UI dictionary.
+# {placeholders} are replaced by the i18n engine (window.rc2I18n.t(key, vars)).
+
+nav:
+  home: { en: "Home", ca: "Inici", es: "Inicio" }
+  priorities: { en: "Priorities", ca: "Prioritats", es: "Prioridades" }
+  contribute: { en: "Contribute", ca: "Contribueix", es: "Contribuye" }
+  bioeconomy: { en: "Bioeconomy", ca: "Bioeconomia", es: "Bioeconomía" }
+  organizations: { en: "Organizations", ca: "Organitzacions", es: "Organizaciones" }
+  programs: { en: "Programs and Initiatives", ca: "Programes i iniciatives", es: "Programas e iniciativas" }
+  events: { en: "Events", ca: "Esdeveniments", es: "Eventos" }
+
+lang:
+  label: { en: "Language", ca: "Idioma", es: "Idioma" }
+
+footer:
+  explore: { en: "Explore", ca: "Explora", es: "Explora" }
+  partners: { en: "Partners", ca: "Aliats", es: "Aliados" }
+  bioregion: { en: "State of the Bioregion", ca: "Estat del bioregion", es: "Estado del biorregión" }
+  legalNote: { en: "Cooperative in formation · Catalunya", ca: "Cooperativa en formació · Catalunya", es: "Cooperativa en formación · Cataluña" }
+  code: { en: "Code · MIT", ca: "Codi · MIT", es: "Código · MIT" }
+  content: { en: "Content · CC BY-SA 4.0", ca: "Contingut · CC BY-SA 4.0", es: "Contenido · CC BY-SA 4.0" }
+
+common:
+  dataError: { en: "Data error:", ca: "Error de dades:", es: "Error de datos:" }
+  loading: { en: "Loading…", ca: "Carregant…", es: "Cargando…" }
+  noDescription: { en: "No description available.", ca: "Sense descripció disponible.", es: "Sin descripción disponible." }
+  website: { en: "Website →", ca: "Web →", es: "Web →" }
+  details: { en: "Details", ca: "Detalls", es: "Detalles" }
+  hideDetails: { en: "Hide details", ca: "Amaga els detalls", es: "Ocultar detalles" }
+  link: { en: "Link →", ca: "Enllaç →", es: "Enlace →" }
+  filters: { en: "Filters", ca: "Filtres", es: "Filtros" }
+  clearAll: { en: "Clear all", ca: "Neteja-ho tot", es: "Borrar todo" }
+  searchByName: { en: "Search by name", ca: "Cerca per nom", es: "Buscar por nombre" }
+  priorityArea: { en: "Priority area", ca: "Àrea prioritària", es: "Área prioritaria" }
+  territory: { en: "Territory", ca: "Territori", es: "Territorio" }
+  ontologyTags: { en: "Ontology tags", ca: "Etiquetes d'ontologia", es: "Etiquetas de ontología" }
+  themes: { en: "Themes", ca: "Temes", es: "Temas" }
+  actorRole: { en: "Actor role", ca: "Rol de l'actor", es: "Rol del actor" }
+  whyItMatters: { en: "Why it matters", ca: "Per què és rellevant", es: "Por qué es relevante" }
+  publicContact: { en: "Public contact", ca: "Contacte públic", es: "Contacto público" }
+  climateContext: { en: "Climate context", ca: "Context climàtic", es: "Contexto climático" }
+  relatedInitiatives: { en: "Related initiatives", ca: "Iniciatives relacionades", es: "Iniciativas relacionadas" }
+  relatedProjects: { en: "Related projects or areas", ca: "Projectes o àrees relacionades", es: "Proyectos o áreas relacionados" }
+  relatedEvents: { en: "Related events", ca: "Esdeveniments relacionats", es: "Eventos relacionados" }
+  relatedResources: { en: "Related resources", ca: "Recursos relacionats", es: "Recursos relacionados" }
+
+home:
+  title: { en: "Who is regenerating Catalunya?", ca: "Qui està regenerant Catalunya?", es: "¿Quién está regenerando Cataluña?" }
+  lede:
+    en: "Collaborative maps and mapping processes focused on organizations and initiatives working toward a regenerative Catalunya. Search, filter, and discover who is doing what, as well as what you can contribute to this movement!"
+    ca: "Mapes col·laboratius i processos de cartografia centrats en organitzacions i iniciatives que treballen per una Catalunya regenerativa. Cerca, filtra i descobreix qui fa què, i també què hi pots aportar tu a aquest moviment!"
+    es: "Mapas colaborativos y procesos de cartografía centrados en organizaciones e iniciativas que trabajan por una Cataluña regenerativa. Busca, filtra y descubre quién hace qué, y también qué puedes aportar a este movimiento."
+  stats: { en: "organizations, programs, and events currently mapped", ca: "organitzacions, programes i esdeveniments mapejats actualment", es: "organizaciones, programas y eventos mapeados actualmente" }
+  prompt: { en: "Start exploring the map:", ca: "Comença a explorar el mapa:", es: "Empieza a explorar el mapa:" }
+  orgTitle: { en: "Organizations", ca: "Organitzacions", es: "Organizaciones" }
+  orgDesc: { en: "People, networks, organizations, and projects working on regeneration.", ca: "Persones, xarxes, organitzacions i projectes que treballen per la regeneració.", es: "Personas, redes, organizaciones y proyectos que trabajan por la regeneración." }
+  progTitle: { en: "Programs and Initiatives", ca: "Programes i iniciatives", es: "Programas e iniciativas" }
+  progDesc: { en: "Collective programs, networks, and initiatives driving systemic change.", ca: "Programes col·lectius, xarxes i iniciatives que impulsen el canvi sistèmic.", es: "Programas colectivos, redes e iniciativas que impulsan el cambio sistémico." }
+  evTitle: { en: "Events", ca: "Esdeveniments", es: "Eventos" }
+  evDesc: { en: "Gatherings, conferences, workshops, and community meetups.", ca: "Trobades, conferències, tallers i jornades comunitàries.", es: "Encuentros, conferencias, talleres y jornadas comunitarias." }
+  browse: { en: "Browse →", ca: "Explora →", es: "Explora →" }
+
+orgs:
+  heroLede:
+    en: "Discover regenerative actors, organizations, networks, and initiatives across Catalunya. Search by name or filter by priority area, territory, role, themes, and ontology tags."
+    ca: "Descobreix actors regeneratius, organitzacions, xarxes i iniciatives d'arreu de Catalunya. Cerca per nom o filtra per àrea prioritària, territori, rol, temes i etiquetes d'ontologia."
+    es: "Descubre actores regenerativos, organizaciones, redes e iniciativas de toda Cataluña. Busca por nombre o filtra por área prioritaria, territorio, rol, temas y etiquetas de ontología."
+  searchPlaceholder: { en: "Type an organization name…", ca: "Escriu el nom d'una organització…", es: "Escribe el nombre de una organización…" }
+  count: { en: "Showing {shown} of {total} organizations", ca: "Es mostren {shown} de {total} organitzacions", es: "Mostrando {shown} de {total} organizaciones" }
+
+programs:
+  heroLede:
+    en: "Regenerative programs, networks, and collective initiatives operating across Catalunya. Search by name or filter by priority area and territory."
+    ca: "Programes regeneratius, xarxes i iniciatives col·lectives que operen arreu de Catalunya. Cerca per nom o filtra per àrea prioritària i territori."
+    es: "Programas regenerativos, redes e iniciativas colectivas que operan en toda Cataluña. Busca por nombre o filtra por área prioritaria y territorio."
+  searchPlaceholder: { en: "Type a program name…", ca: "Escriu el nom d'un programa…", es: "Escribe el nombre de un programa…" }
+  count: { en: "Showing {shown} of {total} programs", ca: "Es mostren {shown} de {total} programes", es: "Mostrando {shown} de {total} programas" }
+
+events:
+  heroLede:
+    en: "Gatherings, conferences, workshops, and community events related to regeneration in Catalunya."
+    ca: "Trobades, conferències, tallers i esdeveniments comunitaris relacionats amb la regeneració a Catalunya."
+    es: "Encuentros, conferencias, talleres y eventos comunitarios relacionados con la regeneración en Cataluña."
+  calendar: { en: "Calendar", ca: "Calendari", es: "Calendario" }
+  list: { en: "List", ca: "Llista", es: "Lista" }
+  mapped: { en: "events mapped", ca: "esdeveniments mapejats", es: "eventos mapeados" }
+  noDated: { en: "No dated events found.", ca: "No s'han trobat esdeveniments amb data.", es: "No se han encontrado eventos con fecha." }
+  dateTbc: { en: "Date TBC", ca: "Data per confirmar", es: "Fecha por confirmar" }
+  date: { en: "Date", ca: "Data", es: "Fecha" }
+  location: { en: "Location", ca: "Ubicació", es: "Ubicación" }
+
+bio:
+  heroLede:
+    en: "Bioeconomy is a subsector within the wider regeneration field in Catalunya. This page shows the Catalan entities building bio-based, circular, regenerative value chains using biological resources, at the intersection of environmental regeneration and biotech, life sciences, climate tech and agri-food tech."
+    ca: "La bioeconomia és un subsector dins del camp més ampli de la regeneració a Catalunya. Aquesta pàgina mostra les entitats catalanes que construeixen cadenes de valor biològiques, circulars i regeneratives, a la intersecció de la regeneració ambiental amb la biotecnologia, les ciències de la vida, la tecnologia climàtica i l'agroalimentària."
+    es: "La bioeconomía es un subsector dentro del campo más amplio de la regeneración en Cataluña. Esta página muestra las entidades catalanas que construyen cadenas de valor biológicas, circulares y regenerativas, en la intersección de la regeneración ambiental con la biotecnología, las ciencias de la vida, la tecnología climática y la agroalimentaria."
+  heroLede2: { en: "Filter by subcategory or search by name to explore the map.", ca: "Filtra per subcategoria o cerca per nom per explorar el mapa.", es: "Filtra por subcategoría o busca por nombre para explorar el mapa." }
+  filterTitle: { en: "Explore the bioeconomy map", ca: "Explora el mapa de la bioeconomia", es: "Explora el mapa de la bioeconomía" }
+  filterSubcategory: { en: "Filter by subcategory", ca: "Filtra per subcategoria", es: "Filtrar por subcategoría" }
+  bioSubcategories: { en: "Bioeconomy subcategories", ca: "Subcategories de bioeconomia", es: "Subcategorías de bioeconomía" }
+  searchPlaceholder: { en: "Type an organization name…", ca: "Escriu el nom d'una organització…", es: "Escribe el nombre de una organización…" }
+  count: { en: "Showing {shown} of {total} organizations", ca: "Es mostren {shown} de {total} organitzacions", es: "Mostrando {shown} de {total} organizaciones" }
+  subcategories:
+    alt-protein-foodtech: { en: "Alternative proteins / foodtech", ca: "Proteïnes alternatives / foodtech", es: "Proteínas alternativas / foodtech" }
+    biomaterials-industrial-biotech: { en: "Biomaterials / industrial biotech", ca: "Biomaterials / biotecnologia industrial", es: "Biomateriales / biotecnología industrial" }
+    blue-bioeconomy-marine-biotech: { en: "Blue bioeconomy / marine biotech", ca: "Bioeconomia blava / biotecnologia marina", es: "Bioeconomía azul / biotecnología marina" }
+    circular-organic-valorization: { en: "Circular organic valorization", ca: "Valorització orgànica circular", es: "Valorización orgánica circular" }
+    agri-biotech-regenerative-inputs: { en: "Agri-biotech / regenerative inputs", ca: "Agrobiotecnologia / inputs regeneratius", es: "Agrobiotecnología / insumos regenerativos" }
+    climate-biotech-bioenergy-tech: { en: "Climate / bioenergy tech", ca: "Tecnologia climàtica / bioenergia", es: "Tecnología climática / bioenergía" }
+    water-biotech-bioremediation: { en: "Water biotech / bioremediation", ca: "Biotecnologia de l'aigua / bioremediació", es: "Biotecnología del agua / biorremediación" }
+
+pri:
+  heroTitle: { en: "Six priorities for a living Catalunya", ca: "Sis prioritats per a una Catalunya viva", es: "Seis prioridades para una Cataluña viva" }
+  heroLede:
+    en: "A diagnosis of the bioregion across six interdependent systems, plus the leverage and capital vehicles that can move each toward regeneration."
+    ca: "Un diagnòstic del bioregion a través de sis sistemes interdependent, més les palanques i els vehicles de capital que poden moure cadascun cap a la regeneració."
+    es: "Un diagnóstico del biorregión a través de seis sistemas interdependientes, más las palancas y los vehículos de capital que pueden mover cada uno hacia la regeneración."
+  scoreboard: { en: "Scoreboard", ca: "Marcador", es: "Marcador" }
+  six: { en: "The six priorities", ca: "Les sis prioritats", es: "Las seis prioridades" }
+  interdependence: { en: "Interdependence", ca: "Interdependència", es: "Interdependencia" }
+  interdependenceLede:
+    en: "The six priorities are not a menu. They are a system: restoring watersheds increases food resilience; reducing energy demand lowers pressure on water; social commons create the capacity to act across all of them."
+    ca: "Les sis prioritats no són un menú. Són un sistema: restaurar les conques augmenta la resiliència alimentària; reduir la demanda energètica rebaixa la pressió sobre l'aigua; els comuns socials creen la capacitat d'actuar en totes."
+    es: "Las seis prioridades no son un menú. Son un sistema: restaurar las cuencas aumenta la resiliencia alimentaria; reducir la demanda energética baja la presión sobre el agua; los comunes sociales crean la capacidad de actuar en todas."
+  interdepCaption:
+    en: "The six priorities compound. Restore watersheds → food resilience; reduce energy demand → less pressure on water; social commons → capacity to act across all."
+    ca: "Les sis prioritats es combinen. Restaurar conques → resiliència alimentària; reduir la demanda energètica → menys pressió sobre l'aigua; comuns socials → capacitat d'actuar en totes."
+    es: "Las seis prioridades se combinan. Restaurar cuencas → resiliencia alimentaria; reducir la demanda energética → menos presión sobre el agua; comunes sociales → capacidad de actuar en todas."
+  interdepTitle:
+    en: "Six priorities as an interdependent system"
+    ca: "Sis prioritats com a sistema interdependent"
+    es: "Seis prioridades como sistema interdependiente"
+  moneyTitle: { en: "Where money should go", ca: "On ha d'anar el diner", es: "A dónde debería ir el dinero" }
+  moneyLede:
+    en: "Catalunya needs a layered capital stack: patient trusts and banks for land and infrastructure, venture studios for regenerative enterprises, and investment companies for larger blended portfolios."
+    ca: "Catalunya necessita una pila de capital per capes: fideïcomisos i bancs pacients per a la terra i la infraestructura, venture studios per a les empreses regeneratives i empreses d'inversió per a carteres combinades més grans."
+    es: "Cataluña necesita una pila de capital por capas: fideicomisos y bancos pacientes para la tierra y la infraestructura, venture studios para las empresas regenerativas y empresas de inversión para carteras combinadas más grandes."
+  methodTitle: { en: "Method and provenance", ca: "Mètode i procedència", es: "Método y procedencia" }
+  methodBody1:
+    en: "The priorities were derived from ongoing research on the Catalan bioregion and from the actor database already mapped on this site. Every indicator shown carries a source, a date, and a confidence badge. Where data is missing, we say so."
+    ca: "Les prioritats provenen de la recerca en curs sobre el bioregion català i de la base de dades d'actors ja mapejada en aquest web. Cada indicador porta una font, una data i una insígnia de confiança. On falten dades, ho diem."
+    es: "Las prioridades provienen de la investigación en curso sobre el biorregión catalán y de la base de datos de actores ya mapeada en este sitio. Cada indicador lleva una fuente, una fecha y una insignia de confianza. Donde faltan datos, lo decimos."
+  methodBody2:
+    en: "Indicators will be refreshed on a schedule that matches their upstream source: daily for reservoir and weather data, monthly for many economic and environmental series, annually for census and survey-based indicators. The full snapshot is rebuilt every six hours via GitHub Actions."
+    ca: "Els indicadors es refrescaran amb un calendari que coincideixi amb la seva font: diàriament per a dades d'embassaments i meteorològiques, mensualment per a moltes sèries econòmiques i ambientals, anualment per a indicadors censals i d'enquestes. La instantània completa es reconstruïx cada sis hores mitjançant GitHub Actions."
+    es: "Los indicadores se actualizarán con un calendario que coincida con su fuente: diariamente para datos de embalses y meteorológicos, mensualmente para muchas series económicas y ambientales, anualmente para indicadores censales y de encuestas. La instantánea completa se reconstruye cada seis horas mediante GitHub Actions."
+  audienceLabel: { en: "Reading this as:", ca: "Llegeix-ho com a:", es: "Léelo como:" }
+  audience:
+    public: { en: "Curious public", ca: "Públic general", es: "Público general" }
+    funder: { en: "Funder", ca: "Finançador", es: "Financiador" }
+    administration: { en: "Public administration", ca: "Administració pública", es: "Administración pública" }
+    organiser: { en: "Movement / organiser", ca: "Moviment / organitzador", es: "Movimiento / organizador" }
+  block:
+    public:
+      en: "This section shows where Catalunya is living beyond its limits, and what is already being done about it. The scoreboard below is the quickest way to see the state of the six priorities."
+      ca: "Aquesta secció mostra on Catalunya viu més enllà dels seus límits i què ja s'hi està fent. El marcador de sota és la manera més ràpida de veure l'estat de les sis prioritats."
+      es: "Esta sección muestra dónde Cataluña vive más allá de sus límites y qué se está haciendo al respecto. El marcador de abajo es la forma más rápida de ver el estado de las seis prioridades."
+    funder:
+      en: "Each priority links live actors, programs, and a capital stack. The numbers are sourced and dated; the capital horizons and ticket sizes are indicative starting points for due diligence."
+      ca: "Cada prioritat enllaça actors, programes i una pila de capital reals. Les xifres tenen font i data; els horitzons de capital i les mides de tiquet són punts de partida indicatius per a la diligència deguda."
+      es: "Cada prioridad enlaza actores, programas y una pila de capital reales. Las cifras tienen fuente y fecha; los horizontes de capital y los tamaños de ticket son puntos de partida indicativos para la diligencia debida."
+    administration:
+      en: "The priorities align with Catalan, Spanish, and EU strategies already in force. The territorial and actor data can help identify delivery partners and co-financing routes."
+      ca: "Les prioritats s'alineen amb estratègies catalanes, espanyoles i europees ja en vigor. Les dades territorials i d'actors poden ajudar a identificar socis d'execució i vies de cofinançament."
+      es: "Las prioridades se alinean con estrategias catalanas, españolas y europeas ya en vigor. Los datos territoriales y de actores pueden ayudar a identificar socios de ejecución y vías de cofinanciación."
+    organiser:
+      en: "Use the diagnosis as a shared argument, and the actor maps to find peers already working on each priority. The interdependence diagram shows why these fights cannot be separated."
+      ca: "Fes servir el diagnòstic com a argument compartit i els mapes d'actors per trobar iguals que ja treballen en cada prioritat. El diagrama d'interdependència mostra per què aquestes lluites no es poden separar."
+      es: "Usa el diagnóstico como argumento compartido y los mapas de actores para encontrar pares que ya trabajan en cada prioridad. El diagrama de interdependencia muestra por qué estas luchas no se pueden separar."
+  moneyBlock:
+    public:
+      en: "Public money, philanthropic grants, and private capital each have a place — but only when matched to the right time horizon, asset, and governance structure."
+      ca: "El diner públic, les subvencions filantròpiques i el capital privat hi tenen cabuda — però només quan s'ajusten a l'horitzó temporal, l'actiu i l'estructura de governança adequats."
+      es: "El dinero público, las subvenciones filantrópicas y el capital privado tienen cabida — pero solo cuando se ajustan al horizonte temporal, el activo y la estructura de gobernanza adecuados."
+    funder:
+      en: "The four BioFi vehicles are sized for different risk, return, and governance profiles. Detailed capital memos per priority are linked from each priority page."
+      ca: "Els quatre vehicles BioFi estan dimensionats per a diferents perfils de risc, retorn i governança. Els memos de capital detallats per prioritat s'enllacen des de cada pàgina de prioritat."
+      es: "Los cuatro vehículos BioFi están dimensionados para diferentes perfiles de riesgo, retorno y gobernanza. Los memos de capital detallados por prioridad se enlazan desde cada página de prioridad."
+    administration:
+      en: "Public co-investment and guarantees can crowd in private capital where market failures are highest — especially land, water, and social infrastructure."
+      ca: "La co-inversió pública i les garanties poden atreure capital privat on les fallades de mercat són més grans — especialment terra, aigua i infraestructura social."
+      es: "La coinversión pública y las garantías pueden atraer capital privado donde las fallas de mercado son mayores — especialmente tierra, agua e infraestructura social."
+    organiser:
+      en: "The capital stack is not neutral. Trusts and commons institutions keep assets out of speculative markets; banks and venture instruments must be designed to reinforce, not extract from, the underlying commons."
+      ca: "La pila de capital no és neutral. Els fideïcomisos i les institucions de comuns mantenen els actius fora dels mercats especulatius; els bancs i els instruments de risc s'han de dissenyar per reforçar, no extreure, els comuns subjacents."
+      es: "La pila de capital no es neutral. Los fideicomisos y las instituciones de comunes mantienen los activos fuera de los mercados especulativos; los bancos y los instrumentos de riesgo deben diseñarse para reforzar, no extraer, los comunes subyacentes."
+
+priority:
+  diagnosis: { en: "Diagnosis", ca: "Diagnòstic", es: "Diagnóstico" }
+  indicator: { en: "Indicator", ca: "Indicador", es: "Indicador" }
+  leverage: { en: "Leverage", ca: "Palanques", es: "Palancas" }
+  capital: { en: "Capital stack", ca: "Pila de capital", es: "Pila de capital" }
+  whosDoing: { en: "Who is already doing it", ca: "Qui ja ho està fent", es: "Quién ya lo está haciendo" }
+  whoTail: { en: "mapped on this site are tagged with this priority.", ca: "mapejats en aquest web porten aquesta prioritat.", es: "mapeados en este sitio llevan esta prioridad." }
+  sources: { en: "Sources", ca: "Fonts", es: "Fuentes" }
+  organization: { en: "Organization", ca: "Organització", es: "Organización" }
+  program: { en: "Program", ca: "Programa", es: "Programa" }
+  accessedLabel: { en: "accessed", ca: "consultat el", es: "consultado el" }
+  trendLabel: { en: "Trend:", ca: "Tendència:", es: "Tendencia:" }
+  status:
+    in_overshoot: { en: "In overshoot", ca: "En superació", es: "En superación" }
+    under_strain: { en: "Under strain", ca: "Sota pressió", es: "Bajo presión" }
+    holding: { en: "Holding", ca: "Estable", es: "Estable" }
+    improving: { en: "Improving", ca: "Millorant", es: "Mejorando" }
+  noData: { en: "No data yet", ca: "Sense dades encara", es: "Sin datos todavía" }
+
+card:
+  organizations: { en: "organizations", ca: "organitzacions", es: "organizaciones" }
+  programs: { en: "programs", ca: "programes", es: "programas" }
+  explore: { en: "Explore →", ca: "Explora →", es: "Explora →" }
+
+capital:
+  trust: { en: "Bioregional Trust", ca: "Fideïcomís bioregional", es: "Fideicomiso biorregional" }
+  bank: { en: "Bioregional Bank", ca: "Banc bioregional", es: "Banco biorregional" }
+  venture-studio: { en: "Venture Studio", ca: "Venture Studio", es: "Venture Studio" }
+  investment-company: { en: "Investment Company", ca: "Empresa d'inversió", es: "Empresa de inversión" }
+  returns:
+    ecological: { en: "Ecological", ca: "Ecològic", es: "Ecológico" }
+    social: { en: "Social", ca: "Social", es: "Social" }
+    cultural: { en: "Cultural", ca: "Cultural", es: "Cultural" }
+    financial: { en: "Financial", ca: "Financer", es: "Financiero" }
+    inspirational: { en: "Inspirational", ca: "Inspirador", es: "Inspirador" }
+
+prov:
+  summary: { en: "Source and method", ca: "Font i mètode", es: "Fuente y método" }
+  confidence: { en: "{conf} confidence", ca: "confiança {conf}", es: "confianza {conf}" }
+  source: { en: "Source", ca: "Font", es: "Fuente" }
+  licence: { en: "Licence", ca: "Llicència", es: "Licencia" }
+  lastVerified: { en: "Last verified", ca: "Darrera verificació", es: "Última verificación" }
+
+cont:
+  heroTitle: { en: "Ways to contribute", ca: "Maneres de contribuir", es: "Formas de contribuir" }
+  heroLede: { en: "Every known modality for contributing time, attention or money to regenerating Catalunya — {routes} routes, {links} direct links, {mapped} of them to entities already mapped on this site.", ca: "Totes les modalitats conegudes per contribuir amb temps, atenció o diners a la regeneració de Catalunya — {routes} vies, {links} enllaços directes, {mapped} d'ells a entitats ja mapejades en aquest web.", es: "Todas las modalidades conocidas para contribuir con tiempo, atención o dinero a la regeneración de Cataluña — {routes} vías, {links} enlaces directos, {mapped} de ellos a entidades ya mapeadas en este sitio." }
+  toPart2: { en: "Part 2: funding needs of restoration initiatives →", ca: "Part 2: necessitats de finançament de les iniciatives de restauració →", es: "Parte 2: necesidades de financiación de las iniciativas de restauración →" }
+  legendPrompt: { en: "Legend — what the badges mean:", ca: "Llegenda — què signifiquen les insígnies:", es: "Leyenda — qué significan las insignias:" }
+  legend:
+    portal: { en: "Aggregator or gateway for a whole category", ca: "Agregador o porta d'entrada per a tota una categoria", es: "Agregador o puerta de entrada para toda una categoría" }
+    platform: { en: "Digital tool you participate in directly", ca: "Eina digital on participes directament", es: "Herramienta digital en la que participas directamente" }
+    public: { en: "Official Catalan government channel", ca: "Canal oficial de la Generalitat", es: "Canal oficial de la Generalidad" }
+    finance: { en: "Cooperative / ethical money vehicles", ca: "Vehicles de diner cooperatius / ètics", es: "Vehículos de dinero cooperativos / éticos" }
+    funder: { en: "Philanthropy or impact capital", ca: "Filantropia o capital d'impacte", es: "Filantropía o capital de impacto" }
+    mapped: { en: "Entity already in this site's directory", ca: "Entitat que ja és al directori d'aquest web", es: "Entidad que ya está en el directorio de este sitio" }
+  part2: { en: "Part 2", ca: "Part 2", es: "Parte 2" }
+  methodTitle: { en: "Method and provenance", ca: "Mètode i procedència", es: "Método y procedencia" }
+  methodBody:
+    en: "This page was drafted from a research file on ecological restoration and socio-environmental contribution in Catalunya (2026-08-11) and from the entity registry behind this map (ReFi BCN CRM). Every link was verified on 2026-08-11; where a domain could not be reached, the entity is mentioned in prose but not linked. Entity websites marked \"On the map\" come from the CRM records shown in the organizations directory. Part 2 is a dated snapshot of funding needs — asks change weekly, so each card carries a status and a source."
+    ca: "Aquesta pàgina s'ha redactat a partir d'un fitxer de recerca sobre restauració ecològica i contribució socioambiental a Catalunya (11-08-2026) i del registre d'entitats que hi ha darrere d'aquest mapa (CRM de ReFi BCN). Tots els enllaços es van verificar l'11-08-2026; on un domini no era accessible, l'entitat es menciona en el text però no s'enllaça. Els webs d'entitats marcades com a «Al mapa» provenen dels registres del CRM que es mostren al directori d'organitzacions. La part 2 és una fotografia datada de les necessitats de finançament — les demandes canvien setmanalment, per això cada targeta porta un estat i una font."
+    es: "Esta página se ha redactado a partir de un archivo de investigación sobre restauración ecológica y contribución socioambiental en Cataluña (11-08-2026) y del registro de entidades que hay detrás de este mapa (CRM de ReFi BCN). Todos los enlaces se verificaron el 11-08-2026; cuando un dominio no era accesible, la entidad se menciona en el texto pero no se enlaza. Los sitios web de entidades marcadas como «En el mapa» provienen de los registros del CRM que se muestran en el directorio de organizaciones. La parte 2 es una fotografía fechada de las necesidades de financiación — las demandas cambian semanalmente, por eso cada tarjeta lleva un estado y una fuente."
+  sources1: { en: "Sources — Part 1 (contribution modalities)", ca: "Fonts — Part 1 (modalitats de contribució)", es: "Fuentes — Parte 1 (modalidades de contribución)" }
+  sources2: { en: "Sources — Part 2 (funding needs)", ca: "Fonts — Part 2 (necessitats de finançament)", es: "Fuentes — Parte 2 (necesidades de financiación)" }
+  territory: { en: "Territory", ca: "Territori", es: "Territorio" }
+  money: { en: "Money", ca: "Diners", es: "Dinero" }
+  status:
+    running: { en: "In motion", ca: "En marxa", es: "En marcha" }
+    open-ask: { en: "Open ask", ca: "Demanda oberta", es: "Demanda abierta" }
+    funded: { en: "Funded", ca: "Finançat", es: "Financiado" }
+    closed: { en: "Closed", ca: "Tancat", es: "Cerrado" }
+  badges:
+    portal: { en: "Portal", ca: "Portal", es: "Portal" }
+    platform: { en: "Platform", ca: "Plataforma", es: "Plataforma" }
+    public: { en: "Public programme", ca: "Programa públic", es: "Programa público" }
+    finance: { en: "Cooperative finance", ca: "Finances cooperatives", es: "Finanzas cooperativas" }
+    funder: { en: "Funder", ca: "Finançador", es: "Financiador" }
+    mapped: { en: "On the map", ca: "Al mapa", es: "En el mapa" }

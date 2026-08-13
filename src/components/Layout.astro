@@ -12,6 +12,8 @@ import "../styles/theme.css";
 import "../styles/global.css";
 import Nav from "./Nav.astro";
 import Footer from "./Footer.astro";
+import I18n from "./I18n.astro";
+import { loadI18n, type I18nDict } from "../lib/i18n";
 import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
@@ -19,6 +21,8 @@ import yaml from "js-yaml";
 const site = yaml.load(
   fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8")
 ) as { name: string; url: string; description: string };
+
+const uiStrings = loadI18n();
 
 interface Props {
   title: string;
@@ -28,8 +32,11 @@ interface Props {
   dataset?: string;
   minimal?: boolean;
   noindex?: boolean;
+  /** Per-page content strings merged with the shared UI dictionary. */
+  i18nDict?: I18nDict;
 }
-const { title, description = site.description, current = "home", section, dataset, minimal = false, noindex = false } = Astro.props;
+const { title, description = site.description, current = "home", section, dataset, minimal = false, noindex = false, i18nDict } = Astro.props;
+const mergedDict: I18nDict = { ...uiStrings, ...i18nDict };
 const pageTitle = `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 ---
@@ -39,9 +46,10 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={description} />
-  {noindex && <meta name="robots" content="noindex" />}
+  <meta name="robots" content={noindex ? "noindex" : "index"} />
   <title>{pageTitle}</title>
   <link rel="canonical" href={canonical} />
+  <I18n dict={mergedDict} />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={site.name} />
   <meta property="og:title" content={pageTitle} />
