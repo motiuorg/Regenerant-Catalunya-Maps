@@ -1,6 +1,6 @@
 # rc2 — Regenerant Catalunya
 
-Bioregional priorities and regenerative actor directory for Catalunya — a clean-slate website using the ReFi BCN editorial-organic design system.
+Bioregional priorities and regenerative actor directory for Catalunya — a clean-slate website using the ReFi BCN editorial-organic design system. Deployed from the motiuorg repo as the Regenerant Catalunya Maps project page.
 
 ## What was copied from refibcn.github.io
 
@@ -18,13 +18,12 @@ Bioregional priorities and regenerative actor directory for Catalunya — a clea
 ## Run locally
 
 ```bash
-cd projects/rc2
 npm install
 npm run dev
-# → http://localhost:4321/rc2/
+# → http://localhost:4321/Regenerant-Catalunya-Maps/
 ```
 
-> Because the site is configured for a GitHub project page (`/rc2`), Astro also serves it under that base path in dev.
+> Because the site is configured for a GitHub project page (`/Regenerant-Catalunya-Maps`), Astro also serves it under that base path in dev.
 
 ## Build
 
@@ -37,20 +36,18 @@ To test the production build:
 
 ```bash
 npm run preview
-# → http://localhost:4321/rc2/
+# → http://localhost:4321/Regenerant-Catalunya-Maps/
 ```
 
 ## GitHub Pages deploy
 
 The repo is set up to deploy automatically via GitHub Actions (`.github/workflows/deploy.yml`) every time you push to `main`.
 
-Target URL: `https://refibcn.github.io/rc2/`
+Target URL: `https://motiuorg.github.io/Regenerant-Catalunya-Maps/`
 
 ### Push to GitHub for the first time
 
 ```bash
-cd projects/rc2
-
 # If you haven't initialised git yet
 git init
 
@@ -58,18 +55,18 @@ git add .
 git commit -m "Initial rc2 scaffold with GitHub Pages + Notion plumbing"
 
 # Option A: GitHub CLI (creates the repo and pushes in one go)
-gh repo create refibcn/rc2 --public --source=. --push
+gh repo create motiuorg/Regenerant-Catalunya-Maps --public --source=. --push
 
-# Option B: create the repo manually on github.com/refibcn/rc2,
+# Option B: create the repo manually on github.com/motiuorg/Regenerant-Catalunya-Maps,
 # then add the remote and push
-git remote add origin git@github.com:refibcn/rc2.git
+git remote add origin git@github.com:motiuorg/Regenerant-Catalunya-Maps.git
 git branch -M main
 git push -u origin main
 ```
 
 ### Enable GitHub Pages
 
-1. Go to `https://github.com/refibcn/rc2/settings/pages`
+1. Go to `https://github.com/motiuorg/Regenerant-Catalunya-Maps/settings/pages`
 2. Under **Build and deployment** → **Source**, select **GitHub Actions**
 3. The workflow in `.github/workflows/deploy.yml` will take over from the next push
 
