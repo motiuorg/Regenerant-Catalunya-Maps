@@ -1,0 +1,610 @@
+---
+import Layout from "../../components/Layout.astro";
+import OrganicAmbient from "../../components/OrganicAmbient.astro";
+import { loadSectionConfig, fetchDatabaseRecords } from "../../lib/notion";
+import { hasCatbis, hasFluvia } from "../../lib/crm";
+import { loadFluviaContent, fluviaDict, t } from "../../lib/fluvia";
+
+const content = loadFluviaContent();
+const dict = fluviaDict();
+
+const sections = loadSectionConfig();
+const actorsSection = sections.find((s) => s.id === "actors");
+const programsSection = sections.find((s) => s.id === "programs");
+const eventsSection = sections.find((s) => s.id === "events");
+
+let actorCount = 0;
+let programCount = 0;
+let eventCount = 0;
+let error: string | null = null;
+
+async function fetchFluviaCount(section: typeof actorsSection) {
+    if (!section?.database_id) return 0;
+    const records = await fetchDatabaseRecords(section.database_id);
+    return records.filter((r) => hasCatbis(r) && hasFluvia(r)).length;
+}
+
+try {
+    [actorCount, programCount, eventCount] = await Promise.all([
+        fetchFluviaCount(actorsSection),
+        fetchFluviaCount(programsSection),
+        fetchFluviaCount(eventsSection),
+    ]);
+} catch (e: any) {
+    error = e.message ?? "Failed to fetch data from Notion.";
+}
+
+const totalCount = actorCount + programCount + eventCount;
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+const fluvia = `${base}fluvia/`;
+
+const exploreLinks = [
+    {
+        id: "priorities",
+        title: "Priorities",
+        titleKey: "nav.priorities",
+        descriptionKey: "fluv.home.explore.priorities",
+        href: `${fluvia}priorities/`,
+        count: null as number | null,
+    },
+    {
+        id: "organizations",
+        title: "Organizations",
+        titleKey: "nav.organizations",
+        descriptionKey: "fluv.home.explore.organizations",
+        href: `${fluvia}organizations/`,
+        count: actorCount,
+    },
+    {
+        id: "programs",
+        title: "Programs and Initiatives",
+        titleKey: "nav.programs",
+        descriptionKey: "fluv.home.explore.programs",
+        href: `${fluvia}programs/`,
+        count: programCount,
+    },
+    {
+        id: "events",
+        title: "Events",
+        titleKey: "nav.events",
+        descriptionKey: "fluv.home.explore.events",
+        href: `${fluvia}events/`,
+        count: eventCount,
+    },
+];
+---
+
+<Layout
+    title="Fluvià"
+    description="A watershed-scale map of the people and initiatives regenerating the Fluvià river and its basin."
+    current="overview"
+    shell="fluvia"
+    noindex
+    i18nDict={dict}
+>
+    <header class="hero">
+        <OrganicAmbient />
+        <div class="hero__inner section">
+            <p class="eyebrow" data-i18n="fluv.home.eyebrow">
+                Regenerant Catalunya Maps · Fluvià watershed
+            </p>
+            <h1 class="display" data-i18n="fluv.home.title">
+                Regenerating the Fluvià
+            </h1>
+            <p class="lede" data-i18n="fluv.home.lede">
+                A watershed-scale map of the people regenerating the Fluvià —
+                the Catalan river with the greatest potential to be
+                renaturalised in Europe.
+            </p>
+
+            <p class="stats">
+                <strong>{totalCount}</strong>{" "}
+                <span data-i18n="fluv.home.stats">
+                    organizations, programs, and events mapped on the Fluvià
+                    watershed
+                </span>
+            </p>
+
+            {error && (
+                <div class="error-banner">
+                    <p>
+                        <strong data-i18n="common.dataError">
+                            Data error:
+                        </strong>{" "}
+                        {error}
+                    </p>
+                </div>
+            )}
+        </div>
+    </header>
+
+    <section class="section section--wide map-section">
+        <!-- To swap the map, replace the image file at public/assets/fluvia-map.jpg -->
+        <figure class="map-figure">
+            <img
+                class="map-image"
+                src={`${base}assets/fluvia-map.jpg`}
+                alt="Location of the Fluvià river catchment in Catalonia, showing the river course from the Garrotxa headwaters to its mouth at Sant Pere Pescador"
+                width="850"
+                height="581"
+                loading="lazy"
+                decoding="async"
+            />
+            <figcaption class="map-caption">
+                <span data-i18n="fluv.home.mapCaption">
+                    The Fluvià basin: from the Garrotxa Volcanic Zone Natural
+                    Park to the Aiguamolls de l'Empordà Natural Park, 97 km to
+                    the sea.
+                </span>
+                <span class="map-credit">
+                    <span data-i18n="fluv.home.mapCredit">
+                        Source: Gómez-Gener et al., location of the Fluvià River
+                        catchment.
+                    </span>
+                    <a
+                        href="https://www.researchgate.net/publication/310468446"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        ResearchGate
+                    </a>
+                </span>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="section section--wide">
+        <h2 class="section-title" data-i18n="fluv.home.factsTitle">
+            The basin, at a glance
+        </h2>
+        <div class="fact-grid">
+            {content.home.facts.map((fact: any, i: number) => (
+                <div class="fact">
+                    <span class="fact__value">{fact.value}</span>
+                    <span
+                        class="fact__label"
+                        data-i18n={`fluv.home.facts.${i}.label`}
+                    >
+                        {t(fact.label)}
+                    </span>
+                </div>
+            ))}
+        </div>
+    </section>
+
+    <section class="section section--wide section--alt">
+        <h2 class="section-title" data-i18n="fluv.home.whyTitle">
+            Why the Fluvià
+        </h2>
+        <p class="section-lede" data-i18n="fluv.home.whyLede">
+            Simbiosi Fluvial describes it as the river in Europe with the
+            greatest capacity to be regenerated and restored.
+        </p>
+        <div class="reason-grid">
+            {content.home.reasons.map((reason: any, i: number) => (
+                <article class="reason">
+                    <h3
+                        class="reason__title"
+                        data-i18n={`fluv.home.reasons.${i}.title`}
+                    >
+                        {t(reason.title)}
+                    </h3>
+                    <p
+                        class="reason__body"
+                        data-i18n={`fluv.home.reasons.${i}.body`}
+                    >
+                        {t(reason.body)}
+                    </p>
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <section class="section section--wide">
+        <h2 class="section-title" data-i18n="fluv.home.pressuresTitle">
+            Pressures on the basin
+        </h2>
+        <p class="section-lede" data-i18n="fluv.home.pressuresLede">
+            The Catalan Water Agency classifies the ecological state of the
+            river as poor in its headwaters and mediocre from Sant Joan les
+            Fonts to the estuary.
+        </p>
+        <ol class="pressure-list">
+            {content.home.pressures.map((pressure: any, i: number) => (
+                <li class="pressure">
+                    <span class="pressure__index">
+                        {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                        <h3
+                            class="pressure__title"
+                            data-i18n={`fluv.home.pressures.${i}.title`}
+                        >
+                            {t(pressure.title)}
+                        </h3>
+                        <p
+                            class="pressure__body"
+                            data-i18n={`fluv.home.pressures.${i}.body`}
+                        >
+                            {t(pressure.body)}
+                        </p>
+                    </div>
+                </li>
+            ))}
+        </ol>
+    </section>
+
+    <section class="section section--wide section--alt">
+        <h2 class="section-title" data-i18n="fluv.home.exploreTitle">
+            Explore the basin
+        </h2>
+        <p class="section-lede" data-i18n="fluv.home.exploreLede">
+            Four views over the same live databases.
+        </p>
+        <div class="link-grid">
+            {exploreLinks.map((link) => (
+                <a href={link.href} class="explore-card">
+                    {link.count !== null && (
+                        <span class="explore-count">{link.count}</span>
+                    )}
+                    <h3 class="explore-title" data-i18n={link.titleKey}>
+                        {link.title}
+                    </h3>
+                    <p
+                        class="explore-description"
+                        data-i18n={link.descriptionKey}
+                    ></p>
+                    <span class="explore-action" data-i18n="card.explore">
+                        Explore →
+                    </span>
+                </a>
+            ))}
+        </div>
+    </section>
+
+    <section class="section section--wide">
+        <div class="note">
+            <h2 class="note__title" data-i18n="fluv.home.noteTitle">
+                A live, provisional map
+            </h2>
+            <p class="note__body" data-i18n="fluv.home.noteBody">
+                This is a demonstration map prepared for the Simbiosi Fluvial
+                community.
+            </p>
+        </div>
+
+        <h2 class="section-title" data-i18n="fluv.sources.title">
+            Sources
+        </h2>
+        <ul class="source-list">
+            {content.sources.items.map((source: any, i: number) => (
+                <li>
+                    <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-i18n={`fluv.sources.items.${i}.label`}
+                    >
+                        {t(source.label)}
+                    </a>
+                    <span class="source-list__date">{source.accessed}</span>
+                </li>
+            ))}
+        </ul>
+    </section>
+</Layout>
+
+<style>
+    .hero {
+        position: relative;
+        padding: var(--space-16) var(--gutter) var(--space-6);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+        text-align: center;
+        overflow: hidden;
+    }
+    .hero__inner {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-default);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero .eyebrow {
+        margin-bottom: var(--space-3);
+    }
+    .hero h1 {
+        margin-bottom: var(--space-5);
+    }
+    .hero .lede {
+        max-width: 66ch;
+        margin: 0 auto var(--space-8);
+    }
+
+    .stats {
+        font-family: var(--serif);
+        font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--text-muted);
+        margin: 0 0 var(--space-4);
+        max-width: 60ch;
+    }
+    .stats strong {
+        font-family: var(--serif);
+        font-style: normal;
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        font-weight: 500;
+        color: var(--primary);
+    }
+
+    .section-title {
+        font-family: var(--serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin: 0 0 var(--space-4);
+        color: var(--ink);
+    }
+    .section--alt {
+        background: var(--surface-1);
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+    }
+    .section-lede {
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 70ch;
+        margin: 0 0 var(--space-6);
+    }
+
+    .fact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+        gap: var(--space-4);
+        border-top: 1px solid var(--ink);
+        padding-top: var(--space-5);
+    }
+    .fact {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    .fact__value {
+        font-family: var(--serif);
+        font-size: clamp(1.9rem, 3vw, 2.4rem);
+        font-weight: 500;
+        line-height: 1;
+        color: var(--primary);
+    }
+    .fact__label {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: var(--text-muted);
+        max-width: 26ch;
+    }
+
+    .reason-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+        gap: var(--space-6);
+    }
+    .reason {
+        background: var(--paper);
+        border: 1px solid var(--border-subtle);
+        padding: var(--space-5);
+    }
+    .reason__title {
+        font-family: var(--serif);
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin: 0 0 var(--space-3);
+        color: var(--ink);
+    }
+    .reason__body {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .pressure-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid var(--ink);
+    }
+    .pressure {
+        display: grid;
+        grid-template-columns: 3rem 1fr;
+        gap: var(--space-4);
+        padding: var(--space-5) 0;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    .pressure__index {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--rule);
+        padding-top: 0.2rem;
+    }
+    .pressure__title {
+        font-family: var(--serif);
+        font-size: 1.05rem;
+        font-weight: 500;
+        margin: 0 0 var(--space-2);
+        color: var(--ink);
+    }
+    .pressure__body {
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        margin: 0;
+        max-width: 70ch;
+    }
+
+    .link-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+        gap: var(--space-4);
+    }
+    .explore-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-6);
+        background: var(--paper);
+        border: 1px solid var(--border-subtle);
+        text-decoration: none;
+        color: inherit;
+        transition:
+            border-color var(--t-fast),
+            transform var(--t-fast);
+    }
+    .explore-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px);
+    }
+    .explore-count {
+        font-family: var(--mono);
+        font-size: 2.4rem;
+        font-weight: 500;
+        line-height: 1;
+        color: var(--primary);
+    }
+    .explore-title {
+        font-family: var(--serif);
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin: 0;
+        color: var(--ink);
+    }
+    .explore-description {
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        margin: 0;
+        flex: 1 1 auto;
+    }
+    .explore-action {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+        align-self: flex-start;
+    }
+
+    .note {
+        background: var(--surface-1);
+        border: 1px solid var(--border-subtle);
+        border-left: 3px solid var(--primary);
+        padding: var(--space-6);
+        margin-bottom: var(--space-10);
+    }
+    .note__title {
+        font-family: var(--serif);
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0 0 var(--space-3);
+        color: var(--ink);
+    }
+    .note__body {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+        margin: 0;
+        max-width: 80ch;
+    }
+
+    .source-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        max-width: 80ch;
+    }
+    .source-list li {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-1);
+    }
+    .source-list a {
+        font-size: 0.95rem;
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color var(--t-fast);
+    }
+    .source-list a:hover {
+        border-bottom-color: var(--primary);
+    }
+    .source-list__date {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    .error-banner {
+        background: var(--surface-2);
+        border: 1px solid var(--primary);
+        padding: var(--space-4);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        margin-top: var(--space-6);
+        max-width: 60ch;
+        text-align: left;
+    }
+
+    .map-section {
+        background: var(--surface-1);
+        border-bottom: 1px solid var(--ink);
+    }
+    .map-figure {
+        margin: 0;
+    }
+    .map-image {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: var(--paper);
+        border: 1px solid var(--border-subtle);
+    }
+    .map-caption {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+        margin-top: var(--space-3);
+        text-align: center;
+    }
+    .map-credit {
+        opacity: 0.85;
+    }
+    .map-credit a {
+        color: inherit;
+        text-underline-offset: 2px;
+    }
+
+    @media (max-width: 720px) {
+        .hero {
+            padding: var(--space-10) var(--gutter) var(--space-8);
+        }
+        .link-grid {
+            grid-template-columns: 1fr;
+        }
+        .pressure {
+            grid-template-columns: 2rem 1fr;
+            gap: var(--space-3);
+        }
+    }
+</style>

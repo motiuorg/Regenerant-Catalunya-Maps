@@ -1,0 +1,315 @@
+# Fluvià microsite content — a watershed-scale reading of Regenerant Catalunya Maps.
+# Every leaf translated as { en, ca, es } so the shared I18n engine can switch language.
+# Data (actors, programs, events) is NOT stored here: it is pulled live from the same
+# Notion databases as the main site, filtered by the CATBIS + fluvia second-order tags.
+
+nav:
+  overview: { en: "Overview", ca: "Visió general", es: "Resumen" }
+  mainMap: { en: "Complete map →", ca: "Mapa complet →", es: "Mapa completo →" }
+
+home:
+  eyebrow: { en: "Regenerant Catalunya Maps · Fluvià watershed", ca: "Regenerant Catalunya Maps · Conca del Fluvià", es: "Regenerant Catalunya Maps · Cuenca del Fluvià" }
+  title: { en: "Regenerating the Fluvià", ca: "Regenerar el Fluvià", es: "Regenerar el Fluvià" }
+  lede:
+    en: "A watershed-scale map of the people regenerating the Fluvià — the Catalan river with the greatest potential to be renaturalised in Europe. It reads the same live databases as the full Regenerant Catalunya map: every entry below carries both the CATBIS and the fluvia tag."
+    ca: "Un mapa a escala de conca de les persones que regeneren el Fluvià — el riu català amb més potencial de ser renaturalitzat d'Europa. Llegeix les mateixes bases de dades vives que el mapa complet de Regenerant Catalunya: totes les entrades porten les etiquetes CATBIS i fluvia."
+    es: "Un mapa a escala de cuenca de las personas que regeneran el Fluvià — el río catalán con mayor potencial de ser renaturalizado de Europa. Lee las mismas bases de datos vivas que el mapa completo de Regenerant Catalunya: todas las entradas llevan las etiquetas CATBIS y fluvia."
+  stats: { en: "organizations, programs, and events mapped on the Fluvià watershed", ca: "organitzacions, programes i esdeveniments mapejats a la conca del Fluvià", es: "organizaciones, programas y eventos mapeados en la cuenca del Fluvià" }
+  mapPlaceholder:
+    en: "Map of the Fluvià basin — to be added. Place an openly licensed image at public/assets/fluvia-map.png and swap this placeholder for it."
+    ca: "Mapa de la conca del Fluvià — pendent d'afegir. Col·loca una imatge amb llicència lliure a public/assets/fluvia-map.png i substitueix aquest espai reservat."
+    es: "Mapa de la cuenca del Fluvià — pendiente de añadir. Coloca una imagen con licencia libre en public/assets/fluvia-map.png y sustituye este espacio reservado."
+  mapCredit:
+    en: "Source: Gómez-Gener et al., location of the Fluvià River catchment."
+    ca: "Font: Gómez-Gener et al., localització de la conca del riu Fluvià."
+    es: "Fuente: Gómez-Gener et al., localización de la cuenca del río Fluvià."
+  mapCaption:
+    en: "The Fluvià basin: from the Garrotxa Volcanic Zone Natural Park to the Aiguamolls de l'Empordà Natural Park, 97 km to the sea."
+    ca: "La conca del Fluvià: del Parc Natural de la Zona Volcànica de la Garrotxa al Parc Natural dels Aiguamolls de l'Empordà, 97 km fins al mar."
+    es: "La cuenca del Fluvià: desde el Parque Natural de la Zona Volcánica de la Garrotxa hasta el Parque Natural dels Aiguamolls de l'Empordà, 97 km hasta el mar."
+  factsTitle: { en: "The basin, at a glance", ca: "La conca, d'un cop d'ull", es: "La cuenca, de un vistazo" }
+  facts:
+    - value: "97 km"
+      label: { en: "from the Grau d'Olot to the Mediterranean at Sant Pere Pescador", ca: "del Grau d'Olot al Mediterrani, a Sant Pere Pescador", es: "del Grau d'Olot al Mediterráneo, en Sant Pere Pescador" }
+    - value: "974 km²"
+      label: { en: "of watershed — an internal Catalan basin, one of the few without a major dam", ca: "de conca — una conca interna catalana, de les poques sense cap gran embassament", es: "de cuenca — una cuenca interna catalana, de las pocas sin ningún gran embalse" }
+    - value: "3"
+      label: { en: "comarques crossed: Garrotxa, Pla de l'Estany and Alt Empordà", ca: "comarques travessades: la Garrotxa, el Pla de l'Estany i l'Alt Empordà", es: "comarcas atravesadas: Garrotxa, Pla de l'Estany y Alt Empordà" }
+    - value: "23+"
+      label: { en: "municipalities and local bodies engaged with Simbiosi Fluvial", ca: "municipis i ens locals implicats en Simbiosi Fluvial", es: "municipios y entes locales implicados en Simbiosi Fluvial" }
+    - value: "2"
+      label: { en: "natural parks connected, from the volcanoes to the wetlands", ca: "parcs naturals connectats, dels volcans als aiguamolls", es: "parques naturales conectados, de los volcanes a los humedales" }
+
+  whyTitle: { en: "Why the Fluvià", ca: "Per què el Fluvià", es: "Por qué el Fluvià" }
+  whyLede:
+    en: "Simbiosi Fluvial describes it as the river in Europe with the greatest capacity to be regenerated and restored. Four conditions make that credible:"
+    ca: "Simbiosi Fluvial el descriu com el riu d'Europa amb més capacitat de ser regenerat i restaurat. Quatre condicions ho fan creïble:"
+    es: "Simbiosi Fluvial lo describe como el río de Europa con mayor capacidad de ser regenerado y restaurado. Cuatro condiciones lo hacen creíble:"
+  reasons:
+    - title: { en: "It still runs free", ca: "Encara corre lliure", es: "Todavía corre libre" }
+      body:
+        en: "It is the only Catalan river without large reservoirs along its course and without large urban settlements in its middle and lower reaches. The water is not stored, diverted or dammed at scale."
+        ca: "És l'únic riu català sense grans embassaments al llarg del seu recorregut i sense grans nuclis urbans al curs mitjà i baix. L'aigua no s'embassa, no es desvia ni es represa a gran escala."
+        es: "Es el único río catalán sin grandes embalses a lo largo de su recorrido y sin grandes núcleos urbanos en su curso medio y bajo. El agua no se embalsa, no se desvía ni se represa a gran escala."
+    - title: { en: "Natura 2000, coast to coast", ca: "Natura 2000, de capçalera a desembocadura", es: "Natura 2000, de cabecera a desembocadura" }
+      body:
+        en: "Its headwaters rise inside the Garrotxa Volcanic Zone Natural Park and its mouth opens into the Aiguamolls de l'Empordà Natural Park. The old riverbed — the Riu Vell — and the abandoned meanders are protected wetlands and part of the Natura 2000 network."
+        ca: "La capçalera neix dins del Parc Natural de la Zona Volcànica de la Garrotxa i la desembocadura s'obre al Parc Natural dels Aiguamolls de l'Empordà. El llit vell — el Riu Vell — i els meandres abandonats són zones humides protegides i formen part de la xarxa Natura 2000."
+        es: "Su cabecera nace dentro del Parque Natural de la Zona Volcánica de la Garrotxa y su desembocadura se abre al Parque Natural dels Aiguamolls de l'Empordà. El cauce viejo — el Riu Vell — y los meandros abandonados son humedales protegidos y forman parte de la red Natura 2000."
+    - title: { en: "The damage is reversible", ca: "El mal és reversible", es: "El daño es reversible" }
+      body:
+        en: "The pressures that degrade the Fluvià — nutrient pollution, weirs, gravel extraction, untreated discharges — are all reversible with coordinated restoration and stewardship. It is a river that can be brought back, not one that has to be defended as a ruin."
+        ca: "Les pressions que degraden el Fluvià — contaminació per nutrients, rescloses, extracció de graves, abocaments no tractats — són reversibles amb restauració i custòdia coordinades. És un riu que es pot recuperar, no un riu que calgui defensar com una ruïna."
+        es: "Las presiones que degradan el Fluvià — contaminación por nutrientes, azudes, extracción de gravas, vertidos sin tratar — son reversibles con restauración y custodia coordinadas. Es un río que se puede recuperar, no un río que haya que defender como una ruina."
+    - title: { en: "A hydro-community is forming", ca: "S'està formant una hidrocomunitat", es: "Se está formando una hidrocomunidad" }
+      body:
+        en: "More than 20 municipalities, four non-profits, county councils and citizen platforms are experimenting with governing the watershed as a shared system — a governance laboratory that aims to outlive subsidy cycles and political change."
+        ca: "Més de 20 municipis, quatre entitats sense ànim de lucre, consells comarcals i plataformes ciutadanes experimenten amb governar la conca com un sistema compartit — un laboratori de governança que vol sobreviure als cicles de subvenció i als canvis polítics."
+        es: "Más de 20 municipios, cuatro entidades sin ánimo de lucro, consejos comarcales y plataformas ciudadanas experimentan con gobernar la cuenca como un sistema compartido — un laboratorio de gobernanza que quiere sobrevivir a los ciclos de subvención y a los cambios políticos."
+
+  pressuresTitle: { en: "Pressures on the basin", ca: "Pressions sobre la conca", es: "Presiones sobre la cuenca" }
+  pressuresLede:
+    en: "The Catalan Water Agency classifies the ecological state of the river as poor in its headwaters and mediocre from Sant Joan les Fonts to the estuary. Biodiversity in Catalan aquatic environments has fallen by up to 60% in recent decades. Six pressures are named repeatedly:"
+    ca: "L'Agència Catalana de l'Aigua classifica l'estat ecològic del riu com a dolent a la capçalera i mediocre de Sant Joan les Fonts fins a l'estuari. La biodiversitat dels ambients aquàtics catalans ha caigut fins a un 60% en les darreres dècades. Hi ha sis pressions que es repeteixen:"
+    es: "La Agencia Catalana del Agua clasifica el estado ecológico del río como malo en su cabecera y mediocre desde Sant Joan les Fonts hasta el estuario. La biodiversidad de los ambientes acuáticos catalanes ha caído hasta un 60% en las últimas décadas. Se repiten seis presiones:"
+  pressures:
+    - title: { en: "Agricultural nitrates", ca: "Nitrats agrícoles", es: "Nitratos agrícolas" }
+      body:
+        en: "Runoff from farmland in the Pla de l'Estany and the Empordà plain feeds eutrophication and algal growth."
+        ca: "L'escolament de les terres del Pla de l'Estany i de la plana empordanesa alimenta l'eutrofització i el creixement d'algues."
+        es: "La escorrentía de las tierras del Pla de l'Estany y de la llanura ampurdanesa alimenta la eutrofización y el crecimiento de algas."
+    - title: { en: "Gravel extraction", ca: "Extracció de graves", es: "Extracción de gravas" }
+      body:
+        en: "Extraction from the riverbed alters the sediment regime, the channel profile and the habitats that depend on them."
+        ca: "L'extracció del llit altera el règim de sediments, el perfil del canal i els hàbitats que en depenen."
+        es: "La extracción del cauce altera el régimen de sedimentos, el perfil del canal y los hábitats que dependen de ellos."
+    - title: { en: "Gaps in wastewater treatment", ca: "Dèficits de sanejament", es: "Déficits de saneamiento" }
+      body:
+        en: "Some urban and industrial discharges, including around the river mouth, still reach the river insufficiently treated."
+        ca: "Alguns abocaments urbans i industrials, també a prop de la desembocadura, arriben al riu sense tractament suficient."
+        es: "Algunos vertidos urbanos e industriales, también cerca de la desembocadura, llegan al río sin tratamiento suficiente."
+    - title: { en: "Interrupted connectivity", ca: "Connectivitat interrompuda", es: "Conectividad interrumpida" }
+      body:
+        en: "Weirs and small intakes break the continuity of the river and the movement of species such as the white-clawed crayfish and native mussels."
+        ca: "Rescloses i petites captures trenquen la continuïtat del riu i el moviment d'espècies com el cranc de riu de potes blanques i les nàiades."
+        es: "Azudes y pequeñas captaciones rompen la continuidad del río y el movimiento de especies como el cangrejo de río de patas blancas y las náyades."
+    - title: { en: "Drought", ca: "Sequera", es: "Sequía" }
+      body:
+        en: "In dry periods the flow can drop by more than two-thirds within a single month, stalling the water and degrading its quality."
+        ca: "En períodes secs el cabal pot caure més de dues terceres parts en un sol mes, estancant l'aigua i degradant-ne la qualitat."
+        es: "En periodos secos el caudal puede caer más de dos tercios en un solo mes, estancando el agua y degradando su calidad."
+    - title: { en: "Fragmented governance", ca: "Governança fragmentada", es: "Gobernanza fragmentada" }
+      body:
+        en: "Responsibility is split between municipalities, three county councils, the ACA and sectoral bodies that rarely coordinate with one another."
+        ca: "La responsabilitat es reparteix entre municipis, tres consells comarcals, l'ACA i organismes sectorials que rarament es coordinen."
+        es: "La responsabilidad se reparte entre municipios, tres consejos comarcales, la ACA y organismos sectoriales que rara vez se coordinan."
+
+  exploreTitle: { en: "Explore the basin", ca: "Explora la conca", es: "Explora la cuenca" }
+  exploreLede:
+    en: "Four views over the same live databases. Every entry is tagged with both CATBIS and fluvia in the Notion CRM behind this site."
+    ca: "Quatre mirades sobre les mateixes bases de dades vives. Cada entrada porta les etiquetes CATBIS i fluvia al CRM de Notion que alimenta aquest web."
+    es: "Cuatro miradas sobre las mismas bases de datos vivas. Cada entrada lleva las etiquetas CATBIS y fluvia en el CRM de Notion que alimenta este sitio."
+  explore:
+    priorities: { en: "Six readings of the river landscape's health: water, riparian life, land, energy, materials and the community that holds them together.", ca: "Sis lectures de la salut del paisatge fluvial: aigua, vida de ribera, terra, energia, materials i la comunitat que els sosté.", es: "Seis lecturas de la salud del paisaje fluvial: agua, vida de ribera, tierra, energía, materiales y la comunidad que los sostiene." }
+    organizations: { en: "The stewards: non-profits, public bodies, networks and citizen platforms working along the river.", ca: "Els guardians: entitats, administracions, xarxes i plataformes ciutadanes que treballen al llarg del riu.", es: "Los guardianes: entidades, administraciones, redes y plataformas ciudadanas que trabajan a lo largo del río." }
+    programs: { en: "The alliances: from Simbiosi Fluvial to citizen science, water governance and river stewardship.", ca: "Les aliances: de Simbiosi Fluvial a la ciència ciutadana, la governança de l'aigua i la custòdia del riu.", es: "Las alianzas: de Simbiosi Fluvial a la ciencia ciudadana, la gobernanza del agua y la custodia del río." }
+    events: { en: "Gatherings bound to the river and its governance, past and upcoming.", ca: "Trobades lligades al riu i a la seva governança, passades i properes.", es: "Encuentros ligados al río y a su gobernanza, pasados y próximos." }
+
+  noteTitle: { en: "A live, provisional map", ca: "Un mapa viu i provisional", es: "Un mapa vivo y provisional" }
+  noteBody:
+    en: "This is a demonstration map prepared for the Simbiosi Fluvial community: a test of how the same Notion databases behind Regenerant Catalunya Maps can be re-read at watershed scale. Figures and institutional descriptions are working context, not verified publication copy — check them against primary sources before any external use."
+    ca: "Aquest és un mapa de demostració preparat per a la comunitat de Simbiosi Fluvial: una prova de com les mateixes bases de dades de Notion que alimenten Regenerant Catalunya Maps es poden rellegir a escala de conca. Les xifres i les descripcions institucionals són context de treball, no text de publicació verificat — cal contrastar-les amb fonts primàries abans de qualsevol ús extern."
+    es: "Este es un mapa de demostración preparado para la comunidad de Simbiosi Fluvial: una prueba de cómo las mismas bases de datos de Notion que alimentan Regenerant Catalunya Maps pueden releerse a escala de cuenca. Las cifras y las descripciones institucionales son contexto de trabajo, no texto de publicación verificado — conviene contrastarlas con fuentes primarias antes de cualquier uso externo."
+
+priorities:
+  eyebrow: { en: "Regenerant Catalunya Maps · Fluvià watershed", ca: "Regenerant Catalunya Maps · Conca del Fluvià", es: "Regenerant Catalunya Maps · Cuenca del Fluvià" }
+  title: { en: "Six readings of the river's health", ca: "Sis lectures de la salut del riu", es: "Seis lecturas de la salud del río" }
+  lede:
+    en: "The same six systems that structure the Catalonia-wide diagnosis, read here as dimensions of one landscape's socio-ecological health — and of the community that holds it together."
+    ca: "Els mateixos sis sistemes que estructuren el diagnòstic de tot Catalunya, llegits aquí com a dimensions de la salut socioecològica d'un sol paisatge — i de la comunitat que el sosté."
+    es: "Los mismos seis sistemas que estructuran el diagnóstico de toda Cataluña, leídos aquí como dimensiones de la salud socioecológica de un solo paisaje — y de la comunidad que lo sostiene."
+  howToRead:
+    en: "This is a health check, not a menu. The Fluvià does not read budgets or comarcal boundaries: water quality depends on the riparian forest, the riparian forest depends on how the plain is farmed, and all of it depends on whether the municipalities and users of the basin can agree on anything at all. Each card states the current condition, the pressures that degrade it, what a healthier state would look like, and who is already working on it."
+    ca: "Això és una revisió de salut, no un menú. El Fluvià no llegeix pressupostos ni límits comarcals: la qualitat de l'aigua depèn del bosc de ribera, el bosc de ribera depèn de com es conrea la plana, i tot plegat depèn de si els municipis i els usuaris de la conca són capaços de posar-se d'acord. Cada fitxa indica l'estat actual, les pressions que el degraden, com seria un estat més sa i qui ja hi està treballant."
+    es: "Esto es una revisión de salud, no un menú. El Fluvià no lee presupuestos ni límites comarcales: la calidad del agua depende del bosque de ribera, el bosque de ribera depende de cómo se cultiva la llanura, y todo ello depende de si los municipios y usuarios de la cuenca son capaces de ponerse de acuerdo. Cada ficha indica el estado actual, las presiones que lo degradan, cómo sería un estado más sano y quién ya está trabajando en ello."
+  scoreboardTitle: { en: "River landscape health check", ca: "Revisió de salut del paisatge fluvial", es: "Revisión de salud del paisaje fluvial" }
+  detailTitle: { en: "The six dimensions", ca: "Les sis dimensions", es: "Las seis dimensiones" }
+  stateLabel: { en: "Condition", ca: "Estat", es: "Estado" }
+  signalLabel: { en: "Signal", ca: "Senyal", es: "Señal" }
+  diagnosisLabel: { en: "Diagnosis", ca: "Diagnòstic", es: "Diagnóstico" }
+  pressuresLabel: { en: "Pressures", ca: "Pressions", es: "Presiones" }
+  healthyLabel: { en: "What a healthy river landscape looks like", ca: "Com seria un paisatge fluvial sa", es: "Cómo sería un paisaje fluvial sano" }
+  whoLabel: { en: "Who is already working on it", ca: "Qui ja hi està treballant", es: "Quién ya está trabajando en ello" }
+  whoEmpty: { en: "No actors or programs tagged with this dimension yet.", ca: "Encara no hi ha actors ni programes etiquetats amb aquesta dimensió.", es: "Todavía no hay actores ni programas etiquetados con esta dimensión." }
+  actorsLabel: { en: "organizations", ca: "organitzacions", es: "organizaciones" }
+  programsLabel: { en: "programs", ca: "programes", es: "programas" }
+  fullAnalysis: { en: "Read the Catalonia-wide diagnosis of this priority →", ca: "Llegeix el diagnòstic d'aquesta prioritat per a tot Catalunya →", es: "Lee el diagnóstico de esta prioridad para toda Cataluña →" }
+  interdependence:
+    en: "Regenerating one of these dimensions regenerates the others. Restoring alder forest shades and cools the water; cooler water holds oxygen and life; a plain that keeps its nutrients needs less treatment downstream; a basin that decides its own water allocation can afford to leave environmental flows in the river. The inverse is also true, which is why fragmentation — ecological and institutional — is the basin's deepest problem."
+    ca: "Regenerar una d'aquestes dimensions regenera les altres. Recuperar la verneda dona ombra i refreda l'aigua; l'aigua més freda reté oxigen i vida; una plana que reté els nutrients necessita menys tractament aigües avall; una conca que decideix la seva pròpia assignació d'aigua pot permetre's deixar cabals ecològics al riu. El contrari també és cert, i per això la fragmentació — ecològica i institucional — és el problema més profund de la conca."
+    es: "Regenerar una de estas dimensiones regenera las demás. Recuperar la aliseda da sombra y enfría el agua; el agua más fría retiene oxígeno y vida; una llanura que retiene sus nutrientes necesita menos tratamiento aguas abajo; una cuenca que decide su propia asignación de agua puede permitirse dejar caudales ecológicos en el río. Lo contrario también es cierto, y por eso la fragmentación — ecológica e institucional — es el problema más profundo de la cuenca."
+  statuses:
+    under_strain: { en: "Under strain", ca: "Sota pressió", es: "Bajo presión" }
+    fragile: { en: "Fragile, yet recoverable", ca: "Fragil, però recuperable", es: "Frágil, pero recuperable" }
+    reversible: { en: "Reversible legacy", ca: "Llegat reversible", es: "Legado reversible" }
+    emerging: { en: "Emerging", ca: "Emergent", es: "Emergente" }
+  entries:
+    water:
+      status: under_strain
+      signal:
+        en: "Headwaters poor, middle and lower course mediocre (ACA); flow can fall by two-thirds in a month of drought."
+        ca: "Capçalera dolenta, curs mitjà i baix mediocre (ACA); el cabal pot caure dues terceres parts en un mes de sequera."
+        es: "Cabecera mala, curso medio y bajo mediocre (ACA); el caudal puede caer dos tercios en un mes de sequía."
+      diagnosis:
+        en: "The Fluvià is the only internal Catalan basin without a major dam and without large towns in its middle and lower reaches — a rare condition in the Mediterranean. That freedom is also fragility: the flow depends almost entirely on rainfall, drought stalls the water, eutrophication and invasive species advance, and farmland loads the river with nutrients. Weirs and small intakes break a river that still functions ecologically as a whole."
+        ca: "El Fluvià és l'única conca interna catalana sense cap gran embassament i sense grans nuclis urbans al curs mitjà i baix — una condició rara a la Mediterrània. Aquesta llibertat també és fragilitat: el cabal depèn gairebé del tot de la pluja, la sequera estanca l'aigua, l'eutrofització i les espècies invasores avancen, i l'agricultura carrega el riu de nutrients. Rescloses i petites captures trenquen un riu que encara funciona ecològicament com un tot."
+        es: "El Fluvià es la única cuenca interna catalana sin ningún gran embalse y sin grandes núcleos urbanos en su curso medio y bajo — una condición rara en el Mediterráneo. Esa libertad es también fragilidad: el caudal depende casi por completo de la lluvia, la sequía estanca el agua, la eutrofización y las especies invasoras avanzan, y la agricultura carga el río de nutrientes. Azudes y pequeñas captaciones rompen un río que todavía funciona ecológicamente como un todo."
+      pressures:
+        - { en: "Drought and flow stagnation", ca: "Sequera i estancament del cabal", es: "Sequía y estancamiento del caudal" }
+        - { en: "Nutrient pollution and eutrophication", ca: "Contaminació per nutrients i eutrofització", es: "Contaminación por nutrientes y eutrofización" }
+        - { en: "Invasive species", ca: "Espècies invasores", es: "Especies invasoras" }
+        - { en: "Weirs breaking ecological continuity", ca: "Rescloses que trenquen la continuïtat ecològica", es: "Azudes que rompen la continuidad ecológica" }
+      healthy:
+        en: "Water that runs, connects and is shared: environmental flow regimes agreed between the ACA and water users, ecological continuity restored past obsolete barriers, and a basin community able to decide allocation in scarcity — the direction the Comunitat de l'Aigua in La Garrotxa is already testing."
+        ca: "Aigua que corre, connecta i es comparteix: règims de cabal ecològic acordats entre l'ACA i els usuaris, continuïtat ecològica restaurada més enllà de les barreres obsoletes i una comunitat de conca capaç de decidir l'assignació en episodis d'escassetat — la direcció que ja assaja la Comunitat de l'Aigua de la Garrotxa."
+        es: "Agua que corre, conecta y se comparte: regímenes de caudal ecológico acordados entre la ACA y los usuarios, continuidad ecológica restaurada más allá de las barreras obsoletas y una comunidad de cuenca capaz de decidir la asignación en episodios de escasez — la dirección que ya ensaya la Comunitat de l'Aigua de la Garrotxa."
+    ecosystems:
+      status: fragile
+      signal:
+        en: "Two priority habitats — alder forest and mixed deciduous forest with pedunculate oak — and threatened species: white-clawed crayfish, polecat, native mussels, otter."
+        ca: "Dos hàbitats prioritaris — verneda i boscos caducifolis mixtos amb roure pènol — i espècies amenaçades: cranc de riu de potes blanques, turó, nàiades, llúdriga."
+        es: "Dos hábitats prioritarios — aliseda y bosques caducifolios mixtos con roble pedunculado — y especies amenazadas: cangrejo de río de patas blancas, turón, náyades, nutria."
+      diagnosis:
+        en: "The basin links two protected landscapes — the volcanic zone at the headwaters and the Aiguamolls at the mouth — with the Riu Vell and the abandoned meanders protected as Natura 2000 wetlands. Between them, the riparian corridor is the ecological spine of the territory, and it is interrupted: gravel extraction reshapes the riverbed, invasive species displace native ones, and Catalan aquatic environments have lost up to 60% of their biodiversity in recent decades."
+        ca: "La conca enllaça dos paisatges protegits — la zona volcànica a la capçalera i els Aiguamolls a la desembocadura — amb el Riu Vell i els meandres abandonats protegits com a zones humides Natura 2000. Entre ells, el corredor de ribera és la columna vertebral ecològica del territori, i està interromput: l'extracció de graves remodela el llit, les espècies invasores desplacen les natives i els ambients aquàtics catalans han perdut fins a un 60% de biodiversitat en les darreres dècades."
+        es: "La cuenca enlaza dos paisajes protegidos — la zona volcánica en la cabecera y los Aiguamolls en la desembocadura — con el Riu Vell y los meandros abandonados protegidos como humedales Natura 2000. Entre ellos, el corredor de ribera es la columna vertebral ecológica del territorio, y está interrumpido: la extracción de gravas remodela el cauce, las especies invasoras desplazan a las nativas y los ambientes acuáticos catalanes han perdido hasta un 60% de biodiversidad en las últimas décadas."
+      pressures:
+        - { en: "Gravel extraction altering the riverbed", ca: "Extracció de graves que altera el llit", es: "Extracción de gravas que altera el cauce" }
+        - { en: "Invasive species", ca: "Espècies invasores", es: "Especies invasoras" }
+        - { en: "Discontinuous riparian corridor", ca: "Corredor de ribera discontinu", es: "Corredor de ribera discontinuo" }
+        - { en: "Loss of aquatic biodiversity", ca: "Pèrdua de biodiversitat aquàtica", es: "Pérdida de biodiversidad acuática" }
+      healthy:
+        en: "A continuous corridor from the volcanoes to the sea: alder and oak forest recovering along the banks, stable populations of crayfish and native mussels, and the river's own endemic snail — Vilertia galeata, described in 2022 at Esponellà — as evidence that the Fluvià still creates life."
+        ca: "Un corredor continu dels volcans al mar: vernedes i rouredes recuperant-se a les ribes, poblacions estables de cranc i nàiades, i el cargol endèmic del riu — Vilertia galeata, descrit el 2022 a Esponellà — com a prova que el Fluvià encara crea vida."
+        es: "Un corredor continuo de los volcanes al mar: alisedas y robledales recuperándose en las riberas, poblaciones estables de cangrejo y náyades, y el caracol endémico del río — Vilertia galeata, descrito en 2022 en Esponellà — como prueba de que el Fluvià todavía crea vida."
+    food:
+      status: under_strain
+      signal:
+        en: "Farmland in the Pla de l'Estany and the Empordà plain shares the basin's water — and its nutrients."
+        ca: "Les terres del Pla de l'Estany i de la plana empordanesa comparteixen l'aigua de la conca — i els seus nutrients."
+        es: "Las tierras del Pla de l'Estany y de la llanura ampurdanesa comparten el agua de la cuenca — y sus nutrientes."
+      diagnosis:
+        en: "River and plain are one system. Nitrate runoff is one of the main pressures on water quality, and agriculture is also the first to lose when the river degrades: less water, poorer soil, less resilience. Because rainfall in the headwaters is relatively favourable, the Fluvià is little used for irrigation — so the question here is less about allocation and more about how the land is farmed."
+        ca: "Riu i plana són un sol sistema. L'escolament de nitrats és una de les principals pressions sobre la qualitat de l'aigua, i l'agricultura és també la primera a perdre quan el riu es degrada: menys aigua, sòls més pobres, menys resiliència. Com que la pluviometria a la capçalera és relativament favorable, el Fluvià s'usa poc per a regadiu — així que la qüestió aquí no és tant el repartiment sinó com es conrea la terra."
+        es: "Río y llanura son un solo sistema. La escorrentía de nitratos es una de las principales presiones sobre la calidad del agua, y la agricultura es también la primera en perder cuando el río se degrada: menos agua, suelos más pobres, menos resiliencia. Como la pluviometría en la cabecera es relativamente favorable, el Fluvià se usa poco para regadío — así que la cuestión aquí no es tanto el reparto sino cómo se cultiva la tierra."
+      pressures:
+        - { en: "Nitrate runoff and eutrophication", ca: "Escolament de nitrats i eutrofització", es: "Escorrentía de nitratos y eutrofización" }
+        - { en: "Soil and water degradation", ca: "Degradació del sòl i de l'aigua", es: "Degradación del suelo y del agua" }
+        - { en: "Loss of small farm viability", ca: "Pèrdua de viabilitat de la petita pagesia", es: "Pérdida de viabilidad de la pequeña agricultura" }
+      healthy:
+        en: "An agroecological mosaic in the plain that keeps nutrients in the soil: buffer strips and restored riverbanks, closed nutrient loops, short supply chains, and farmers recognised and supported as stewards of the watershed."
+        ca: "Un mosaic agroecològic a la plana que reté els nutrients al sòl: franges de protecció i ribes restaurades, circuits tancats de nutrients, cadenes curtes i pagesia reconeguda i recolzada com a custòdia de la conca."
+        es: "Un mosaico agroecológico en la llanura que retiene los nutrientes en el suelo: franjas de protección y riberas restauradas, circuitos cerrados de nutrientes, cadenas cortas y agricultura reconocida y apoyada como custodia de la cuenca."
+    energy:
+      status: reversible
+      signal:
+        en: "Small hydropower since the Serinyà weir of 1935; the Esponellà reservoir project was abandoned in the 1970s."
+        ca: "Petita hidràulica des de la resclosa de Serinyà (1935); el projecte d'embassament d'Esponellà es va abandonar als anys setanta."
+        es: "Pequeña hidráulica desde el azud de Serinyà (1935); el proyecto de embalse de Esponellà se abandonó en los años setenta."
+      diagnosis:
+        en: "The Fluvià powered textile and paper mills in Olot, Sant Joan les Fonts and Besalú, and still hosts small hydro plants at Serinyà and Esponellà. The great dam that would have flooded the plain was never built — one of the reasons the river keeps its shape. Today the question is not whether the basin produces energy, but how: flow regimes, fish passes and the removal of obsolete barriers decide whether generation is compatible with a living river."
+        ca: "El Fluvià va moure fàbriques tèxtils i de paper a Olot, Sant Joan les Fonts i Besalú, i encara acull petites centrals hidroelèctriques a Serinyà i Esponellà. El gran embassament que hauria inundat la plana no es va arribar a construir — una de les raons per les quals el riu conserva la seva forma. Avui la qüestió no és si la conca produeix energia, sinó com: els règims de cabal, les escales de peixos i la retirada de barreres obsoletes decideixen si la generació és compatible amb un riu viu."
+        es: "El Fluvià movió fábricas textiles y de papel en Olot, Sant Joan les Fonts y Besalú, y todavía alberga pequeñas centrales hidroeléctricas en Serinyà y Esponellà. El gran embalse que habría inundado la llanura nunca se construyó — una de las razones por las que el río conserva su forma. Hoy la cuestión no es si la cuenca produce energía, sino cómo: los regímenes de caudal, las escalas de peces y la retirada de barreras obsoletas deciden si la generación es compatible con un río vivo."
+      pressures:
+        - { en: "Weirs and intakes interrupting flow", ca: "Rescloses i captures que interrompen el cabal", es: "Azudes y captaciones que interrumpen el caudal" }
+        - { en: "Energy demand competing for water", ca: "Demanda d'energia que competeix per l'aigua", es: "Demanda de energía que compite por el agua" }
+        - { en: "Legacy infrastructure without ecological design", ca: "Infraestructura antiga sense disseny ecològic", es: "Infraestructura antigua sin diseño ecológico" }
+      healthy:
+        en: "Energy that respects the river: efficiency and community generation first, hydropower operated on ecological flow regimes, and barriers removed where they no longer serve a purpose."
+        ca: "Energia que respecta el riu: eficiència i generació comunitària primer, hidroelèctrica operada amb règims de cabal ecològic i barreres retirades quan ja no compleixen cap funció."
+        es: "Energía que respeta el río: eficiencia y generación comunitaria primero, hidroeléctrica operada con regímenes de caudal ecológico y barreras retiradas cuando ya no cumplen ninguna función."
+    circular:
+      status: reversible
+      signal:
+        en: "Gravel, wastewater and farm runoff are materials out of place in a river that should carry life, not load."
+        ca: "Graves, aigües residuals i escolament agrícola són materials fora de lloc en un riu que hauria de portar vida, no càrrega."
+        es: "Gravas, aguas residuales y escorrentía agrícola son materiales fuera de lugar en un río que debería llevar vida, no carga."
+      diagnosis:
+        en: "Circularity in the basin means closing three loops: nutrients — from farm runoff back into soil instead of into water; water — treatment, reuse and infiltration instead of discharge; and materials — gravel managed as part of the river's sediment regime rather than as a quarry. The ACA's own circular-water agenda reads at basin scale as one question: what still leaves the watershed as waste?"
+        ca: "La circularitat a la conca vol dir tancar tres cicles: nutrients — de l'escolament agrícola al sòl en lloc de l'aigua; aigua — tractament, reutilització i infiltració en lloc d'abocament; i materials — graves gestionades com a part del règim de sediments del riu i no com una pedrera. L'agenda d'aigua circular de l'ACA, a escala de conca, es tradueix en una pregunta: què surt encara de la conca com a residu?"
+        es: "La circularidad en la cuenca significa cerrar tres ciclos: nutrientes — de la escorrentía agrícola al suelo en lugar del agua; agua — tratamiento, reutilización e infiltración en lugar de vertido; y materiales — gravas gestionadas como parte del régimen de sedimentos del río y no como una cantera. La agenda de agua circular de la ACA, a escala de cuenca, se traduce en una pregunta: ¿qué sale todavía de la cuenca como residuo?"
+      pressures:
+        - { en: "Insufficient wastewater treatment", ca: "Tractament insuficient d'aigües residuals", es: "Tratamiento insuficiente de aguas residuales" }
+        - { en: "Extractive gravel management", ca: "Gestió extractiva de les graves", es: "Gestión extractiva de las gravas" }
+        - { en: "Nutrient leakage into the river", ca: "Fugida de nutrients cap al riu", es: "Fuga de nutrientes hacia el río" }
+      healthy:
+        en: "A basin that closes its loops: treated water returned clean or reused, nutrients captured in soil and biomass, and sediment managed as part of the river's own dynamics."
+        ca: "Una conca que tanca els seus cicles: aigua tractada retornada neta o reutilitzada, nutrients capturats al sòl i a la biomassa, i sediments gestionats com a part de la dinàmica del propi riu."
+        es: "Una cuenca que cierra sus ciclos: agua tratada devuelta limpia o reutilizada, nutrientes capturados en el suelo y en la biomasa, y sedimentos gestionados como parte de la dinámica del propio río."
+    social:
+      status: emerging
+      signal:
+        en: "More than 20 municipalities and four non-profits building a hydro-community: a watershed governed as a commons."
+        ca: "Més de 20 municipis i quatre entitats construint una hidrocomunitat: una conca governada com un bé comú."
+        es: "Más de 20 municipios y cuatro entidades construyendo una hidrocomunidad: una cuenca gobernada como un bien común."
+      diagnosis:
+        en: "The ecological health of the Fluvià depends on social health: who decides, who cares, who stays. The history is instructive — the Consorci del Fluvià (2011–2015) showed both the need for basin-scale coordination and how quickly it dissolves without durable funding. Today Simbiosi Fluvial, the county councils, the emerging water community in La Garrotxa and the grassroots platforms at the river mouth are rebuilding that capacity from the bottom up, with volunteering, citizen science and education as its base."
+        ca: "La salut ecològica del Fluvià depèn de la salut social: qui decideix, qui cuida, qui es queda. La història és instructiva — el Consorci del Fluvià (2011–2015) va mostrar tant la necessitat de coordinar-se a escala de conca com la facilitat amb què es dissol sense finançament estable. Avui Simbiosi Fluvial, els consells comarcals, la incipient comunitat de l'aigua de la Garrotxa i les plataformes de la desembocadura reconstrueixen aquesta capacitat des de baix, amb el voluntariat, la ciència ciutadana i l'educació com a base."
+        es: "La salud ecológica del Fluvià depende de la salud social: quién decide, quién cuida, quién se queda. La historia es instructiva — el Consorci del Fluvià (2011–2015) mostró tanto la necesidad de coordinarse a escala de cuenca como la facilidad con que se disuelve sin financiación estable. Hoy Simbiosi Fluvial, los consejos comarcales, la incipiente comunidad del agua de La Garrotxa y las plataformas de la desembocadura reconstruyen esa capacidad desde abajo, con el voluntariado, la ciencia ciudadana y la educación como base."
+      pressures:
+        - { en: "Coordination that depends on subsidies", ca: "Coordinació que depèn de subvencions", es: "Coordinación que depende de subvenciones" }
+        - { en: "Fragmentation across three comarques and dozens of agencies", ca: "Fragmentació entre tres comarques i desenes d'organismes", es: "Fragmentación entre tres comarcas y decenas de organismos" }
+        - { en: "Participation fatigue and electoral cycles", ca: "Fatiga participativa i cicles electorals", es: "Fatiga participativa y ciclos electorales" }
+      healthy:
+        en: "A hydro-community with an institution behind it: municipalities, farmers, water users, non-profits and public agencies sharing decisions that survive political change, and a river whose state is legible to everyone who lives along it."
+        ca: "Una hidrocomunitat amb una institució al darrere: municipis, pagesia, usuaris de l'aigua, entitats i administracions compartint decisions que sobreviuen als canvis polítics, i un riu l'estat del qual és llegible per a tothom qui hi viu a prop."
+        es: "Una hidrocomunidad con una institución detrás: municipios, agricultura, usuarios del agua, entidades y administraciones compartiendo decisiones que sobreviven a los cambios políticos, y un río cuyo estado es legible para todo el mundo que vive cerca."
+
+orgs:
+  heroLede:
+    en: "The stewards of the basin: non-profits, public bodies, networks and citizen platforms tagged with the Fluvià in the Regenerant Catalunya CRM. Search by name or filter by priority, territory and role."
+    ca: "Els guardians de la conca: entitats, administracions, xarxes i plataformes ciutadanes etiquetades amb el Fluvià al CRM de Regenerant Catalunya. Cerca per nom o filtra per prioritat, territori i rol."
+    es: "Los guardianes de la cuenca: entidades, administraciones, redes y plataformas ciudadanas etiquetadas con el Fluvià en el CRM de Regenerant Catalunya. Busca por nombre o filtra por prioridad, territorio y rol."
+  role: { en: "Role in the ecosystem", ca: "Rol a l'ecosistema", es: "Rol en el ecosistema" }
+  why: { en: "Why it matters on the Fluvià", ca: "Per què importa al Fluvià", es: "Por qué importa en el Fluvià" }
+
+programs:
+  heroLede:
+    en: "The alliances of the basin: the initiatives that coordinate, restore, monitor and govern the Fluvià, from the watershed alliance to historic basin-governance experiments. Search by name or filter by priority and territory."
+    ca: "Les aliances de la conca: les iniciatives que coordinen, restauren, fan seguiment i governen el Fluvià, de l'aliança de conca als experiments històrics de governança. Cerca per nom o filtra per prioritat i territori."
+    es: "Las alianzas de la cuenca: las iniciativas que coordinan, restauran, monitorizan y gobiernan el Fluvià, desde la alianza de cuenca hasta los experimentos históricos de gobernanza. Busca por nombre o filtra por prioridad y territorio."
+  notes: { en: "Context", ca: "Context", es: "Contexto" }
+
+events:
+  heroLede:
+    en: "Gatherings bound to the river: from basin-planning participation sessions to forums on the future of water in the Fluvià."
+    ca: "Trobades lligades al riu: de les sessions de participació de la planificació de conca als fòrums sobre el futur de l'aigua al Fluvià."
+    es: "Encuentros ligados al río: de las sesiones de participación de la planificación de cuenca a los foros sobre el futuro del agua en el Fluvià."
+
+sources:
+  title: { en: "Sources", ca: "Fonts", es: "Fuentes" }
+  items:
+    - label: { en: "Simbiosi Fluvial — official project website", ca: "Simbiosi Fluvial — web oficial del projecte", es: "Simbiosi Fluvial — web oficial del proyecto" }
+      url: "https://simbiosifluvial.org/"
+      accessed: "2026-09-16"
+    - label: { en: "Generalitat de Catalunya: Simbiosi Fluvial, a pioneering project for the renaturalisation of the Fluvià (19 March 2025)", ca: "Generalitat de Catalunya: Simbiosi Fluvial, un projecte pioner per la renaturalització del riu Fluvià (19 de març de 2025)", es: "Generalitat de Catalunya: Simbiosi Fluvial, un proyecto pionero para la renaturalización del río Fluvià (19 de marzo de 2025)" }
+      url: "https://mediambient.gencat.cat/ca/detalls/Noticies/250319-simbiosi-fluvial"
+      accessed: "2026-09-16"
+    - label: { en: "Resilience.Earth: Simbiosi Fluvial, the renaturalisation of the Fluvià", ca: "Resilience.Earth: Simbiosi Fluvial, la renaturalització del riu Fluvià", es: "Resilience.Earth: Simbiosi Fluvial, la renaturalización del río Fluvià" }
+      url: "https://resilience.earth/article/simbiosi-fluvial-la-renaturalitzacio-del-riu-fluvia"
+      accessed: "2026-09-16"
+    - label: { en: "Viquipèdia: Fluvià", ca: "Viquipèdia: Fluvià", es: "Wikipedia: Fluvià" }
+      url: "https://ca.wikipedia.org/wiki/Fluvi%C3%A0"
+      accessed: "2026-09-16"
+    - label: { en: "Associació Hàbitats — Projecte Rius", ca: "Associació Hàbitats — Projecte Rius", es: "Associació Hàbitats — Projecte Rius" }
+      url: "https://www.projecterius.cat/"
+      accessed: "2026-09-16"
+    - label: { en: "ANEGx — Naturalist and Ecologist Association of La Garrotxa", ca: "ANEGx — Agrupació Naturalista i Ecologista de la Garrotxa", es: "ANEGx — Agrupación Naturalista y Ecologista de La Garrotxa" }
+      url: "https://anegx.com/"
+      accessed: "2026-09-16"
+    - label: { en: "Associació Silene", ca: "Associació Silene", es: "Associació Silene" }
+      url: "https://www.silene.ong/"
+      accessed: "2026-09-16"
+    - label: { en: "IAEDEN — Salvem l'Empordà: Grup en Defensa de la Gola del Fluvià", ca: "IAEDEN — Salvem l'Empordà: Grup en Defensa de la Gola del Fluvià", es: "IAEDEN — Salvem l'Empordà: Grup en Defensa de la Gola del Fluvià" }
+      url: "https://iaeden.cat/el-grup-en-defensa-de-la-gola-del-fluvia/"
+      accessed: "2026-09-16"

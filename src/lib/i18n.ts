@@ -7,11 +7,8 @@ export type Lang = "en" | "ca" | "es";
 
 export type I18nDict = Record<string, I18nString>;
 
-/** Load the shared UI strings dictionary (src/data/i18n.yaml). */
-export function loadI18n(): I18nDict {
-  const filePath = path.join(process.cwd(), "src/data/i18n.yaml");
-  const raw = fs.readFileSync(filePath, "utf8");
-  const parsed = yaml.load(raw) as Record<string, any>;
+/** Flatten a nested i18n tree ({ en, ca?, es? } leaves) into a flat key → string dict. */
+export function flattenI18n(node: any): I18nDict {
   const flat: I18nDict = {};
   const walk = (prefix: string, node: any) => {
     if (!node || typeof node !== "object") return;
@@ -23,8 +20,16 @@ export function loadI18n(): I18nDict {
       walk(prefix ? `${prefix}.${key}` : key, value);
     }
   };
-  walk("", parsed);
+  walk("", node);
   return flat;
+}
+
+/** Load the shared UI strings dictionary (src/data/i18n.yaml). */
+export function loadI18n(): I18nDict {
+  const filePath = path.join(process.cwd(), "src/data/i18n.yaml");
+  const raw = fs.readFileSync(filePath, "utf8");
+  const parsed = yaml.load(raw) as Record<string, any>;
+  return flattenI18n(parsed);
 }
 
 /** Server-side helper: pick the string for a language (falls back to en). */

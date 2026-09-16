@@ -9,8 +9,10 @@ import "@fontsource/averia-serif-libre/400.css";
 import "@fontsource/averia-serif-libre/700.css";
 import "../styles/tokens.css";
 import "../styles/theme.css";
+import "../styles/themes/fluvia-river.css";
 import "../styles/global.css";
 import Nav from "./Nav.astro";
+import FluviaNav from "./FluviaNav.astro";
 import Footer from "./Footer.astro";
 import I18n from "./I18n.astro";
 import { loadI18n, type I18nDict } from "../lib/i18n";
@@ -19,79 +21,102 @@ import path from "node:path";
 import yaml from "js-yaml";
 
 const site = yaml.load(
-  fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8")
+    fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
 ) as { name: string; url: string; description: string };
 
 const uiStrings = loadI18n();
 
 interface Props {
-  title: string;
-  description?: string;
-  current?: "home" | "priorities" | "contribute" | "bioeconomy" | "organizations" | "programs" | "events";
-  section?: string;
-  dataset?: string;
-  minimal?: boolean;
-  noindex?: boolean;
-  /** Per-page content strings merged with the shared UI dictionary. */
-  i18nDict?: I18nDict;
+    title: string;
+    description?: string;
+    current?: string;
+    section?: string;
+    dataset?: string;
+    minimal?: boolean;
+    noindex?: boolean;
+    /** Which site chrome to render. "fluvia" swaps in the Fluvià watershed navigation. */
+    shell?: "main" | "fluvia";
+    /** Per-page content strings merged with the shared UI dictionary. */
+    i18nDict?: I18nDict;
 }
-const { title, description = site.description, current = "home", section, dataset, minimal = false, noindex = false, i18nDict } = Astro.props;
+const {
+    title,
+    description = site.description,
+    current = "home",
+    section,
+    dataset,
+    minimal = false,
+    noindex = false,
+    shell = "main",
+    i18nDict,
+} = Astro.props;
 const mergedDict: I18nDict = { ...uiStrings, ...i18nDict };
 const pageTitle = `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 ---
+
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content={description} />
-  <meta name="robots" content={noindex ? "noindex" : "index"} />
-  <title>{pageTitle}</title>
-  <link rel="canonical" href={canonical} />
-  <I18n dict={mergedDict} />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content={site.name} />
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonical} />
-  <slot name="head" />
-</head>
-<body class:list={{ minimal }}>
-  {!minimal && <Nav current={current} section={section} dataset={dataset} />}
-  <main><slot /></main>
-  {!minimal && <Footer />}
-  <script>
-    const els = document.querySelectorAll("main > section, main > header, main > article");
-    if ("IntersectionObserver" in window && els.length) {
-      const revealIn = (el) => {
-        el.classList.add("reveal");
-        const rect = el.getBoundingClientRect();
-        const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
-        if (inViewport) {
-          el.classList.add("reveal--in");
-        }
-      };
+<html lang="en" class:list={{ "theme-fluvia": shell === "fluvia" }}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        <meta name="robots" content={noindex ? "noindex" : "index"} />
+        <title>{pageTitle}</title>
+        <link rel="canonical" href={canonical} />
+        <I18n dict={mergedDict} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={site.name} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <slot name="head" />
+    </head>
+    <body class:list={{ minimal }}>
+        {!minimal &&
+            (shell === "fluvia" ? (
+                <FluviaNav current={current} />
+            ) : (
+                <Nav current={current} section={section} dataset={dataset} />
+            ))}
+        <main>
+            <slot />
+        </main>
+        {!minimal && <Footer />}
+        <script>
+            const els = document.querySelectorAll(
+                "main > section, main > header, main > article",
+            );
+            if ("IntersectionObserver" in window && els.length) {
+                const revealIn = (el) => {
+                    el.classList.add("reveal");
+                    const rect = el.getBoundingClientRect();
+                    const inViewport =
+                        rect.top < window.innerHeight && rect.bottom > 0;
+                    if (inViewport) {
+                        el.classList.add("reveal--in");
+                    }
+                };
 
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              e.target.classList.add("reveal--in");
-              io.unobserve(e.target);
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        for (const e of entries) {
+                            if (e.isIntersecting) {
+                                e.target.classList.add("reveal--in");
+                                io.unobserve(e.target);
+                            }
+                        }
+                    },
+                    { threshold: 0.01, rootMargin: "0px 0px -50px 0px" },
+                );
+
+                els.forEach((el) => {
+                    revealIn(el);
+                    if (!el.classList.contains("reveal--in")) {
+                        io.observe(el);
+                    }
+                });
             }
-          }
-        },
-        { threshold: 0.01, rootMargin: "0px 0px -50px 0px" },
-      );
-
-      els.forEach((el) => {
-        revealIn(el);
-        if (!el.classList.contains("reveal--in")) {
-          io.observe(el);
-        }
-      });
-    }
-  </script>
-</body>
+        </script>
+    </body>
 </html>

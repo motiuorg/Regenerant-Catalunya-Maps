@@ -1,0 +1,76 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
+const site = yaml.load(
+  fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8")
+) as { name: string };
+
+interface Props {
+  current?: string;
+}
+const { current = "overview" } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const fluvia = `${base}fluvia/`;
+const items = [
+  { id: "overview", label: "Overview", href: fluvia, key: "fluv.nav.overview" },
+  { id: "priorities", label: "Priorities", href: `${fluvia}priorities/`, key: "nav.priorities" },
+  { id: "organizations", label: "Organizations", href: `${fluvia}organizations/`, key: "nav.organizations" },
+  { id: "programs", label: "Programs and Initiatives", href: `${fluvia}programs/`, key: "nav.programs" },
+  { id: "events", label: "Events", href: `${fluvia}events/`, key: "nav.events" },
+];
+---
+<header class="fluv-nav">
+  <div class="fluv-nav__top">
+    <a href={fluvia} class="fluv-brand" aria-label={`${site.name} — Fluvià — overview`}>
+      <span class="fluv-brand__org">{site.name}</span>
+      <span class="fluv-brand__sep">·</span>
+      <span class="fluv-brand__river">Fluvià</span>
+    </a>
+    <a href={base} class="fluv-back" data-i18n="fluv.nav.mainMap">Complete map →</a>
+  </div>
+  <nav aria-label="Fluvià">
+    <ul>
+      {items.map((it) => (
+        <li><a href={it.href} class:list={[{ active: current === it.id }]} data-i18n={it.key}>{it.label}</a></li>
+      ))}
+      <li class="nav-lang">
+        <div class="lang-switcher" role="group" aria-label="Language">
+          {["en", "ca", "es"].map((lang) => (
+            <button
+              type="button"
+              class="lang-switcher__btn"
+              data-lang-btn={lang}
+              lang={lang}
+              aria-pressed="false"
+            >
+              {lang.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+<style>
+  .fluv-nav { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--ink); background: var(--paper); }
+  .fluv-nav__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem var(--gutter) 0.5rem; }
+  .fluv-brand { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; color: var(--ink); font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .fluv-brand__org { font-weight: 500; }
+  .fluv-brand__sep { color: var(--rule); }
+  .fluv-brand__river { color: var(--primary); }
+  .fluv-back { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--rule); text-decoration: none; border-bottom: 1px solid transparent; white-space: nowrap; }
+  .fluv-back:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  .fluv-nav nav { padding: 0 var(--gutter) 0.6rem; }
+  .fluv-nav nav ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; flex-wrap: wrap; align-items: center; }
+  .fluv-nav nav a { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rule); text-decoration: none; padding: 0.2rem 0; border-bottom: 1px solid transparent; white-space: nowrap; }
+  .fluv-nav nav a.active, .fluv-nav nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  .lang-switcher { display: inline-flex; gap: 0; border: 1px solid var(--border-subtle); }
+  .lang-switcher__btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; background: var(--paper); color: var(--text-muted); border: none; cursor: pointer; transition: background-color var(--t-fast), color var(--t-fast); }
+  .lang-switcher__btn + .lang-switcher__btn { border-left: 1px solid var(--border-subtle); }
+  .lang-switcher__btn:hover { color: var(--ink); }
+  .lang-switcher__btn.active { background: var(--ink); color: var(--paper); }
+  @media (max-width: 880px) { .fluv-nav__top { flex-direction: column; align-items: flex-start; gap: 0.35rem; } }
+  @media (max-width: 720px) { .fluv-nav nav ul { gap: 0.9rem; } }
+</style>

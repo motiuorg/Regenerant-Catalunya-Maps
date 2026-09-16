@@ -1,0 +1,74 @@
+/* Fluvià watershed palette — a cooler, river-toned reading of the
+   editorial-organic theme, applied only when <html> carries `.theme-fluvia`
+   (Layout shell="fluvia"). Water blue becomes the primary, riparian green
+   stays as the living accent, and warm sand/sediment tones remain as the
+   organic counterpoint — so the palette keeps the site's editorial warmth
+   while shifting toward the river.
+   `html.theme-fluvia` outranks `:root`, so token order does not matter. */
+html.theme-fluvia {
+  /* paper & ink: cool mist over the same neutral system */
+  --paper: #f8fafb;
+  --ivory: #eef4f6;
+  --sand: #e1e9ed;
+  --ink: #14242e;
+  --rule: #5a6e76;
+
+  /* blue family — snowmelt → deep water */
+  --pillar-neural-1: #cfe9ef;
+  --pillar-neural-2: #93c4d3;
+  --pillar-neural-3: #3a7ea0;
+  --pillar-neural-4: #1c4a63;
+  --pillar-neural-light: var(--pillar-neural-1);
+  --pillar-neural-mid: var(--pillar-neural-3);
+  --pillar-neural-dark: var(--pillar-neural-4);
+
+  /* green family — riparian forest, the living accent */
+  --pillar-tissue-1: #dff0c8;
+  --pillar-tissue-2: #a4c47e;
+  --pillar-tissue-3: #42795a;
+  --pillar-tissue-4: #2c4f40;
+  --pillar-tissue-light: var(--pillar-tissue-1);
+  --pillar-tissue-mid: var(--pillar-tissue-3);
+  --pillar-tissue-dark: var(--pillar-tissue-4);
+
+  /* warm family — sediment, sunlight on the water */
+  --pillar-flow-1: #f4e0a2;
+  --pillar-flow-2: #d8a468;
+  --pillar-flow-3: #b05a33;
+  --pillar-flow-4: #5f3822;
+  --pillar-flow-light: var(--pillar-flow-1);
+  --pillar-flow-mid: var(--pillar-flow-3);
+  --pillar-flow-dark: var(--pillar-flow-4);
+
+  /* library accents shifted toward the blue side of the wheel */
+  --lib-gris: #9daab0;
+  --lib-ocean: #2f5fa8;
+  --lib-blue: #4e93b8;
+  --lib-green: #3f8f63;
+  --lib-yellow: #c9a028;
+  --lib-orange: #c9722c;
+  --lib-red: #b8482f;
+  --lib-pink: #d06a80;
+  --lib-purple: #7a5fb0;
+
+  /* semantic roles: the river blue leads, the riparian green regenerates */
+  --primary: var(--pillar-neural-3);
+  --primary-hover: var(--pillar-neural-4);
+  --primary-foreground: var(--paper);
+  --accent: var(--pillar-tissue-3);
+  --accent-foreground: var(--paper);
+  --regen: var(--pillar-tissue-3);
+  --regen-hover: var(--pillar-tissue-4);
+  --regen-foreground: var(--paper);
+
+  --info: var(--pillar-neural-3);
+  --info-foreground: var(--paper);
+  --success: var(--pillar-tissue-4);
+  --success-foreground: #f2f6f2;
+
+  --gradient-bridge: linear-gradient(
+    135deg,
+    var(--pillar-neural-3),
+    var(--pillar-tissue-3)
+  );
+}

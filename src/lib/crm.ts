@@ -37,6 +37,8 @@ export interface CrmProgram {
   area2: string[];
   agency: string | null;
   secondTags: string[];
+  /** Free-form context/verification notes kept in the CRM (Notes property). */
+  notes: string;
 }
 
 export interface CrmEvent {
@@ -158,6 +160,7 @@ export function normalizeProgram(record: NormalizedRecord): CrmProgram {
     area2: toStringArray(props["Area2"]),
     agency: toNullableString(props["Agency"]),
     secondTags: toStringArray(props["2NDTAG"]),
+    notes: String(props["Notes"] ?? ""),
   };
 }
 
@@ -178,9 +181,9 @@ export function normalizeEvent(record: NormalizedRecord): CrmEvent {
   };
 }
 
-export function hasCatbis(record: NormalizedRecord | CrmRecord): boolean {
+function hasTag(record: NormalizedRecord | CrmRecord, tag: string): boolean {
   if ("secondTags" in record && Array.isArray(record.secondTags)) {
-    return record.secondTags.some((t) => t.toLowerCase() === "catbis");
+    if (record.secondTags.some((t) => String(t).toLowerCase() === tag)) return true;
   }
   const props = (record as NormalizedRecord).properties ?? {};
   const candidates = [
@@ -192,9 +195,18 @@ export function hasCatbis(record: NormalizedRecord | CrmRecord): boolean {
   for (const value of candidates) {
     if (value === undefined || value === null) continue;
     const tags = toStringArray(value);
-    if (tags.some((t) => t.toLowerCase() === "catbis")) return true;
+    if (tags.some((t) => String(t).toLowerCase() === tag)) return true;
   }
   return false;
+}
+
+export function hasCatbis(record: NormalizedRecord | CrmRecord): boolean {
+  return hasTag(record, "catbis");
+}
+
+/** True when the record carries the `fluvia` second-order tag (plus CATBIS, as tagged in the CRM). */
+export function hasFluvia(record: NormalizedRecord | CrmRecord): boolean {
+  return hasTag(record, "fluvia");
 }
 
 export function hasBioeconomyMeme(record: NormalizedRecord | CrmRecord): boolean {

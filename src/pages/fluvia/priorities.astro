@@ -1,0 +1,730 @@
+---
+import Layout from "../../components/Layout.astro";
+import OrganicAmbient from "../../components/OrganicAmbient.astro";
+import { loadPriorities } from "../../lib/priorities";
+import { loadSectionConfig, fetchDatabaseRecords } from "../../lib/notion";
+import {
+    hasCatbis,
+    hasFluvia,
+    normalizeRecord,
+    normalizeProgram,
+    inferPriorityTags,
+    priorityColor,
+} from "../../lib/crm";
+import { loadFluviaContent, fluviaDict, t } from "../../lib/fluvia";
+import type { CrmActor, CrmProgram } from "../../lib/crm";
+
+const content = loadFluviaContent();
+
+const priorities = loadPriorities().sort((a, b) => a.order - b.order);
+
+// Priority names and one-liners come from the shared priorities registry; the
+// health-check readings of each dimension come from src/data/fluvia.yaml.
+const dict = fluviaDict();
+for (const p of priorities) {
+    dict[`p-${p.slug}-shortname`] = p.shortName;
+    dict[`p-${p.slug}-oneliner`] = p.oneLiner ?? { en: "" };
+}
+
+const sections = loadSectionConfig();
+const actorsSection = sections.find((s) => s.id === "actors");
+const programsSection = sections.find((s) => s.id === "programs");
+
+let actorRecords: any[] = [];
+let programRecords: any[] = [];
+let notionError: string | null = null;
+
+try {
+    if (actorsSection?.database_id) {
+        actorRecords = await fetchDatabaseRecords(actorsSection.database_id);
+    }
+    if (programsSection?.database_id) {
+        programRecords = await fetchDatabaseRecords(
+            programsSection.database_id,
+        );
+    }
+} catch (e: any) {
+    notionError = e.message ?? "Failed to fetch records from Notion.";
+}
+
+const fluvialFilter = (r: any) => hasCatbis(r) && hasFluvia(r);
+
+const actors: CrmActor[] = actorRecords
+    .filter(fluvialFilter)
+    .map(normalizeRecord);
+const programs = programRecords
+    .filter(fluvialFilter)
+    .map(normalizeProgram)
+    .map((p) => ({ ...p, priorityTags: inferPriorityTags(p) }));
+
+const dimensions = priorities.map((priority) => {
+    const entry = content.priorities?.entries?.[priority.slug] ?? {};
+    const relatedActors = actors.filter((a) =>
+        a.thirdTags.includes(priority.id),
+    );
+    const relatedPrograms = programs.filter((p) =>
+        p.priorityTags.includes(priority.id),
+    );
+    return {
+        priority,
+        entry,
+        status: String(entry.status ?? "under_strain"),
+        relatedActors,
+        relatedPrograms,
+    };
+});
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+const fluvia = `${base}fluvia/`;
+
+/** Map a health-check status id to a theme palette token suffix. */
+function statusColor(status: string): string {
+    return (
+        {
+            under_strain: "orange",
+            fragile: "yellow",
+            reversible: "blue",
+            emerging: "green",
+        }[status] ?? "orange"
+    );
+}
+---
+
+<Layout
+    title="River landscape priorities"
+    description="The socio-ecological health of the Fluvià river landscape, read through six dimensions: water, ecosystems, food, energy, circularity and community."
+    current="priorities"
+    shell="fluvia"
+    noindex
+    i18nDict={dict}
+>
+    <header class="hero hero--compact">
+        <OrganicAmbient />
+        <div class="hero__inner section">
+            <p class="eyebrow" data-i18n="fluv.priorities.eyebrow">
+                Regenerant Catalunya Maps · Fluvià watershed
+            </p>
+            <h1 class="display" data-i18n="fluv.priorities.title">
+                Six readings of the river's health
+            </h1>
+            <p class="lede" data-i18n="fluv.priorities.lede">
+                The same six systems that structure the Catalonia-wide
+                diagnosis, read here as dimensions of one landscape's
+                socio-ecological health.
+            </p>
+        </div>
+    </header>
+
+    <section class="section section--wide">
+        {notionError && (
+            <div class="error-banner">
+                <p>
+                    <strong data-i18n="common.dataError">Data error:</strong>{" "}
+                    {notionError}
+                </p>
+            </div>
+        )}
+
+        <div class="note">
+            <p class="note__body" data-i18n="fluv.priorities.howToRead">
+                This is a health check, not a menu.
+            </p>
+        </div>
+
+        <h2 class="section-title" data-i18n="fluv.priorities.scoreboardTitle">
+            River landscape health check
+        </h2>
+        <div class="health">
+            {dimensions.map(
+                ({
+                    priority,
+                    status,
+                    entry,
+                    relatedActors,
+                    relatedPrograms,
+                }) => (
+                    <a
+                        class="health__row"
+                        href={`#${priority.slug}`}
+                        style={`--pc: ${priorityColor(priority.id)}; --sc: var(--lib-${statusColor(status)});`}
+                    >
+                        <span
+                            class="health__name"
+                            data-i18n={`p-${priority.slug}-shortname`}
+                        >
+                            {t(priority.shortName)}
+                        </span>
+                        <span
+                            class="health__state"
+                            data-i18n={`fluv.priorities.statuses.${status}`}
+                        >
+                            {t(content.priorities?.statuses?.[status])}
+                        </span>
+                        <span
+                            class="health__signal"
+                            data-i18n={`fluv.priorities.entries.${priority.slug}.signal`}
+                        >
+                            {t(entry.signal)}
+                        </span>
+                        <span class="health__counts">
+                            {relatedActors.length}{" "}
+                            <span data-i18n="fluv.priorities.actorsLabel">
+                                organizations
+                            </span>
+                            {" · "}
+                            {relatedPrograms.length}{" "}
+                            <span data-i18n="fluv.priorities.programsLabel">
+                                programs
+                            </span>
+                        </span>
+                    </a>
+                ),
+            )}
+        </div>
+
+        <h2 class="section-title" data-i18n="fluv.priorities.detailTitle">
+            The six dimensions
+        </h2>
+
+        <div class="dimension-list">
+            {dimensions.map(
+                ({
+                    priority,
+                    status,
+                    entry,
+                    relatedActors,
+                    relatedPrograms,
+                }) => (
+                    <article
+                        class="dimension"
+                        id={priority.slug}
+                        style={`--pc: ${priorityColor(priority.id)}; --sc: var(--lib-${statusColor(status)});`}
+                    >
+                        <header class="dimension__header">
+                            <div>
+                                <span class="dimension__order">
+                                    {String(priority.order).padStart(2, "0")}
+                                </span>
+                                <h3
+                                    class="dimension__name"
+                                    data-i18n={`p-${priority.slug}-shortname`}
+                                >
+                                    {t(priority.shortName)}
+                                </h3>
+                                <p
+                                    class="dimension__oneliner"
+                                    data-i18n={`p-${priority.slug}-oneliner`}
+                                >
+                                    {t(priority.oneLiner)}
+                                </p>
+                            </div>
+                            <span
+                                class="dimension__state"
+                                data-i18n={`fluv.priorities.statuses.${status}`}
+                            >
+                                {t(content.priorities?.statuses?.[status])}
+                            </span>
+                        </header>
+
+                        <p
+                            class="dimension__signal"
+                            data-i18n={`fluv.priorities.entries.${priority.slug}.signal`}
+                        >
+                            {t(entry.signal)}
+                        </p>
+
+                        <div class="dimension__block">
+                            <h4
+                                class="block-label"
+                                data-i18n="fluv.priorities.diagnosisLabel"
+                            >
+                                Diagnosis
+                            </h4>
+                            <p
+                                class="block-text"
+                                data-i18n={`fluv.priorities.entries.${priority.slug}.diagnosis`}
+                            >
+                                {t(entry.diagnosis)}
+                            </p>
+                        </div>
+
+                        <div class="dimension__split">
+                            <div class="dimension__block">
+                                <h4
+                                    class="block-label"
+                                    data-i18n="fluv.priorities.pressuresLabel"
+                                >
+                                    Pressures
+                                </h4>
+                                <ul class="pressure-items">
+                                    {(entry.pressures ?? []).map(
+                                        (item: any, i: number) => (
+                                            <li
+                                                data-i18n={`fluv.priorities.entries.${priority.slug}.pressures.${i}`}
+                                            >
+                                                {t(item)}
+                                            </li>
+                                        ),
+                                    )}
+                                </ul>
+                            </div>
+                            <div class="dimension__block">
+                                <h4
+                                    class="block-label"
+                                    data-i18n="fluv.priorities.healthyLabel"
+                                >
+                                    What a healthy river landscape looks like
+                                </h4>
+                                <p
+                                    class="block-text"
+                                    data-i18n={`fluv.priorities.entries.${priority.slug}.healthy`}
+                                >
+                                    {t(entry.healthy)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="dimension__block dimension__block--who">
+                            <h4
+                                class="block-label"
+                                data-i18n="fluv.priorities.whoLabel"
+                            >
+                                Who is already working on it
+                            </h4>
+                            {relatedActors.length === 0 &&
+                            relatedPrograms.length === 0 ? (
+                                <p
+                                    class="block-text"
+                                    data-i18n="fluv.priorities.whoEmpty"
+                                >
+                                    No actors or programs tagged with this
+                                    dimension yet.
+                                </p>
+                            ) : (
+                                <ul class="who-list">
+                                    {relatedActors.slice(0, 6).map((actor) => (
+                                        <li>
+                                            <a
+                                                href={`${fluvia}organizations/`}
+                                                class="who-link who-link--actor"
+                                            >
+                                                {actor.name}
+                                            </a>
+                                        </li>
+                                    ))}
+                                    {relatedPrograms
+                                        .slice(0, 4)
+                                        .map((program) => (
+                                            <li>
+                                                <a
+                                                    href={`${fluvia}programs/`}
+                                                    class="who-link who-link--program"
+                                                >
+                                                    {program.name}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    {relatedActors.length +
+                                        relatedPrograms.length >
+                                        10 && (
+                                        <li class="who-more">
+                                            +
+                                            {relatedActors.length +
+                                                relatedPrograms.length -
+                                                10}
+                                        </li>
+                                    )}
+                                </ul>
+                            )}
+                            <a
+                                href={`${base}priorities/${priority.slug}/`}
+                                class="dimension__full"
+                            >
+                                <span data-i18n="fluv.priorities.fullAnalysis">
+                                    Read the Catalonia-wide diagnosis of this
+                                    priority →
+                                </span>
+                            </a>
+                        </div>
+                    </article>
+                ),
+            )}
+        </div>
+    </section>
+
+    <section class="section section--wide section--alt">
+        <h2 class="section-title" data-i18n="pri.interdependence">
+            Interdependence
+        </h2>
+        <p class="section-lede" data-i18n="fluv.priorities.interdependence">
+            Regenerating one of these dimensions regenerates the others.
+        </p>
+    </section>
+
+    <section class="section section--wide">
+        <h2 class="section-title" data-i18n="fluv.sources.title">
+            Sources
+        </h2>
+        <ul class="source-list">
+            {content.sources.items.map((source: any, i: number) => (
+                <li>
+                    <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-i18n={`fluv.sources.items.${i}.label`}
+                    >
+                        {t(source.label)}
+                    </a>
+                    <span class="source-list__date">{source.accessed}</span>
+                </li>
+            ))}
+        </ul>
+    </section>
+</Layout>
+
+<style>
+    .hero--compact {
+        position: relative;
+        padding: var(--space-12) var(--gutter) var(--space-8);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+        overflow: hidden;
+    }
+    .hero__inner {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-default);
+        margin: 0 auto;
+    }
+    .hero--compact .eyebrow {
+        margin-bottom: var(--space-3);
+    }
+    .hero--compact h1 {
+        margin-bottom: var(--space-4);
+    }
+    .hero--compact .lede {
+        max-width: 70ch;
+    }
+
+    .section-title {
+        font-family: var(--serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin: var(--space-10) 0 var(--space-4);
+        color: var(--ink);
+    }
+    .section--alt {
+        background: var(--surface-1);
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+    }
+    .section-lede {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+        max-width: 78ch;
+        margin: 0;
+    }
+
+    .note {
+        background: var(--surface-1);
+        border: 1px solid var(--border-subtle);
+        border-left: 3px solid var(--primary);
+        padding: var(--space-5);
+        margin-bottom: var(--space-8);
+    }
+    .note__body {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        max-width: 85ch;
+    }
+
+    .health {
+        border-top: 1px solid var(--ink);
+    }
+    .health__row {
+        display: grid;
+        grid-template-columns: 11rem 12rem 1fr auto;
+        gap: var(--space-4);
+        align-items: baseline;
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--border-subtle);
+        text-decoration: none;
+        color: inherit;
+        transition: background-color var(--t-fast);
+    }
+    .health__row:hover {
+        background: var(--surface-1);
+    }
+    .health__name {
+        font-family: var(--serif);
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: var(--ink);
+        position: relative;
+        padding-left: 0.9rem;
+    }
+    .health__name::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.45em;
+        width: 0.5rem;
+        height: 0.5rem;
+        background: var(--pc);
+    }
+    .health__state {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.2rem 0.45rem;
+        color: var(--sc);
+        border: 1px solid var(--sc);
+        background: color-mix(in srgb, var(--sc) 12%, var(--paper));
+        justify-self: start;
+        white-space: nowrap;
+    }
+    .health__signal {
+        font-size: 0.88rem;
+        line-height: 1.5;
+        color: var(--text-muted);
+    }
+    .health__counts {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        white-space: nowrap;
+    }
+
+    .dimension-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-8);
+    }
+    .dimension {
+        background: var(--surface-1);
+        border: 1px solid var(--border-subtle);
+        border-top: 3px solid var(--pc);
+        padding: var(--space-6);
+        scroll-margin-top: 8rem;
+    }
+    .dimension__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-4);
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: var(--space-4);
+        margin-bottom: var(--space-4);
+    }
+    .dimension__order {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        color: var(--rule);
+    }
+    .dimension__name {
+        font-family: var(--serif);
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin: var(--space-1) 0 var(--space-2);
+        color: var(--ink);
+    }
+    .dimension__oneliner {
+        font-family: var(--serif);
+        font-size: 0.95rem;
+        font-style: italic;
+        color: var(--text-muted);
+        margin: 0;
+        max-width: 60ch;
+    }
+    .dimension__state {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.25rem 0.5rem;
+        color: var(--sc);
+        border: 1px solid var(--sc);
+        background: color-mix(in srgb, var(--sc) 12%, var(--paper));
+        white-space: nowrap;
+    }
+    .dimension__signal {
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--text-primary);
+        margin: 0 0 var(--space-5);
+        padding-left: var(--space-4);
+        border-left: 2px solid var(--pc);
+        max-width: 85ch;
+    }
+    .dimension__block {
+        margin-bottom: var(--space-4);
+    }
+    .block-label {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin: 0 0 var(--space-2);
+        font-weight: 400;
+    }
+    .block-text {
+        font-size: 0.93rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        margin: 0;
+        max-width: 85ch;
+    }
+    .dimension__split {
+        display: grid;
+        grid-template-columns: minmax(14rem, 1fr) minmax(18rem, 1.4fr);
+        gap: var(--space-6);
+        padding: var(--space-4) 0;
+        border-top: 1px dashed var(--border-subtle);
+    }
+    .pressure-items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    .pressure-items li {
+        font-size: 0.88rem;
+        line-height: 1.45;
+        color: var(--text-muted);
+        padding-left: var(--space-4);
+        position: relative;
+    }
+    .pressure-items li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--sc);
+    }
+    .dimension__block--who {
+        border-top: 1px dashed var(--border-subtle);
+        padding-top: var(--space-4);
+        margin-bottom: 0;
+    }
+    .who-list {
+        list-style: none;
+        margin: 0 0 var(--space-3);
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+    .who-link {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
+        padding: 0.2rem 0.5rem;
+        text-decoration: none;
+        border: 1px solid var(--border-subtle);
+        background: var(--paper);
+    }
+    .who-link--actor {
+        color: var(--ink);
+    }
+    .who-link--program {
+        color: var(--primary);
+        border-style: dashed;
+    }
+    .who-link:hover {
+        border-color: var(--ink);
+    }
+    .who-more {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        color: var(--rule);
+        padding: 0.2rem 0.3rem;
+    }
+    .dimension__full {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color var(--t-fast);
+    }
+    .dimension__full:hover {
+        border-bottom-color: var(--primary);
+    }
+
+    .source-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        max-width: 80ch;
+    }
+    .source-list li {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-1);
+    }
+    .source-list a {
+        font-size: 0.95rem;
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color var(--t-fast);
+    }
+    .source-list a:hover {
+        border-bottom-color: var(--primary);
+    }
+    .source-list__date {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    .error-banner {
+        background: var(--surface-2);
+        border: 1px solid var(--primary);
+        padding: var(--space-4);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        margin-bottom: var(--space-6);
+    }
+
+    @media (max-width: 1024px) {
+        .health__row {
+            grid-template-columns: 10rem 1fr;
+        }
+        .health__signal {
+            grid-column: 1 / -1;
+        }
+        .health__counts {
+            grid-column: 1 / -1;
+        }
+        .dimension__split {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 720px) {
+        .health__row {
+            grid-template-columns: 1fr;
+            gap: var(--space-2);
+        }
+        .dimension__header {
+            flex-direction: column;
+        }
+    }
+</style>

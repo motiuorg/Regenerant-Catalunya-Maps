@@ -128,6 +128,28 @@ The site is statically generated. GitHub Actions rebuilds it every 6 hours (`.gi
 | `/contribute/` | Every modality for contributing time / attention / money / land / capital to regenerating Catalunya, with direct links and provenance |
 | `/contribute/#funding-needs` | Part 2: funding needs of restoration initiatives — public programmes, live asks, and structural gaps |
 
+## Fluvià microsite (`/fluvia/`)
+
+A hidden, unlinked watershed-scale reading of the same databases, focused on the Fluvià river basin (Garrotxa · Pla de l'Estany · Alt Empordà). It is not linked from the main nav; it is reached only by people who know the URL (`…/fluvia/`).
+
+- `/fluvia/` — overview: basin facts, why-the-Fluvià, pressures, live counts, sources, and a catchment map (`public/assets/fluvia-map.jpg`, Gómez-Gener et al.)
+- `/fluvia/priorities/` — six socio-ecological health readings of the river landscape, each with condition, signal, pressures, healthy state, and who is working on it
+- `/fluvia/organizations/`, `/fluvia/programs/`, `/fluvia/events/` — directories with the same filter UX as the main site, scoped to the basin
+
+All Fluvià pages pull from the **same Notion databases** as the main site, filtered to records tagged with **both `CATBIS` and `fluvia`** in their second-order tag property (`2NDTAG`; `Select` on older event rows). Filtering lives in `src/lib/crm.ts` (`hasFluvia`). Content lives in `src/data/fluvia.yaml` (en/ca/es) loaded via `src/lib/fluvia.ts`; the Fluvià nav is `src/components/FluviaNav.astro` (`shell="fluvia"` on `Layout`). Pages are rendered with `noindex` and use a cooler, blue-toned river palette (`src/styles/themes/fluvia-river.css`), applied only to Fluvià pages via the `theme-fluvia` class on `<html>` — the main site palette is untouched.
+
+### Data files
+
+| File | Purpose |
+|------|---------|
+| `src/data/fluvia.yaml` | All Fluvià copy (en/ca/es): overview, health-check priorities, directory ledes, sources |
+| `src/lib/fluvia.ts` | Loader + `fluviaDict()` for the I18n engine |
+| `src/components/FluviaNav.astro` | Fluvià sub-site nav with language switcher and back-link to the full map |
+| `src/pages/fluvia/*.astro` | The five pages |
+| `src/styles/themes/fluvia-river.css` | Blue-toned river palette, scoped to Fluvià pages |
+
+To expose a new actor/program/event on the microsite, tag it `CATBIS` + `fluvia` in Notion; the next rebuild picks it up automatically.
+
 ## Where to start editing
 
 | File | Purpose |
