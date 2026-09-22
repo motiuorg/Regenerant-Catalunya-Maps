@@ -157,21 +157,9 @@ pri:
     organiser: { en: "Movement / organiser", ca: "Moviment / organitzador", es: "Movimiento / organizador" }
   block:
     public:
-      en: "This section shows where Catalunya is living beyond its limits, and what is already being done about it. The scoreboard below is the quickest way to see the state of the six priorities."
-      ca: "Aquesta secció mostra on Catalunya viu més enllà dels seus límits i què ja s'hi està fent. El marcador de sota és la manera més ràpida de veure l'estat de les sis prioritats."
-      es: "Esta sección muestra dónde Cataluña vive más allá de sus límites y qué se está haciendo al respecto. El marcador de abajo es la forma más rápida de ver el estado de las seis prioridades."
-    funder:
-      en: "Each priority links live actors, programs, and a capital stack. The numbers are sourced and dated; the capital horizons and ticket sizes are indicative starting points for due diligence."
-      ca: "Cada prioritat enllaça actors, programes i una pila de capital reals. Les xifres tenen font i data; els horitzons de capital i les mides de tiquet són punts de partida indicatius per a la diligència deguda."
-      es: "Cada prioridad enlaza actores, programas y una pila de capital reales. Las cifras tienen fuente y fecha; los horizontes de capital y los tamaños de ticket son puntos de partida indicativos para la diligencia debida."
-    administration:
-      en: "The priorities align with Catalan, Spanish, and EU strategies already in force. The territorial and actor data can help identify delivery partners and co-financing routes."
-      ca: "Les prioritats s'alineen amb estratègies catalanes, espanyoles i europees ja en vigor. Les dades territorials i d'actors poden ajudar a identificar socis d'execució i vies de cofinançament."
-      es: "Las prioridades se alinean con estrategias catalanas, españolas y europeas ya en vigor. Los datos territoriales y de actores pueden ayudar a identificar socios de ejecución y vías de cofinanciación."
-    organiser:
-      en: "Use the diagnosis as a shared argument, and the actor maps to find peers already working on each priority. The interdependence diagram shows why these fights cannot be separated."
-      ca: "Fes servir el diagnòstic com a argument compartit i els mapes d'actors per trobar iguals que ja treballen en cada prioritat. El diagrama d'interdependència mostra per què aquestes lluites no es poden separar."
-      es: "Usa el diagnóstico como argumento compartido y los mapas de actores para encontrar pares que ya trabajan en cada prioridad. El diagrama de interdependencia muestra por qué estas luchas no se pueden separar."
+      en: "This section shows where Catalunya is living beyond its limits, and what is already being done about it. The scoreboard below is the quickest way to see the state of the six priorities. The main source for this temporary, evolving categorization has been the <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">Catalunya de-growth analysis</a>."
+      ca: "Aquesta secció mostra on Catalunya viu més enllà dels seus límits i què ja s'hi està fent. El marcador de sota és la manera més ràpida de veure l'estat de les sis prioritats. La font principal d'aquesta categorització temporal i en evolució ha estat l'<a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">anàlisi del decreixement de Catalunya</a>."
+      es: "Esta sección muestra dónde Cataluña vive más allá de sus límites y qué se está haciendo al respecto. El marcador de abajo es la forma más rápida de ver el estado de las seis prioridades. La fuente principal de esta categorización temporal y en evolución ha sido el <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">análisis del decrecimiento de Cataluña</a>."
   moneyBlock:
     public:
       en: "Public money, philanthropic grants, and private capital each have a place — but only when matched to the right time horizon, asset, and governance structure."

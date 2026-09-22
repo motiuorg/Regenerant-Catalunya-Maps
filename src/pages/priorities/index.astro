@@ -9,10 +9,15 @@ import CapitalStack from "../../components/CapitalStack.astro";
 import { loadPriorities } from "../../lib/priorities";
 import { loadIndicators } from "../../lib/indicators";
 import { loadSectionConfig, fetchDatabaseRecords } from "../../lib/notion";
-import { hasCatbis, normalizeRecord, normalizeProgram, inferPriorityTags } from "../../lib/crm";
+import {
+    hasCatbis,
+    normalizeRecord,
+    normalizeProgram,
+    inferPriorityTags,
+} from "../../lib/crm";
 
 const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
 
 const priorities = loadPriorities().sort((a, b) => a.order - b.order);
 const indicators = loadIndicators();
@@ -26,277 +31,384 @@ let programRecords: any[] = [];
 let notionError: string | null = null;
 
 try {
-  if (actorsSection?.database_id) {
-    actorRecords = await fetchDatabaseRecords(actorsSection.database_id);
-  }
-  if (programsSection?.database_id) {
-    programRecords = await fetchDatabaseRecords(programsSection.database_id);
-  }
+    if (actorsSection?.database_id) {
+        actorRecords = await fetchDatabaseRecords(actorsSection.database_id);
+    }
+    if (programsSection?.database_id) {
+        programRecords = await fetchDatabaseRecords(
+            programsSection.database_id,
+        );
+    }
 } catch (e: any) {
-  notionError = e.message ?? "Failed to fetch records from Notion.";
+    notionError = e.message ?? "Failed to fetch records from Notion.";
 }
 
 const actors = actorRecords.filter(hasCatbis).map(normalizeRecord);
 const programs = programRecords
-  .filter(hasCatbis)
-  .map(normalizeProgram)
-  .map((p) => ({ ...p, priorityTags: inferPriorityTags(p) }));
+    .filter(hasCatbis)
+    .map(normalizeProgram)
+    .map((p) => ({ ...p, priorityTags: inferPriorityTags(p) }));
 
 function countsForPriority(priorityId: string) {
-  return {
-    actors: actors.filter((a) => a.thirdTags.includes(priorityId)).length,
-    programs: programs.filter((p) => p.priorityTags.includes(priorityId)).length,
-  };
+    return {
+        actors: actors.filter((a) => a.thirdTags.includes(priorityId)).length,
+        programs: programs.filter((p) => p.priorityTags.includes(priorityId))
+            .length,
+    };
 }
 
 const t = (obj: { en: string }) => obj.en;
 
-const defaultCapital = [{"vehicle": "trust", "instrument": "Grant / endowment", "horizon": "10-50 years", "ticket": "\u20ac50k-\u20ac5M per holding", "rationale": {"en": "Land, water, and social commons held for long-term regenerative outcomes outside speculative markets.", "ca": "Comuns de terra, aigua i socials mantinguts per a resultats regeneratius a llarg termini, fora dels mercats especulatius.", "es": "Comunes de tierra, agua y sociales mantenidos para resultados regenerativos a largo plazo, fuera de los mercados especulativos."}, "returns": ["ecological", "social", "cultural", "inspirational"]}, {"vehicle": "bank", "instrument": "Patient debt / project finance", "horizon": "5-25 years", "ticket": "\u20ac500k-\u20ac50M per system", "rationale": {"en": "Retrofit, infrastructure, and cooperative facilities that conventional banks cannot price.", "ca": "Rehabilitació, infraestructura i instal·lacions cooperatives que els bancs convencionals no poden valorar.", "es": "Rehabilitación, infraestructura e instalaciones cooperativas que los bancos convencionales no pueden valorar."}, "returns": ["financial", "ecological", "social"]}, {"vehicle": "venture-studio", "instrument": "Equity / revenue share", "horizon": "3-10 years", "ticket": "\u20ac20k-\u20ac1M per venture", "rationale": {"en": "Regenerative enterprises, platforms, and monitoring ventures that can scale across territories.", "ca": "Empreses regeneratives, plataformes i iniciatives de monitoratge que poden escalar a través de territoris.", "es": "Empresas regenerativas, plataformas e iniciativas de monitoreo que pueden escalar a través de territorios."}, "returns": ["financial", "ecological", "inspirational"]}, {"vehicle": "investment-company", "instrument": "Blended finance / equity", "horizon": "5-20 years", "ticket": "\u20ac1M-\u20ac50M per portfolio", "rationale": {"en": "Larger portfolios of public and community assets with measurable impact and community-anchored governance.", "ca": "Carteres més grans d'actius públics i comunitaris amb impacte mesurable i governança ancorada en la comunitat.", "es": "Carteras más grandes de activos públicos y comunitarios con impacto medible y gobernanza anclada en la comunidad."}, "returns": ["financial", "ecological", "social"]}];
+const defaultCapital = [
+    {
+        vehicle: "trust",
+        instrument: "Grant / endowment",
+        horizon: "10-50 years",
+        ticket: "\u20ac50k-\u20ac5M per holding",
+        rationale: {
+            en: "Land, water, and social commons held for long-term regenerative outcomes outside speculative markets.",
+            ca: "Comuns de terra, aigua i socials mantinguts per a resultats regeneratius a llarg termini, fora dels mercats especulatius.",
+            es: "Comunes de tierra, agua y sociales mantenidos para resultados regenerativos a largo plazo, fuera de los mercados especulativos.",
+        },
+        returns: ["ecological", "social", "cultural", "inspirational"],
+    },
+    {
+        vehicle: "bank",
+        instrument: "Patient debt / project finance",
+        horizon: "5-25 years",
+        ticket: "\u20ac500k-\u20ac50M per system",
+        rationale: {
+            en: "Retrofit, infrastructure, and cooperative facilities that conventional banks cannot price.",
+            ca: "Rehabilitació, infraestructura i instal·lacions cooperatives que els bancs convencionals no poden valorar.",
+            es: "Rehabilitación, infraestructura e instalaciones cooperativas que los bancos convencionales no pueden valorar.",
+        },
+        returns: ["financial", "ecological", "social"],
+    },
+    {
+        vehicle: "venture-studio",
+        instrument: "Equity / revenue share",
+        horizon: "3-10 years",
+        ticket: "\u20ac20k-\u20ac1M per venture",
+        rationale: {
+            en: "Regenerative enterprises, platforms, and monitoring ventures that can scale across territories.",
+            ca: "Empreses regeneratives, plataformes i iniciatives de monitoratge que poden escalar a través de territoris.",
+            es: "Empresas regenerativas, plataformas e iniciativas de monitoreo que pueden escalar a través de territorios.",
+        },
+        returns: ["financial", "ecological", "inspirational"],
+    },
+    {
+        vehicle: "investment-company",
+        instrument: "Blended finance / equity",
+        horizon: "5-20 years",
+        ticket: "\u20ac1M-\u20ac50M per portfolio",
+        rationale: {
+            en: "Larger portfolios of public and community assets with measurable impact and community-anchored governance.",
+            ca: "Carteres més grans d'actius públics i comunitaris amb impacte mesurable i governança ancorada en la comunitat.",
+            es: "Carteras más grandes de activos públicos y comunitarios con impacto medible y gobernanza anclada en la comunidad.",
+        },
+        returns: ["financial", "ecological", "social"],
+    },
+];
 
 // Content dictionary for the i18n engine: priority names/one-liners, indicator
 // labels, and default capital rationales, merged with the shared UI strings.
-const contentDict: Record<string, { en: string; ca?: string; es?: string }> = {};
+const contentDict: Record<string, { en: string; ca?: string; es?: string }> =
+    {};
 for (const p of priorities) {
-  contentDict[`p-${p.slug}-name`] = p.name;
-  contentDict[`p-${p.slug}-shortname`] = p.shortName;
-  contentDict[`p-${p.slug}-oneliner`] = p.oneLiner || { en: "" };
+    contentDict[`p-${p.slug}-name`] = p.name;
+    contentDict[`p-${p.slug}-shortname`] = p.shortName;
+    contentDict[`p-${p.slug}-oneliner`] = p.oneLiner || { en: "" };
 }
 for (const ind of indicators) {
-  contentDict[`ind-${ind.id}-label`] = ind.label;
+    contentDict[`ind-${ind.id}-label`] = ind.label;
 }
 for (const item of defaultCapital) {
-  contentDict[`cap-default-${item.vehicle}-rationale`] = item.rationale;
+    contentDict[`cap-default-${item.vehicle}-rationale`] = item.rationale;
 }
 ---
 
-<Layout title="Priorities" current="priorities" description="Six priorities for a living Catalunya: diagnosis, leverage, and capital." i18nDict={contentDict}>
-  <header class="hero hero--compact">
-    <OrganicAmbient />
-    <div class="hero__inner section">
-      <p class="eyebrow">Regenerant Catalunya Maps</p>
-      <h1 class="display" data-i18n="pri.heroTitle">Six priorities for a living Catalunya</h1>
-      <p class="lede" data-i18n="pri.heroLede">
-        A diagnosis of the bioregion across six interdependent systems, plus the leverage and capital vehicles that can move each toward regeneration.
-      </p>
-    </div>
-  </header>
+<Layout
+    title="Priorities"
+    current="priorities"
+    description="Six priorities for a living Catalunya: diagnosis, leverage, and capital."
+    i18nDict={contentDict}
+>
+    <header class="hero hero--compact">
+        <OrganicAmbient />
+        <div class="hero__inner section">
+            <p class="eyebrow">Regenerant Catalunya Maps</p>
+            <h1 class="display" data-i18n="pri.heroTitle">
+                Six priorities for a living Catalunya
+            </h1>
+            <p class="lede" data-i18n="pri.heroLede">
+                A diagnosis of the bioregion across six interdependent systems,
+                plus the leverage and capital vehicles that can move each toward
+                regeneration.
+            </p>
+        </div>
+    </header>
 
-  <section class="section section--wide">
-    {notionError && (
-      <div class="error-banner">
-        <p><strong>Data error:</strong> {notionError}</p>
-      </div>
-    )}
+    <section class="section section--wide">
+        {notionError && (
+            <div class="error-banner">
+                <p>
+                    <strong>Data error:</strong> {notionError}
+                </p>
+            </div>
+        )}
 
-    <AudienceSwitcher />
+        <AudienceSwitcher />
 
-    <div class="content-block" data-audience-block="public">
-      <p class="content-block__text" data-i18n-html="pri.block.public">
-        This section shows where Catalunya is living beyond its limits, and what is already being done about it. The scoreboard below is the quickest way to see the state of the six priorities.
-      </p>
-    </div>
-    <div class="content-block is-hidden" data-audience-block="funder">
-      <p class="content-block__text" data-i18n-html="pri.block.funder">
-        Each priority links live actors, programs, and a capital stack. The numbers are sourced and dated; the capital horizons and ticket sizes are indicative starting points for due diligence.
-      </p>
-    </div>
-    <div class="content-block is-hidden" data-audience-block="administration">
-      <p class="content-block__text" data-i18n-html="pri.block.administration">
-        The priorities align with Catalan, Spanish, and EU strategies already in force. The territorial and actor data can help identify delivery partners and co-financing routes.
-      </p>
-    </div>
-    <div class="content-block is-hidden" data-audience-block="organiser">
-      <p class="content-block__text" data-i18n-html="pri.block.organiser">
-        Use the diagnosis as a shared argument, and the actor maps to find peers already working on each priority. The interdependence diagram shows why these fights cannot be separated.
-      </p>
-    </div>
+        <div class="content-block" data-audience-block="public">
+            <p class="content-block__text" data-i18n-html="pri.block.public">
+                This section shows where Catalunya is living beyond its limits,
+                and what is already being done about it. The scoreboard below is
+                the quickest way to see the state of the six priorities. The
+                main source for this temporary, evolving categorization has been
+                the{" "}
+                <a href="https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf">
+                    Catalunya de-growth analysis
+                </a>
+                .
+            </p>
+        </div>
 
-    <h2 class="section-title" data-i18n="pri.scoreboard">Scoreboard</h2>
-    <PriorityScoreboard priorities={priorities} indicators={indicators} />
+        <h2 class="section-title" data-i18n="pri.scoreboard">
+            Scoreboard
+        </h2>
+        <PriorityScoreboard priorities={priorities} indicators={indicators} />
 
-    <h2 class="section-title" data-i18n="pri.six">The six priorities</h2>
-    <div class="priority-grid">
-      {priorities.map((priority) => {
-        const counts = countsForPriority(priority.id);
-        return (
-          <PriorityCard
-            priority={priority}
-            href={`${base}priorities/${priority.slug}/`}
-            actorCount={counts.actors}
-            programCount={counts.programs}
-          />
-        );
-      })}
-    </div>
-  </section>
+        <h2 class="section-title" data-i18n="pri.six">
+            The six priorities
+        </h2>
+        <div class="priority-grid">
+            {priorities.map((priority) => {
+                const counts = countsForPriority(priority.id);
+                return (
+                    <PriorityCard
+                        priority={priority}
+                        href={`${base}priorities/${priority.slug}/`}
+                        actorCount={counts.actors}
+                        programCount={counts.programs}
+                    />
+                );
+            })}
+        </div>
+    </section>
 
-  <section class="section section--wide section--alt">
-    <div class="split-panel">
-      <div class="split-panel__text">
-        <h2 class="section-title" data-i18n="pri.interdependence">Interdependence</h2>
-        <p class="lede" data-i18n="pri.interdependenceLede">
-          The six priorities are not a menu. They are a system: restoring watersheds increases food resilience; reducing energy demand lowers pressure on water; social commons create the capacity to act across all of them.
+    <section class="section section--wide section--alt">
+        <div class="split-panel">
+            <div class="split-panel__text">
+                <h2 class="section-title" data-i18n="pri.interdependence">
+                    Interdependence
+                </h2>
+                <p class="lede" data-i18n="pri.interdependenceLede">
+                    The six priorities are not a menu. They are a system:
+                    restoring watersheds increases food resilience; reducing
+                    energy demand lowers pressure on water; social commons
+                    create the capacity to act across all of them.
+                </p>
+            </div>
+            <div class="split-panel__media">
+                <InterdependenceDiagram priorities={priorities} />
+            </div>
+        </div>
+    </section>
+
+    <section class="section section--wide">
+        <h2 class="section-title" data-i18n="pri.moneyTitle">
+            Where money should go
+        </h2>
+        <p class="section-lede" data-i18n="pri.moneyLede">
+            Catalunya needs a layered capital stack: patient trusts and banks
+            for land and infrastructure, venture studios for regenerative
+            enterprises, and investment companies for larger blended portfolios.
         </p>
-      </div>
-      <div class="split-panel__media">
-        <InterdependenceDiagram priorities={priorities} />
-      </div>
-    </div>
-  </section>
+        <div class="audience-block" data-audience-block="public">
+            <p
+                class="audience-block__text"
+                data-i18n-html="pri.moneyBlock.public"
+            >
+                Public money, philanthropic grants, and private capital each
+                have a place — but only when matched to the right time horizon,
+                asset, and governance structure.
+            </p>
+        </div>
+        <div class="audience-block is-hidden" data-audience-block="funder">
+            <p
+                class="audience-block__text"
+                data-i18n-html="pri.moneyBlock.funder"
+            >
+                The four BioFi vehicles are sized for different risk, return,
+                and governance profiles. Detailed capital memos per priority are
+                linked from each priority page.
+            </p>
+        </div>
+        <div
+            class="audience-block is-hidden"
+            data-audience-block="administration"
+        >
+            <p
+                class="audience-block__text"
+                data-i18n-html="pri.moneyBlock.administration"
+            >
+                Public co-investment and guarantees can crowd in private capital
+                where market failures are highest — especially land, water, and
+                social infrastructure.
+            </p>
+        </div>
+        <div class="audience-block is-hidden" data-audience-block="organiser">
+            <p
+                class="audience-block__text"
+                data-i18n-html="pri.moneyBlock.organiser"
+            >
+                The capital stack is not neutral. Trusts and commons
+                institutions keep assets out of speculative markets; banks and
+                venture instruments must be designed to reinforce, not extract
+                from, the underlying commons.
+            </p>
+        </div>
+        <CapitalStack
+            capital={defaultCapital}
+            color="var(--ink)"
+            dictKeyPrefix="cap-default"
+        />
+    </section>
 
-  <section class="section section--wide">
-    <h2 class="section-title" data-i18n="pri.moneyTitle">Where money should go</h2>
-    <p class="section-lede" data-i18n="pri.moneyLede">
-      Catalunya needs a layered capital stack: patient trusts and banks for land and infrastructure, venture studios for regenerative enterprises, and investment companies for larger blended portfolios.
-    </p>
-    <div class="audience-block" data-audience-block="public">
-      <p class="audience-block__text" data-i18n-html="pri.moneyBlock.public">
-        Public money, philanthropic grants, and private capital each have a place — but only when matched to the right time horizon, asset, and governance structure.
-      </p>
-    </div>
-    <div class="audience-block is-hidden" data-audience-block="funder">
-      <p class="audience-block__text" data-i18n-html="pri.moneyBlock.funder">
-        The four BioFi vehicles are sized for different risk, return, and governance profiles. Detailed capital memos per priority are linked from each priority page.
-      </p>
-    </div>
-    <div class="audience-block is-hidden" data-audience-block="administration">
-      <p class="audience-block__text" data-i18n-html="pri.moneyBlock.administration">
-        Public co-investment and guarantees can crowd in private capital where market failures are highest — especially land, water, and social infrastructure.
-      </p>
-    </div>
-    <div class="audience-block is-hidden" data-audience-block="organiser">
-      <p class="audience-block__text" data-i18n-html="pri.moneyBlock.organiser">
-        The capital stack is not neutral. Trusts and commons institutions keep assets out of speculative markets; banks and venture instruments must be designed to reinforce, not extract from, the underlying commons.
-      </p>
-    </div>
-    <CapitalStack capital={defaultCapital} color="var(--ink)" dictKeyPrefix="cap-default" />
-  </section>
-
-  <section class="section section--wide section--alt">
-    <h2 class="section-title" data-i18n="pri.methodTitle">Method and provenance</h2>
-    <p class="section-lede" data-i18n="pri.methodBody1">
-      The priorities were derived from ongoing research on the Catalan bioregion and from the actor database already mapped on this site. Every indicator shown carries a source, a date, and a confidence badge. Where data is missing, we say so.
-    </p>
-    <p class="section-body" data-i18n="pri.methodBody2">
-      Indicators will be refreshed on a schedule that matches their upstream source: daily for reservoir and weather data, monthly for many economic and environmental series, annually for census and survey-based indicators. The full snapshot is rebuilt every six hours via GitHub Actions.
-    </p>
-  </section>
+    <section class="section section--wide section--alt">
+        <h2 class="section-title" data-i18n="pri.methodTitle">
+            Method and provenance
+        </h2>
+        <p class="section-lede" data-i18n="pri.methodBody1">
+            The priorities were derived from ongoing research on the Catalan
+            bioregion and from the actor database already mapped on this site.
+            Every indicator shown carries a source, a date, and a confidence
+            badge. Where data is missing, we say so.
+        </p>
+        <p class="section-body" data-i18n="pri.methodBody2">
+            Indicators will be refreshed on a schedule that matches their
+            upstream source: daily for reservoir and weather data, monthly for
+            many economic and environmental series, annually for census and
+            survey-based indicators. The full snapshot is rebuilt every six
+            hours via GitHub Actions.
+        </p>
+    </section>
 </Layout>
 
 <style>
-  .hero--compact {
-    position: relative;
-    padding: var(--space-12) var(--gutter) var(--space-8);
-    border-bottom: 1px solid var(--ink);
-    background: var(--paper);
-    overflow: hidden;
-  }
-  .hero__inner {
-    position: relative;
-    z-index: 1;
-    max-width: var(--container-default);
-    margin: 0 auto;
-  }
-  .hero--compact .eyebrow {
-    margin-bottom: var(--space-3);
-  }
-  .hero--compact h1 {
-    margin-bottom: var(--space-4);
-  }
-  .hero--compact .lede {
-    max-width: 70ch;
-  }
-
-  .section-title {
-    font-family: var(--serif);
-    font-size: 1.6rem;
-    font-weight: 500;
-    margin: var(--space-10) 0 var(--space-4);
-    color: var(--ink);
-  }
-  .section--alt {
-    background: var(--surface-1);
-    border-top: 1px solid var(--ink);
-    border-bottom: 1px solid var(--ink);
-  }
-  .section--alt .section-title {
-    margin-top: 0;
-  }
-  .section-lede {
-    font-size: 1.05rem;
-    line-height: 1.55;
-    color: var(--text-muted);
-    max-width: 70ch;
-    margin: 0 0 var(--space-6);
-  }
-  .section-body {
-    font-size: 0.95rem;
-    line-height: 1.55;
-    color: var(--text-muted);
-    max-width: 70ch;
-  }
-
-  .content-block {
-    background: var(--surface-1);
-    border: 1px solid var(--border-subtle);
-    padding: var(--space-5);
-    margin-bottom: var(--space-8);
-  }
-  .content-block__text {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.55;
-    color: var(--text-primary);
-  }
-
-  .priority-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
-    gap: var(--space-4);
-  }
-
-  .split-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-10);
-    align-items: center;
-  }
-  .split-panel__text {
-    max-width: 55ch;
-  }
-  .split-panel__media {
-    display: flex;
-    justify-content: center;
-  }
-
-  .audience-block {
-    margin-bottom: var(--space-6);
-  }
-  .audience-block__text {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.55;
-    color: var(--text-muted);
-    max-width: 70ch;
-  }
-
-  .error-banner {
-    background: var(--surface-2);
-    border: 1px solid var(--primary);
-    padding: var(--space-4);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    margin-bottom: var(--space-6);
-  }
-
-  @media (max-width: 1024px) {
-    .split-panel {
-      grid-template-columns: 1fr;
+    .hero--compact {
+        position: relative;
+        padding: var(--space-12) var(--gutter) var(--space-8);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+        overflow: hidden;
     }
-  }
-  @media (max-width: 720px) {
+    .hero__inner {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-default);
+        margin: 0 auto;
+    }
+    .hero--compact .eyebrow {
+        margin-bottom: var(--space-3);
+    }
+    .hero--compact h1 {
+        margin-bottom: var(--space-4);
+    }
+    .hero--compact .lede {
+        max-width: 70ch;
+    }
+
+    .section-title {
+        font-family: var(--serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin: var(--space-10) 0 var(--space-4);
+        color: var(--ink);
+    }
+    .section--alt {
+        background: var(--surface-1);
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+    }
+    .section--alt .section-title {
+        margin-top: 0;
+    }
+    .section-lede {
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 70ch;
+        margin: 0 0 var(--space-6);
+    }
+    .section-body {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 70ch;
+    }
+
+    .content-block {
+        background: var(--surface-1);
+        border: 1px solid var(--border-subtle);
+        padding: var(--space-5);
+        margin-bottom: var(--space-8);
+    }
+    .content-block__text {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--text-primary);
+    }
+
     .priority-grid {
-      grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+        gap: var(--space-4);
     }
-  }
+
+    .split-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-10);
+        align-items: center;
+    }
+    .split-panel__text {
+        max-width: 55ch;
+    }
+    .split-panel__media {
+        display: flex;
+        justify-content: center;
+    }
+
+    .audience-block {
+        margin-bottom: var(--space-6);
+    }
+    .audience-block__text {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 70ch;
+    }
+
+    .error-banner {
+        background: var(--surface-2);
+        border: 1px solid var(--primary);
+        padding: var(--space-4);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        margin-bottom: var(--space-6);
+    }
+
+    @media (max-width: 1024px) {
+        .split-panel {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 720px) {
+        .priority-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
