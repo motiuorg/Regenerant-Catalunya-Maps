@@ -1,0 +1,212 @@
+---
+import Layout from "../components/Layout.astro";
+import OrganicAmbient from "../components/OrganicAmbient.astro";
+import type { I18nString } from "../lib/i18n";
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+
+const contentDict: Record<string, I18nString> = {
+    "about.heroTitle": {
+        en: "About this map",
+        ca: "Sobre aquest mapa",
+        es: "Sobre este mapa",
+    },
+    "about.heroLede": {
+        en: "An open-ended mapping process for who is regenerating Catalunya — where it comes from, why it exists, and where it can go.",
+        ca: "Un procés de cartografia obert sobre qui està regenerant Catalunya — d'on ve, per què existeix i cap a on pot anar.",
+        es: "Un proceso de mapeo abierto sobre quién está regenerando Cataluña — de dónde viene, por qué existe y hacia dónde puede ir.",
+    },
+    "about.whatTitle": {
+        en: "An open-ended mapping process",
+        ca: "Un procés de cartografia obert",
+        es: "Un proceso de mapeo abierto",
+    },
+    "about.what1": {
+        en: "This site maps the organizations, programs and events working toward a regenerative Catalunya, together with the priorities, bioregional conditions and ways to contribute around them. It is open-ended by design: the registry behind it keeps growing as new actors are discovered, and the categories can evolve as understanding of the territory deepens.",
+        ca: "Aquest lloc mapeja les organitzacions, els programes i els esdeveniments que treballen per una Catalunya regenerativa, juntament amb les prioritats, les condicions biorregionals i les vies de contribució que els envolten. És obert per disseny: el registre que hi ha al darrere creix a mesura que es descobreixen nous actors, i les categories poden evolucionar a mesura que s'aprofundeix en el coneixement del territori.",
+        es: "Este sitio mapea las organizaciones, los programas y los eventos que trabajan por una Cataluña regenerativa, junto con las prioridades, las condiciones biorregionales y las vías de contribución que los rodean. Es abierto por diseño: el registro que hay detrás crece a medida que se descubren nuevos actores, y las categorías pueden evolucionar a medida que se profundiza en el conocimiento del territorio.",
+    },
+    "about.what2": {
+        en: `The map is generated from a Notion-based registry that is curated and expanded continuously; the site itself is rebuilt from it every six hours, so changes appear without anyone deploying anything. The six priority areas are one possible way of grouping the field — a framing we align with and credit on the <a href="${base}priorities/">priorities page</a>, not the only one.`,
+        ca: `El mapa es genera a partir d'un registre basat en Notion que es cura i s'amplia contínuament; el web es reconstrueix cada sis hores, de manera que els canvis apareixen sense que ningú desplegui res. Les sis àrees prioritàries són una manera possible d'agrupar el sector — un marc amb el qual ens alineem i que acreditem a la <a href="${base}priorities/">pàgina de prioritats</a>, no l'única.`,
+        es: `El mapa se genera a partir de un registro basado en Notion que se cura y amplía continuamente; el sitio se reconstruye cada seis horas, de modo que los cambios aparecen sin que nadie despliegue nada. Las seis áreas prioritarias son una forma posible de agrupar el sector — un marco con el que nos alineamos y que acreditamos en la <a href="${base}priorities/">página de prioridades</a>, no la única.`,
+    },
+    "about.whyTitle": {
+        en: "Why we built it",
+        ca: "Per què l'hem construït",
+        es: "Por qué lo construimos",
+    },
+    "about.why1": {
+        en: "Regenerative work fails when its parts run on separate tracks: projects that should reinforce each other operate in isolation, ecological and social goals are run as separate agendas, and the financial systems available were designed for a different era. The first step out of that is visibility — actors recognising each other as one movement, across the whole territory.",
+        ca: "La regeneració falla quan les seves parts van per vies separades: projectes que haurien de reforçar-se mútuament operen aïllats, els objectius ecològics i socials es porten com a agendes separades i els sistemes financers disponibles es van dissenyar per a una altra època. El primer pas per sortir-ne és la visibilitat — que els actors es reconeguin com un sol moviment, a tot el territori.",
+        es: "La regeneración falla cuando sus partes van por vías separadas: proyectos que deberían reforzarse mutuamente operan aislados, los objetivos ecológicos y sociales se llevan como agendas separadas y los sistemas financieros disponibles se diseñaron para otra época. El primer paso para salir de ahí es la visibilidad — que los actores se reconozcan como un solo movimiento, en todo el territorio.",
+    },
+    "about.why2": {
+        en: "The map is part of Motiu's work on the connective layer of territorial regeneration: mapping and convening the actors of a territory, and building the shared knowledge systems that let regeneration compound. It grew out of Regenerant Catalunya, a funding and capacity-building program for the Catalan bioregion.",
+        ca: "El mapa forma part de la feina de Motiu a la capa connectiva de la regeneració territorial: mapejar i convocar els actors d'un territori, i construir els sistemes de coneixement compartit que fan que la regeneració es compongui. Va néixer de Regenerant Catalunya, un programa de finançament i capacitació per al bioregion català.",
+        es: "El mapa forma parte del trabajo de Motiu en la capa conectiva de la regeneración territorial: mapear y convocar a los actores de un territorio, y construir los sistemas de conocimiento compartido que hacen que la regeneración se componga. Nació de Regenerant Catalunya, un programa de financiación y capacitación para el biorregión catalán.",
+    },
+    "about.whoTitle": {
+        en: "Who is behind it",
+        ca: "Qui hi ha al darrere",
+        es: "Quién está detrás",
+    },
+    "about.who1": {
+        en: "Motiu is a cooperative-in-formation in Barcelona (Bloc4), rooted in the Economia Social i Solidària. We design and run the financial strategies, collective knowledge systems and coordination that regenerative networks need — of which this map is one. Partner organizations are listed in the footer.",
+        ca: "Motiu és una cooperativa en formació a Barcelona (Bloc4), arrelada a l'Economia Social i Solidària. Dissenyem i executem les estratègies financeres, els sistemes de coneixement col·lectiu i la coordinació que les xarxes regeneratives necessiten — aquest mapa és un d'ells. Les organitzacions sòcies apareixen al peu de pàgina.",
+        es: "Motiu es una cooperativa en formación en Barcelona (Bloc4), arraigada en la Economía Social y Solidaria. Diseñamos y ejecutamos las estrategias financieras, los sistemas de conocimiento colectivo y la coordinación que necesitan las redes regenerativas — este mapa es uno de ellos. Las organizaciones socias aparecen en el pie de página.",
+    },
+    "about.who2": {
+        en: `More about us at <a href="https://motiu.org">motiu.org</a>.`,
+        ca: `Més sobre nosaltres a <a href="https://motiu.org">motiu.org</a>.`,
+        es: `Más sobre nosotros en <a href="https://motiu.org">motiu.org</a>.`,
+    },
+    "about.evolveTitle": {
+        en: "Where it can go",
+        ca: "Cap a on pot anar",
+        es: "Hacia dónde puede ir",
+    },
+    "about.evolve1": {
+        en: `The <a href="${base}contribute/">Contribute page</a> sketches one direction: the main areas through which people can contribute time, attention or money, each with a few examples drawn from the map. It is deliberately a mockup — inspiration for possible developments, not a finished guide.`,
+        ca: `La <a href="${base}contribute/">pàgina Contribueix</a> esbossa una direcció: les principals àrees per contribuir amb temps, atenció o diners, cadascuna amb alguns exemples extrets del mapa. És deliberadament una maqueta — inspiració per a possibles desenvolupaments, no una guia acabada.`,
+        es: `La <a href="${base}contribute/">página Contribuye</a> esboza una dirección: las principales áreas para contribuir con tiempo, atención o dinero, cada una con algunos ejemplos extraídos del mapa. Es deliberadamente una maqueta — inspiración para posibles desarrollos, no una guía terminada.`,
+    },
+    "about.evolve2": {
+        en: "If an organization, program or event is missing, or something needs correcting, we would like to hear about it: additions feed the same open registry that powers this site.",
+        ca: "Si falta una organització, un programa o un esdeveniment, o cal corregir alguna cosa, ens ho agradaria saber: les addicions alimenten el mateix registre obert que fa funcionar aquest web.",
+        es: "Si falta una organización, un programa o un evento, o hay que corregir algo, nos gustaría saberlo: las adiciones alimentan el mismo registro abierto que hace funcionar este sitio.",
+    },
+};
+---
+
+<Layout
+    title="About"
+    current="about"
+    description="An open-ended mapping process for who is regenerating Catalunya — by Motiu."
+    i18nDict={contentDict}
+>
+    <header class="hero hero--compact">
+        <OrganicAmbient />
+        <div class="hero__inner section">
+            <p class="eyebrow">Regenerant Catalunya Maps</p>
+            <h1 class="display" data-i18n="about.heroTitle">About this map</h1>
+            <p class="lede" data-i18n-html="about.heroLede">
+                An open-ended mapping process for who is regenerating Catalunya —
+                where it comes from, why it exists, and where it can go.
+            </p>
+        </div>
+    </header>
+
+    <section class="section section--wide">
+        <h2 class="section-title" data-i18n="about.whatTitle">
+            An open-ended mapping process
+        </h2>
+        <div class="content-block">
+            <p class="content-block__text" data-i18n-html="about.what1">
+                This site maps the organizations, programs and events working
+                toward a regenerative Catalunya, together with the priorities,
+                bioregional conditions and ways to contribute around them. It is
+                open-ended by design: the registry behind it keeps growing as new
+                actors are discovered, and the categories can evolve as
+                understanding of the territory deepens.
+            </p>
+        </div>
+        <p class="section-body" data-i18n-html="about.what2">
+            The map is generated from a Notion-based registry that is curated and
+            expanded continuously; the site itself is rebuilt from it every six
+            hours, so changes appear without anyone deploying anything. The six
+            priority areas are one possible way of grouping the field — a framing
+            we align with and credit on the priorities page, not the only one.
+        </p>
+
+        <h2 class="section-title" data-i18n="about.whyTitle">Why we built it</h2>
+        <p class="section-body" data-i18n-html="about.why1">
+            Regenerative work fails when its parts run on separate tracks:
+            projects that should reinforce each other operate in isolation,
+            ecological and social goals are run as separate agendas, and the
+            financial systems available were designed for a different era. The
+            first step out of that is visibility — actors recognising each other
+            as one movement, across the whole territory.
+        </p>
+        <p class="section-body" data-i18n-html="about.why2">
+            The map is part of Motiu's work on the connective layer of
+            territorial regeneration: mapping and convening the actors of a
+            territory, and building the shared knowledge systems that let
+            regeneration compound. It grew out of Regenerant Catalunya, a funding
+            and capacity-building program for the Catalan bioregion.
+        </p>
+
+        <h2 class="section-title" data-i18n="about.whoTitle">
+            Who is behind it
+        </h2>
+        <p class="section-body" data-i18n-html="about.who1">
+            Motiu is a cooperative-in-formation in Barcelona (Bloc4), rooted in
+            the Economia Social i Solidària. We design and run the financial
+            strategies, collective knowledge systems and coordination that
+            regenerative networks need — of which this map is one. Partner
+            organizations are listed in the footer.
+        </p>
+        <p class="section-body" data-i18n-html="about.who2">
+            More about us at <a href="https://motiu.org">motiu.org</a>.
+        </p>
+
+        <h2 class="section-title" data-i18n="about.evolveTitle">
+            Where it can go
+        </h2>
+        <p class="section-body" data-i18n-html="about.evolve1">
+            The Contribute page sketches one direction: the main areas through
+            which people can contribute time, attention or money, each with a few
+            examples drawn from the map. It is deliberately a mockup —
+            inspiration for possible developments, not a finished guide.
+        </p>
+        <p class="section-body" data-i18n-html="about.evolve2">
+            If an organization, program or event is missing, or something needs
+            correcting, we would like to hear about it: additions feed the same
+            open registry that powers this site.
+        </p>
+    </section>
+</Layout>
+
+<style>
+    .hero--compact {
+        position: relative;
+        padding: var(--space-12) var(--gutter) var(--space-8);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+        overflow: hidden;
+    }
+    .hero__inner {
+        position: relative;
+        z-index: 1;
+    }
+    .section-title {
+        font-family: var(--serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin: var(--space-10) 0 var(--space-4);
+        color: var(--ink);
+    }
+    .content-block {
+        background: var(--surface-1);
+        border: 1px solid var(--border-subtle);
+        padding: var(--space-5);
+        margin-bottom: var(--space-5);
+    }
+    .content-block__text {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--text-primary);
+    }
+    .section-body {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 70ch;
+        margin: 0 0 var(--space-4);
+    }
+    .section-body a {
+        color: var(--primary);
+    }
+</style>

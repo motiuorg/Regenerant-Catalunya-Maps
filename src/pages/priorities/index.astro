@@ -3,7 +3,6 @@ import Layout from "../../components/Layout.astro";
 import OrganicAmbient from "../../components/OrganicAmbient.astro";
 import PriorityCard from "../../components/PriorityCard.astro";
 import InterdependenceDiagram from "../../components/InterdependenceDiagram.astro";
-import CapitalStack from "../../components/CapitalStack.astro";
 import { loadPriorities } from "../../lib/priorities";
 import { loadSectionConfig, fetchDatabaseRecords } from "../../lib/notion";
 import {
@@ -55,57 +54,6 @@ function countsForPriority(priorityId: string) {
 
 const t = (obj: { en: string }) => obj.en;
 
-const defaultCapital = [
-    {
-        vehicle: "trust",
-        instrument: "Grant / endowment",
-        horizon: "10-50 years",
-        ticket: "\u20ac50k-\u20ac5M per holding",
-        rationale: {
-            en: "Land, water, and social commons held for long-term regenerative outcomes outside speculative markets.",
-            ca: "Comuns de terra, aigua i socials mantinguts per a resultats regeneratius a llarg termini, fora dels mercats especulatius.",
-            es: "Comunes de tierra, agua y sociales mantenidos para resultados regenerativos a largo plazo, fuera de los mercados especulativos.",
-        },
-        returns: ["ecological", "social", "cultural", "inspirational"],
-    },
-    {
-        vehicle: "bank",
-        instrument: "Patient debt / project finance",
-        horizon: "5-25 years",
-        ticket: "\u20ac500k-\u20ac50M per system",
-        rationale: {
-            en: "Retrofit, infrastructure, and cooperative facilities that conventional banks cannot price.",
-            ca: "Rehabilitació, infraestructura i instal·lacions cooperatives que els bancs convencionals no poden valorar.",
-            es: "Rehabilitación, infraestructura e instalaciones cooperativas que los bancos convencionales no pueden valorar.",
-        },
-        returns: ["financial", "ecological", "social"],
-    },
-    {
-        vehicle: "venture-studio",
-        instrument: "Equity / revenue share",
-        horizon: "3-10 years",
-        ticket: "\u20ac20k-\u20ac1M per venture",
-        rationale: {
-            en: "Regenerative enterprises, platforms, and monitoring ventures that can scale across territories.",
-            ca: "Empreses regeneratives, plataformes i iniciatives de monitoratge que poden escalar a través de territoris.",
-            es: "Empresas regenerativas, plataformas e iniciativas de monitoreo que pueden escalar a través de territorios.",
-        },
-        returns: ["financial", "ecological", "inspirational"],
-    },
-    {
-        vehicle: "investment-company",
-        instrument: "Blended finance / equity",
-        horizon: "5-20 years",
-        ticket: "\u20ac1M-\u20ac50M per portfolio",
-        rationale: {
-            en: "Larger portfolios of public and community assets with measurable impact and community-anchored governance.",
-            ca: "Carteres més grans d'actius públics i comunitaris amb impacte mesurable i governança ancorada en la comunitat.",
-            es: "Carteras más grandes de activos públicos y comunitarios con impacto medible y gobernanza anclada en la comunidad.",
-        },
-        returns: ["financial", "ecological", "social"],
-    },
-];
-
 // Content dictionary for the i18n engine: priority names/one-liners, indicator
 // labels, and default capital rationales, merged with the shared UI strings.
 const contentDict: Record<string, { en: string; ca?: string; es?: string }> =
@@ -114,9 +62,6 @@ for (const p of priorities) {
     contentDict[`p-${p.slug}-name`] = p.name;
     contentDict[`p-${p.slug}-shortname`] = p.shortName;
     contentDict[`p-${p.slug}-oneliner`] = p.oneLiner || { en: "" };
-}
-for (const item of defaultCapital) {
-    contentDict[`cap-default-${item.vehicle}-rationale`] = item.rationale;
 }
 ---
 
@@ -200,51 +145,6 @@ for (const item of defaultCapital) {
                 <InterdependenceDiagram priorities={priorities} />
             </div>
         </div>
-    </section>
-
-    <section class="section section--wide">
-        <h2 class="section-title" data-i18n="pri.moneyTitle">
-            Where money should go
-        </h2>
-        <p class="section-lede" data-i18n="pri.moneyLede">
-            Catalunya needs a layered capital stack: patient trusts and banks
-            for land and infrastructure, venture studios for regenerative
-            enterprises, and investment companies for larger blended portfolios.
-        </p>
-        <div class="audience-block" data-audience-block="public">
-            <p
-                class="audience-block__text"
-                data-i18n-html="pri.moneyBlock.public"
-            >
-                Public money, philanthropic grants, and private capital each
-                have a place — but only when matched to the right time horizon,
-                asset, and governance structure.
-            </p>
-        </div>
-        <CapitalStack
-            capital={defaultCapital}
-            color="var(--ink)"
-            dictKeyPrefix="cap-default"
-        />
-    </section>
-
-    <section class="section section--wide section--alt">
-        <h2 class="section-title" data-i18n="pri.methodTitle">
-            Method and provenance
-        </h2>
-        <p class="section-lede" data-i18n="pri.methodBody1">
-            The priorities were derived from ongoing research on the Catalan
-            bioregion and from the actor database already mapped on this site.
-            Every indicator shown carries a source, a date, and a confidence
-            badge. Where data is missing, we say so.
-        </p>
-        <p class="section-body" data-i18n="pri.methodBody2">
-            Indicators will be refreshed on a schedule that matches their
-            upstream source: daily for reservoir and weather data, monthly for
-            many economic and environmental series, annually for census and
-            survey-based indicators. The full snapshot is rebuilt every six
-            hours via GitHub Actions.
-        </p>
     </section>
 </Layout>
 
