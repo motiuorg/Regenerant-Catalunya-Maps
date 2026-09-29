@@ -1,13 +1,10 @@
 ---
 import Layout from "../../components/Layout.astro";
 import OrganicAmbient from "../../components/OrganicAmbient.astro";
-import AudienceSwitcher from "../../components/AudienceSwitcher.astro";
 import PriorityCard from "../../components/PriorityCard.astro";
-import PriorityScoreboard from "../../components/PriorityScoreboard.astro";
 import InterdependenceDiagram from "../../components/InterdependenceDiagram.astro";
 import CapitalStack from "../../components/CapitalStack.astro";
 import { loadPriorities } from "../../lib/priorities";
-import { loadIndicators } from "../../lib/indicators";
 import { loadSectionConfig, fetchDatabaseRecords } from "../../lib/notion";
 import {
     hasCatbis,
@@ -20,7 +17,6 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
 
 const priorities = loadPriorities().sort((a, b) => a.order - b.order);
-const indicators = loadIndicators();
 
 const sections = loadSectionConfig();
 const actorsSection = sections.find((s) => s.id === "actors");
@@ -119,9 +115,6 @@ for (const p of priorities) {
     contentDict[`p-${p.slug}-shortname`] = p.shortName;
     contentDict[`p-${p.slug}-oneliner`] = p.oneLiner || { en: "" };
 }
-for (const ind of indicators) {
-    contentDict[`ind-${ind.id}-label`] = ind.label;
-}
 for (const item of defaultCapital) {
     contentDict[`cap-default-${item.vehicle}-rationale`] = item.rationale;
 }
@@ -157,26 +150,20 @@ for (const item of defaultCapital) {
             </div>
         )}
 
-        <AudienceSwitcher />
-
         <div class="content-block" data-audience-block="public">
             <p class="content-block__text" data-i18n-html="pri.block.public">
                 This section shows where Catalunya is living beyond its limits,
-                and what is already being done about it. The scoreboard below is
-                the quickest way to see the state of the six priorities. The
-                main source for this temporary, evolving categorization has been
-                the{" "}
+                and what is already being done about it. This temporary,
+                evolving categorization of the six priorities takes as its main
+                reference the report{" "}
                 <a href="https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf">
-                    Catalunya de-growth analysis
-                </a>
-                .
+                    Ecosocial Transition in Catalonia. A Degrowth Proposal
+                </a>{" "}
+                by <a href="https://degrowth.org/">Research &amp; Degrowth</a> —
+                a solid analysis we align with, though it is just one of many
+                possible ways of dividing entities into groups.
             </p>
         </div>
-
-        <h2 class="section-title" data-i18n="pri.scoreboard">
-            Scoreboard
-        </h2>
-        <PriorityScoreboard priorities={priorities} indicators={indicators} />
 
         <h2 class="section-title" data-i18n="pri.six">
             The six priorities
@@ -232,40 +219,6 @@ for (const item of defaultCapital) {
                 Public money, philanthropic grants, and private capital each
                 have a place — but only when matched to the right time horizon,
                 asset, and governance structure.
-            </p>
-        </div>
-        <div class="audience-block is-hidden" data-audience-block="funder">
-            <p
-                class="audience-block__text"
-                data-i18n-html="pri.moneyBlock.funder"
-            >
-                The four BioFi vehicles are sized for different risk, return,
-                and governance profiles. Detailed capital memos per priority are
-                linked from each priority page.
-            </p>
-        </div>
-        <div
-            class="audience-block is-hidden"
-            data-audience-block="administration"
-        >
-            <p
-                class="audience-block__text"
-                data-i18n-html="pri.moneyBlock.administration"
-            >
-                Public co-investment and guarantees can crowd in private capital
-                where market failures are highest — especially land, water, and
-                social infrastructure.
-            </p>
-        </div>
-        <div class="audience-block is-hidden" data-audience-block="organiser">
-            <p
-                class="audience-block__text"
-                data-i18n-html="pri.moneyBlock.organiser"
-            >
-                The capital stack is not neutral. Trusts and commons
-                institutions keep assets out of speculative markets; banks and
-                venture instruments must be designed to reinforce, not extract
-                from, the underlying commons.
             </p>
         </div>
         <CapitalStack

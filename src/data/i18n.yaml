@@ -52,9 +52,9 @@ common:
 home:
   title: { en: "Who is regenerating Catalunya?", ca: "Qui està regenerant Catalunya?", es: "¿Quién está regenerando Cataluña?" }
   lede:
-    en: "Collaborative maps and mapping processes focused on organizations and initiatives working toward a regenerative Catalunya. Search, filter, and discover who is doing what, as well as what you can contribute to this movement!"
-    ca: "Mapes col·laboratius i processos de cartografia centrats en organitzacions i iniciatives que treballen per una Catalunya regenerativa. Cerca, filtra i descobreix qui fa què, i també què hi pots aportar tu a aquest moviment!"
-    es: "Mapas colaborativos y procesos de cartografía centrados en organizaciones e iniciativas que trabajan por una Cataluña regenerativa. Busca, filtra y descubre quién hace qué, y también qué puedes aportar a este movimiento."
+    en: "An open mapping process currently focused on organizations and initiatives working toward a regenerative Catalunya. Search, filter, and discover who is doing what, as well as what you can contribute to this movement!"
+    ca: "Un procés de cartografia obert, centrat actualment en organitzacions i iniciatives que treballen per una Catalunya regenerativa. Cerca, filtra i descobreix qui fa què, i també què hi pots aportar tu a aquest moviment!"
+    es: "Un proceso de mapeo abierto, centrado actualmente en organizaciones e iniciativas que trabajan por una Cataluña regenerativa. Busca, filtra y descubre quién hace qué, y también qué puedes aportar a este movimiento."
   stats: { en: "organizations, programs, and events currently mapped", ca: "organitzacions, programes i esdeveniments mapejats actualment", es: "organizaciones, programas y eventos mapeados actualmente" }
   prompt: { en: "Start exploring the map:", ca: "Comença a explorar el mapa:", es: "Empieza a explorar el mapa:" }
   orgTitle: { en: "Organizations", ca: "Organitzacions", es: "Organizaciones" }
@@ -120,7 +120,6 @@ pri:
     en: "A diagnosis of the bioregion across six interdependent systems, plus the leverage and capital vehicles that can move each toward regeneration."
     ca: "Un diagnòstic del bioregion a través de sis sistemes interdependent, més les palanques i els vehicles de capital que poden moure cadascun cap a la regeneració."
     es: "Un diagnóstico del biorregión a través de seis sistemas interdependientes, más las palancas y los vehículos de capital que pueden mover cada uno hacia la regeneración."
-  scoreboard: { en: "Scoreboard", ca: "Marcador", es: "Marcador" }
   six: { en: "The six priorities", ca: "Les sis prioritats", es: "Las seis prioridades" }
   interdependence: { en: "Interdependence", ca: "Interdependència", es: "Interdependencia" }
   interdependenceLede:
@@ -157,9 +156,9 @@ pri:
     organiser: { en: "Movement / organiser", ca: "Moviment / organitzador", es: "Movimiento / organizador" }
   block:
     public:
-      en: "This section shows where Catalunya is living beyond its limits, and what is already being done about it. The scoreboard below is the quickest way to see the state of the six priorities. The main source for this temporary, evolving categorization has been the <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">Catalunya de-growth analysis</a>."
-      ca: "Aquesta secció mostra on Catalunya viu més enllà dels seus límits i què ja s'hi està fent. El marcador de sota és la manera més ràpida de veure l'estat de les sis prioritats. La font principal d'aquesta categorització temporal i en evolució ha estat l'<a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">anàlisi del decreixement de Catalunya</a>."
-      es: "Esta sección muestra dónde Cataluña vive más allá de sus límites y qué se está haciendo al respecto. El marcador de abajo es la forma más rápida de ver el estado de las seis prioridades. La fuente principal de esta categorización temporal y en evolución ha sido el <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">análisis del decrecimiento de Cataluña</a>."
+      en: "This section shows where Catalunya is living beyond its limits, and what is already being done about it. This temporary, evolving categorization of the six priorities takes as its main reference the report <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">Ecosocial Transition in Catalonia. A Degrowth Proposal</a> by <a href=\"https://degrowth.org/\">Research &amp; Degrowth</a> — a solid analysis we align with, though it is just one of many possible ways of dividing entities into groups."
+      ca: "Aquesta secció mostra on Catalunya viu més enllà dels seus límits i què ja s'hi està fent. Aquesta categorització temporal i en evolució de les sis prioritats té com a referència principal l'informe <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">Ecosocial Transition in Catalonia. A Degrowth Proposal</a> de <a href=\"https://degrowth.org/\">Research &amp; Degrowth</a> — una anàlisi sòlida amb la qual ens alineem, tot i que només és una de les moltes maneres possibles de dividir les entitats en grups."
+      es: "Esta sección muestra dónde Cataluña vive más allá de sus límites y qué se está haciendo al respecto. Esta categorización temporal y en evolución de las seis prioridades toma como referencia principal el informe <a href=\"https://degrowth.org/wp-content/uploads/2024/07/decreixement_ENG_3.pdf\">Ecosocial Transition in Catalonia. A Degrowth Proposal</a> de <a href=\"https://degrowth.org/\">Research &amp; Degrowth</a> — un análisis sólido con el que nos alineamos, aunque es solo una de las muchas formas posibles de dividir las entidades en grupos."
   moneyBlock:
     public:
       en: "Public money, philanthropic grants, and private capital each have a place — but only when matched to the right time horizon, asset, and governance structure."
