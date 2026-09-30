@@ -206,30 +206,46 @@ if (missing > 0 && mapped.length > 0) {
 
         for (const m of markers) {
             // Square marker — the site's radius-0 aesthetic. Colored by the org's
-            // first priority tag; ink otherwise.
+            // first priority tag; ink otherwise. IMPORTANT: MapLibre positions the
+            // marker by setting `transform: translate(...)` on the element it is
+            // given — so hover effects must go on an INNER element, never on the
+            // marker element itself (overwriting its transform makes pins jump).
             const dot = document.createElement("button");
             dot.type = "button";
-            dot.className = "org-map-dot";
+            dot.className = "org-map-hit";
             dot.setAttribute("aria-label", m.name);
             dot.style.cssText = [
+                "box-sizing:content-box",
                 "width:11px",
                 "height:11px",
                 "padding:0",
                 "display:block",
                 "cursor:pointer",
+                "background:transparent",
+                "border:none",
+            ].join(";");
+
+            const square = document.createElement("span");
+            square.className = "org-map-dot";
+            square.style.cssText = [
+                "display:block",
+                "width:11px",
+                "height:11px",
                 `background:${m.color || ink}`,
                 `border:2px solid ${paper}`,
                 "box-shadow:0 0 0 1px rgba(0,0,0,0.35)",
                 "transition:transform 120ms ease",
             ].join(";");
-            dot.addEventListener(
-                "mouseenter",
-                () => (dot.style.transform = "scale(1.3)"),
-            );
-            dot.addEventListener(
-                "mouseleave",
-                () => (dot.style.transform = "scale(1)"),
-            );
+            dot.appendChild(square);
+
+            dot.addEventListener("mouseenter", () => {
+                square.style.transform = "scale(1.3)";
+                marker.togglePopup();
+            });
+            dot.addEventListener("mouseleave", () => {
+                square.style.transform = "scale(1)";
+                marker.togglePopup();
+            });
 
             const chips = m.tags
                 .map(
@@ -262,9 +278,6 @@ if (missing > 0 && mapped.length > 0) {
                 .setLngLat([m.lng, m.lat])
                 .setPopup(popup)
                 .addTo(map);
-
-            dot.addEventListener("mouseenter", () => marker.togglePopup());
-            dot.addEventListener("mouseleave", () => marker.togglePopup());
 
             // Click → find the org in the list below and flash it (if the current
             // filters still show it).
