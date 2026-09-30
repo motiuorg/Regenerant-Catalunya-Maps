@@ -72,7 +72,6 @@ orgs:
     ca: "Descobreix actors regeneratius, organitzacions, xarxes i iniciatives d'arreu de Catalunya. Cerca per nom o filtra per àrea prioritària, territori, rol, temes i etiquetes d'ontologia."
     es: "Descubre actores regenerativos, organizaciones, redes e iniciativas de toda Cataluña. Busca por nombre o filtra por área prioritaria, territorio, rol, temas y etiquetas de ontología."
   mapTitle: { en: "On the map", ca: "Al mapa", es: "En el mapa" }
-  mapMissing: { en: "Without location yet, not on the map:", ca: "Sense ubicació encara, fora del mapa:", es: "Sin ubicación todavía, fuera del mapa:" }
   searchPlaceholder: { en: "Type an organization name…", ca: "Escriu el nom d'una organització…", es: "Escribe el nombre de una organización…" }
   count: { en: "Showing {shown} of {total} organizations", ca: "Es mostren {shown} de {total} organitzacions", es: "Mostrando {shown} de {total} organizaciones" }
 
