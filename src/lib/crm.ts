@@ -1,4 +1,5 @@
 import type { NormalizedRecord } from "./notion";
+import { getPlace } from "./geo";
 import {
   priorityAreaOptions as priorityAreaOptionsFromYaml,
   priorityColor as priorityColorFromYaml,
@@ -26,6 +27,11 @@ export interface CrmActor {
   relatedProjects: string[];
   relatedEvents: string[];
   relatedResources: string[];
+  /** Resolved from the Notion `Place` property (type `place`) or Lat/Lng numbers; null when absent. */
+  lat: number | null;
+  lng: number | null;
+  placeName: string | null;
+  placeAddress: string | null;
 }
 
 export interface CrmProgram {
@@ -123,6 +129,7 @@ function extractStartDate(value: any): string | null {
 
 export function normalizeRecord(record: NormalizedRecord): CrmActor {
   const props = record.properties;
+  const place = getPlace(props);
   return {
     id: record.id,
     name: String(props["Name"] ?? "Untitled"),
@@ -144,7 +151,21 @@ export function normalizeRecord(record: NormalizedRecord): CrmActor {
     relatedProjects: toStringArray(props["Projects & Areas"]),
     relatedEvents: toStringArray(props["Events"]),
     relatedResources: toStringArray(props["Artifacts"]),
+    lat: place?.lat ?? null,
+    lng: place?.lng ?? null,
+    placeName: place?.name ?? null,
+    placeAddress: place?.address ?? null,
   };
+}
+
+/** Map/directory rule (per Motiu CRM handoff, 2026-09-29): an actor counts as an
+ *  organization when its `Agency` multi-select contains exactly "org" (the
+ *  normalized string is comma-joined, e.g. "org,network/ecosystem"). */
+export function isOrgActor(actor: CrmActor): boolean {
+  return (actor.actorType ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .includes("org");
 }
 
 export function normalizeProgram(record: NormalizedRecord): CrmProgram {

@@ -1,0 +1,319 @@
+---
+// OrgMap.astro — MapLibre map of the organizations directory (mirrors the
+// bioregioning.earth map pattern, adapted to the editorial-organic style).
+// Orgs get coordinates from a Notion Location property (any name) or Lat/Lng
+// number fields — see src/lib/geo.ts. When no org has coordinates yet, the
+// block renders nothing (the page looks unchanged until the data lands).
+import type { CrmActor } from "../lib/crm";
+import { priorityColor, isOrgActor } from "../lib/crm";
+
+interface Props {
+    actors: CrmActor[];
+    showTitle?: boolean;
+}
+const { actors, showTitle = true } = Astro.props;
+
+// Per the Motiu CRM handoff: the map shows CATBIS organizations (Agency contains
+// "org") that have a valid Place — never invent fallback coordinates.
+const orgActors = actors.filter(isOrgActor);
+const mapped = orgActors.filter((a) => a.lat != null && a.lng != null);
+const missing = orgActors.length - mapped.length;
+
+const markers = mapped.map((a) => ({
+    id: a.id,
+    name: a.name,
+    lat: a.lat,
+    lng: a.lng,
+    type: a.actorType ?? "",
+    territory: a.area2[0] ?? "",
+    place: a.placeName ?? a.placeAddress ?? "",
+    desc: (a.description || a.whyItMatters || "").slice(0, 200),
+    website: a.website,
+    color: a.thirdTags.length ? priorityColor(a.thirdTags[0]) : "",
+    tags: a.thirdTags.slice(0, 3),
+}));
+
+const safeJson = (obj: any) =>
+    JSON.stringify(obj)
+        .replace(/</g, "\\u003c")
+        .replace(/>/g, "\\u003e")
+        .replace(/&/g, "\\u0026");
+
+if (missing > 0 && mapped.length > 0) {
+    console.warn(
+        `[geo] ${missing} org(s) (Agency~org) without Place coordinates — not shown on the map.`,
+    );
+}
+---
+
+{mapped.length > 0 && (
+    <section class="org-map-block">
+        {(showTitle || missing > 0) && (
+            <div class="org-map-block__head">
+                {showTitle && (
+                    <h2 class="org-map-block__title" data-i18n="orgs.mapTitle">
+                        On the map
+                    </h2>
+                )}
+                {missing > 0 && (
+                    <p class="org-map-block__note">
+                        <span data-i18n="orgs.mapMissing">
+                            Without location yet, not on the map:
+                        </span>{" "}
+                        <span>{missing}</span>
+                    </p>
+                )}
+            </div>
+        )}
+        <div id="org-map" class="org-map" data-markers={safeJson(markers)} />
+    </section>
+)}
+
+<style is:global>
+    /* MapLibre-injected elements live outside the component's scope, so popup
+       chrome is styled globally with the site tokens. */
+    .maplibregl-popup-content {
+        padding: 0 !important;
+        background: var(--paper) !important;
+        border: 1px solid var(--border-default);
+        box-shadow: var(--shadow-sm);
+        border-radius: 0 !important;
+    }
+    .maplibregl-popup-tip {
+        border-top-color: var(--paper) !important;
+        border-bottom-color: var(--paper) !important;
+    }
+    .maplibregl-ctrl-group {
+        border-radius: 0 !important;
+        box-shadow: var(--shadow-sm) !important;
+    }
+</style>
+
+<style>
+    .org-map-block {
+        width: 100%; /* hero__inner is a flex column with align-items:center and shrink-wraps otherwise */
+        max-width: 900px;
+        margin: 0 auto var(--space-8);
+    }
+    .org-map-block__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+        margin-bottom: var(--space-3);
+    }
+    .org-map-block__title {
+        font-family: var(--serif);
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: var(--ink);
+        margin: 0;
+    }
+    .org-map-block__note {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0;
+    }
+    .org-map {
+        width: 100%;
+        height: 460px;
+        border: 1px solid var(--border-subtle);
+        background: var(--surface-1);
+    }
+    @media (max-width: 720px) {
+        .org-map {
+            height: 340px;
+        }
+    }
+</style>
+
+<script>
+    import maplibregl from "maplibre-gl";
+    import "maplibre-gl/dist/maplibre-gl.css";
+
+    interface MarkerData {
+        id: string;
+        name: string;
+        lat: number;
+        lng: number;
+        type: string;
+        territory: string;
+        place: string;
+        desc: string;
+        website: string | null;
+        color: string;
+        tags: string[];
+    }
+
+    const esc = (s: string) =>
+        s
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+
+    function initOrgMap() {
+        const el = document.getElementById("org-map");
+        if (!el) return;
+        const markers: MarkerData[] = JSON.parse(el.dataset.markers || "[]");
+        if (!markers.length) return;
+
+        // Spider overlapping markers: several orgs share a municipality/centroid
+        // (e.g. the Barcelona city centre), so identical rounded coordinates get a
+        // small deterministic ring of pixel offsets instead of stacking.
+        const offsets = new Map<string, [number, number]>();
+        {
+            const groups = new Map<string, MarkerData[]>();
+            for (const m of markers) {
+                const key = `${m.lat.toFixed(4)},${m.lng.toFixed(4)}`;
+                const g = groups.get(key);
+                if (g) g.push(m);
+                else groups.set(key, [m]);
+            }
+            for (const group of groups.values()) {
+                if (group.length < 2) continue;
+                group.sort((a, b) => a.name.localeCompare(b.name));
+                group.forEach((m, i) => {
+                    const ang = (2 * Math.PI * i) / group.length - Math.PI / 2;
+                    offsets.set(m.id, [
+                        Math.round(Math.cos(ang) * 16),
+                        Math.round(Math.sin(ang) * 16),
+                    ]);
+                });
+            }
+        }
+
+        const css = (v: string, fallback: string) =>
+            getComputedStyle(document.documentElement)
+                .getPropertyValue(v)
+                .trim() || fallback;
+        const paper = css("--paper", "#fbf9f3");
+        const ink = css("--ink", "#221a12");
+
+        const map = new maplibregl.Map({
+            container: el,
+            style: {
+                version: 8,
+                sources: {
+                    osm: {
+                        type: "raster",
+                        tiles: [
+                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        ],
+                        tileSize: 256,
+                        attribution: "&copy; OpenStreetMap contributors",
+                    },
+                },
+                layers: [{ id: "osm", type: "raster", source: "osm" }],
+            },
+            center: [1.75, 41.6], // Catalunya
+            zoom: 7.2,
+            dragRotate: false,
+            attributionControl: { compact: true },
+        });
+        map.addControl(
+            new maplibregl.NavigationControl({ showCompass: false }),
+            "bottom-left",
+        );
+
+        const bounds = new maplibregl.LngLatBounds();
+
+        for (const m of markers) {
+            // Square marker — the site's radius-0 aesthetic. Colored by the org's
+            // first priority tag; ink otherwise.
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "org-map-dot";
+            dot.setAttribute("aria-label", m.name);
+            dot.style.cssText = [
+                "width:11px",
+                "height:11px",
+                "padding:0",
+                "display:block",
+                "cursor:pointer",
+                `background:${m.color || ink}`,
+                `border:2px solid ${paper}`,
+                "box-shadow:0 0 0 1px rgba(0,0,0,0.35)",
+                "transition:transform 120ms ease",
+            ].join(";");
+            dot.addEventListener(
+                "mouseenter",
+                () => (dot.style.transform = "scale(1.3)"),
+            );
+            dot.addEventListener(
+                "mouseleave",
+                () => (dot.style.transform = "scale(1)"),
+            );
+
+            const chips = m.tags
+                .map(
+                    (t) =>
+                        `<span style="font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);">${esc(t)}</span>`,
+                )
+                .join('<span style="color:var(--text-muted);"> · </span>');
+
+            const popup = new maplibregl.Popup({
+                offset: 16,
+                closeButton: false,
+                closeOnClick: false,
+                maxWidth: "320px",
+            }).setHTML(`
+                <div style="padding:0.7rem 0.9rem;font-family:var(--sans);max-width:320px;">
+                    <div style="font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin-bottom:0.25rem;">${esc(m.name)}</div>
+                    ${m.place ? `<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.4;margin-bottom:0.3rem;">📍 ${esc(m.place)}</div>` : ""}
+                    ${m.desc ? `<div style="font-size:0.85rem;color:var(--ink);line-height:1.45;margin-bottom:0.4rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${esc(m.desc)}</div>` : ""}
+                    ${m.type || m.territory ? `<div style="font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.35rem;">${esc([m.type, m.territory].filter(Boolean).join(" · "))}</div>` : ""}
+                    ${chips ? `<div style="margin-bottom:0.35rem;">${chips}</div>` : ""}
+                    ${m.website ? `<a href="${esc(m.website)}" target="_blank" rel="noopener noreferrer" style="font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--primary);text-decoration:none;">Website →</a>` : ""}
+                </div>
+            `);
+
+            const marker = new maplibregl.Marker({
+                element: dot,
+                anchor: "center",
+                offset: offsets.get(m.id) ?? [0, 0],
+            })
+                .setLngLat([m.lng, m.lat])
+                .setPopup(popup)
+                .addTo(map);
+
+            dot.addEventListener("mouseenter", () => marker.togglePopup());
+            dot.addEventListener("mouseleave", () => marker.togglePopup());
+
+            // Click → find the org in the list below and flash it (if the current
+            // filters still show it).
+            dot.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const card = document.querySelector<HTMLElement>(
+                    `[data-actor-name="${CSS.escape(m.name)}"]`,
+                );
+                if (!card || card.classList.contains("is-hidden")) return;
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+                card.classList.add("is-flash");
+                window.setTimeout(
+                    () => card.classList.remove("is-flash"),
+                    1800,
+                );
+            });
+
+            bounds.extend([m.lng, m.lat]);
+        }
+
+        if (markers.length > 1) {
+            map.fitBounds(bounds, { padding: 48, maxZoom: 11 });
+        } else {
+            map.setCenter([markers[0].lng, markers[0].lat]);
+            map.setZoom(11);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initOrgMap);
+    } else {
+        initOrgMap();
+    }
+</script>

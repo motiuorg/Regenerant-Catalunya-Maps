@@ -1,36 +1,43 @@
 ---
 import Layout from "../components/Layout.astro";
 import OrganicAmbient from "../components/OrganicAmbient.astro";
-import PulsingMap from "../components/PulsingMap.astro";
+import OrgMap from "../components/OrgMap.astro";
 import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
-import { hasCatbis } from "../lib/crm";
+import { hasCatbis, normalizeRecord, isOrgActor } from "../lib/crm";
+import type { CrmActor } from "../lib/crm";
 
 const sections = loadSectionConfig();
 const actorsSection = sections.find((s) => s.id === "actors");
 const programsSection = sections.find((s) => s.id === "programs");
 const eventsSection = sections.find((s) => s.id === "events");
 
-let actorCount = 0;
+let actors: CrmActor[] = [];
 let programCount = 0;
 let eventCount = 0;
 let error: string | null = null;
 
-async function fetchCount(section: typeof actorsSection) {
-    if (!section?.database_id) return 0;
-    const records = await fetchDatabaseRecords(section.database_id);
-    return records.filter(hasCatbis).length;
+async function fetchRecords(section: typeof actorsSection) {
+    if (!section?.database_id) return [];
+    return fetchDatabaseRecords(section.database_id);
 }
 
 try {
-    [actorCount, programCount, eventCount] = await Promise.all([
-        fetchCount(actorsSection),
-        fetchCount(programsSection),
-        fetchCount(eventsSection),
+    const [actorRecords, programRecords, eventRecords] = await Promise.all([
+        fetchRecords(actorsSection),
+        fetchRecords(programsSection),
+        fetchRecords(eventsSection),
     ]);
+    actors = actorRecords
+        .filter(hasCatbis)
+        .map(normalizeRecord)
+        .filter(isOrgActor);
+    programCount = programRecords.filter(hasCatbis).length;
+    eventCount = eventRecords.filter(hasCatbis).length;
 } catch (e: any) {
     error = e.message ?? "Failed to fetch data from Notion.";
 }
 
+const actorCount = actors.length;
 const totalCount = actorCount + programCount + eventCount;
 
 const rawBase = import.meta.env.BASE_URL;
@@ -92,7 +99,7 @@ const exploreLinks = [
                 </span>
             </p>
 
-            <PulsingMap />
+            <OrgMap actors={actors} showTitle={false} />
 
             {error && (
                 <div class="error-banner">
