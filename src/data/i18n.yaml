@@ -22,7 +22,7 @@ footer:
   explore: { en: "Explore", ca: "Explora", es: "Explora" }
   partners: { en: "Partners", ca: "Aliats", es: "Aliados" }
   bioregion: { en: "State of the Bioregion", ca: "Estat del bioregion", es: "Estado del biorregión" }
-  legalNote: { en: "Cooperative in formation · Catalunya", ca: "Cooperativa en formació · Catalunya", es: "Cooperativa en formación · Cataluña" }
+  legalNote: { en: "Motiu · Catalunya", ca: "Motiu · Catalunya", es: "Motiu · Catalunya" }
   code: { en: "Code · MIT", ca: "Codi · MIT", es: "Código · MIT" }
   content: { en: "Content · CC BY-SA 4.0", ca: "Contingut · CC BY-SA 4.0", es: "Contenido · CC BY-SA 4.0" }
 

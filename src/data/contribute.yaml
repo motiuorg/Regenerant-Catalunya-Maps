@@ -3,7 +3,7 @@ schema_version: "1.0"
 # Ways to contribute to regenerating Catalunya — time / attention / money / land / capital.
 # Content source: research file "restauracio-ecologica-catalunya.md" (2026-08-11) +
 # live verification of every URL (accessed 2026-08-11) + entities from the rc2 CRM
-# (data/crm.yaml, ReFi BCN CRM). Links with `mapped: true` correspond to entities
+# (data/crm.yaml, Motiu). Links with `mapped: true` correspond to entities
 # that appear in this site's organization directory (CATBIS-tagged).
 #
 # Rendering: `src/pages/contribute.astro` + `src/lib/contribute.ts`.
@@ -658,6 +658,6 @@ sources:
   - label: "Arran de Terra"
     url: "https://arrandeterra.org/"
     accessed: "2026-08-11"
-  - label: "ReFi BCN CRM (data/crm.yaml) — entity registry for the rc2 map"
-    url: "https://github.com/refibcn/rc2"
+  - label: "Motiu — entity registry for the map (data/crm.yaml)"
+    url: "https://github.com/motiuorg/Regenerant-Catalunya-Maps"
     accessed: "2026-08-11"
