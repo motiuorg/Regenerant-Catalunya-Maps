@@ -1,9 +1,9 @@
 ---
 // OrgMap.astro — MapLibre map of the organizations directory (mirrors the
 // bioregioning.earth map pattern, adapted to the editorial-organic style).
-// Orgs get coordinates from a Notion Location property (any name) or Lat/Lng
-// number fields — see src/lib/geo.ts. When no org has coordinates yet, the
-// block renders nothing (the page looks unchanged until the data lands).
+// Orgs get coordinates from the Motiu CRM `Place` property (type `place`,
+// longitude = `lon`) or Lat/Lng number fields — see src/lib/geo.ts. When no
+// org has coordinates yet, the block renders nothing.
 import type { CrmActor } from "../lib/crm";
 import { priorityColor, isOrgActor } from "../lib/crm";
 
@@ -132,6 +132,22 @@ if (missing > 0 && mapped.length > 0) {
         tags: string[];
     }
 
+    interface FanState {
+        origin: { lat: number; lng: number };
+        chip: {
+            el: HTMLElement;
+            marker: maplibregl.Marker;
+            setPopup: (open: boolean) => void;
+        };
+        dots: Array<{
+            m: MarkerData;
+            el: HTMLElement;
+            marker: maplibregl.Marker;
+            setPopup: (open: boolean) => void;
+        }>;
+        expanded: boolean;
+    }
+
     const esc = (s: string) =>
         s
             .replace(/&/g, "&amp;")
@@ -162,37 +178,34 @@ if (missing > 0 && mapped.length > 0) {
         const markers: MarkerData[] = JSON.parse(el.dataset.markers || "[]");
         if (!markers.length) return;
 
-        // Spider overlapping markers: several orgs share a municipality/centroid
-        // (e.g. the Barcelona city centre), so identical rounded coordinates get a
-        // small deterministic ring of pixel offsets instead of stacking.
-        const offsets = new Map<string, [number, number]>();
-        {
-            const groups = new Map<string, MarkerData[]>();
-            for (const m of markers) {
-                const key = `${m.lat.toFixed(4)},${m.lng.toFixed(4)}`;
-                const g = groups.get(key);
-                if (g) g.push(m);
-                else groups.set(key, [m]);
-            }
-            for (const group of groups.values()) {
-                if (group.length < 2) continue;
-                group.sort((a, b) => a.name.localeCompare(b.name));
-                group.forEach((m, i) => {
-                    const ang = (2 * Math.PI * i) / group.length - Math.PI / 2;
-                    offsets.set(m.id, [
-                        Math.round(Math.cos(ang) * 26),
-                        Math.round(Math.sin(ang) * 26),
-                    ]);
-                });
-            }
-        }
-
         const css = (v: string, fallback: string) =>
             getComputedStyle(document.documentElement)
                 .getPropertyValue(v)
                 .trim() || fallback;
         const paper = css("--paper", "#fbf9f3");
         const ink = css("--ink", "#221a12");
+
+        // Group markers by rounded coordinates — shared municipal centroids (the
+        // Barcelona cluster) collapse into one count chip that fans out on click.
+        const groups = new Map<string, MarkerData[]>();
+        for (const m of markers) {
+            const key = `${m.lat.toFixed(4)},${m.lng.toFixed(4)}`;
+            const g = groups.get(key);
+            if (g) g.push(m);
+            else groups.set(key, [m]);
+        }
+        const offsets = new Map<string, [number, number]>();
+        for (const group of groups.values()) {
+            if (group.length < 2) continue;
+            group.sort((a, b) => a.name.localeCompare(b.name));
+            group.forEach((m, i) => {
+                const ang = (2 * Math.PI * i) / group.length - Math.PI / 2;
+                offsets.set(m.id, [
+                    Math.round(Math.cos(ang) * 26),
+                    Math.round(Math.sin(ang) * 26),
+                ]);
+            });
+        }
 
         const map = new maplibregl.Map({
             container: el,
@@ -243,12 +256,73 @@ if (missing > 0 && mapped.length > 0) {
 
         const bounds = new maplibregl.LngLatBounds();
 
-        for (const m of markers) {
-            // Sphere marker with a soft glow, colored by the org's first priority
-            // tag; ink otherwise. IMPORTANT: MapLibre positions the marker by
-            // setting `transform: translate(...)` on the element it is given — so
-            // hover effects must go on an INNER element, never on the marker
-            // element itself (overwriting its transform makes pins jump).
+        // Popup with a grace window: leaving the pin starts a short countdown
+        // before the popup closes, hovering the popup cancels it — so links
+        // inside are clickable. Listeners attach lazily (the popup's DOM element
+        // only exists once it has been opened at least once).
+        const bindPopup = (
+            el: HTMLElement,
+            popup: maplibregl.Popup,
+            marker: maplibregl.Marker,
+            onHover?: (active: boolean) => void,
+        ) => {
+            let popupCloseTimer: number | undefined;
+            const attachPopupGrace = () => {
+                const pe = popup.getElement();
+                if (!pe || (pe as any).dataset.mapGrace) return;
+                (pe as any).dataset.mapGrace = "1";
+                pe.addEventListener("mouseenter", () =>
+                    window.clearTimeout(popupCloseTimer),
+                );
+                pe.addEventListener("mouseleave", closeSoon);
+            };
+            const setPopup = (open: boolean) => {
+                if (popup.isOpen() !== open) marker.togglePopup();
+                if (open) attachPopupGrace();
+            };
+            const closeSoon = () => {
+                window.clearTimeout(popupCloseTimer);
+                popupCloseTimer = window.setTimeout(() => setPopup(false), 180);
+            };
+            el.addEventListener("mouseenter", () => {
+                onHover?.(true);
+                window.clearTimeout(popupCloseTimer);
+                setPopup(true);
+            });
+            el.addEventListener("mouseleave", () => {
+                onHover?.(false);
+                closeSoon();
+            });
+            return setPopup;
+        };
+
+        const popupContent = (m: MarkerData) => {
+            const tags = m.tags
+                .map(
+                    (t) =>
+                        `<span style="font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);">${esc(t)}</span>`,
+                )
+                .join('<span style="color:var(--text-muted);"> · </span>');
+            return `
+                <div style="padding:0.7rem 0.9rem;font-family:var(--sans);max-width:320px;">
+                    <div style="font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin-bottom:0.25rem;">${esc(m.name)}</div>
+                    ${m.place ? `<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.4;margin-bottom:0.3rem;">📍 ${esc(m.place)}</div>` : ""}
+                    ${m.desc ? `<div style="font-size:0.85rem;color:var(--ink);line-height:1.45;margin-bottom:0.4rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${esc(m.desc)}</div>` : ""}
+                    ${m.type || m.territory ? `<div style="font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.35rem;">${esc([m.type, m.territory].filter(Boolean).join(" · "))}</div>` : ""}
+                    ${tags ? `<div style="margin-bottom:0.35rem;">${tags}</div>` : ""}
+                    ${m.website ? `<a href="${esc(m.website)}" target="_blank" rel="noopener noreferrer" style="font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--primary);text-decoration:none;">Website →</a>` : ""}
+                </div>
+            `;
+        };
+
+        // A single organization pin. IMPORTANT: MapLibre positions the marker by
+        // setting `transform: translate(...)` on the element it is given — so
+        // hover effects must go on an INNER element, never on the marker element
+        // itself (overwriting its transform makes pins jump).
+        const makePin = (
+            m: MarkerData,
+            opts: { offset?: [number, number]; hidden?: boolean },
+        ) => {
             const dot = document.createElement("button");
             dot.type = "button";
             dot.className = "org-map-hit";
@@ -279,71 +353,33 @@ if (missing > 0 && mapped.length > 0) {
             ].join(";");
             dot.appendChild(square);
 
-            // Grace window: leaving the pin starts a short countdown before the
-            // popup closes, and hovering the popup itself cancels it — so links
-            // inside the popup are actually clickable.
-            let popupCloseTimer: number | undefined;
-            // The popup's DOM element only exists once it has been opened at
-            // least once (getElement() is undefined before), so the grace
-            // listeners are attached lazily on first open.
-            const attachPopupGrace = () => {
-                const el = popup.getElement();
-                if (!el || el.dataset.mapGrace) return;
-                el.dataset.mapGrace = "1";
-                el.addEventListener("mouseenter", () =>
-                    window.clearTimeout(popupCloseTimer),
-                );
-                el.addEventListener("mouseleave", closeSoon);
-            };
-            const setPopup = (open: boolean) => {
-                if (popup.isOpen() !== open) marker.togglePopup();
-                if (open) attachPopupGrace();
-            };
-            const closeSoon = () => {
-                window.clearTimeout(popupCloseTimer);
-                popupCloseTimer = window.setTimeout(() => setPopup(false), 180);
-            };
-            dot.addEventListener("mouseenter", () => {
-                square.style.transform = "scale(1.2)";
-                window.clearTimeout(popupCloseTimer);
-                setPopup(true);
-            });
-            dot.addEventListener("mouseleave", () => {
-                square.style.transform = "scale(1)";
-                closeSoon();
-            });
-
-            const chips = m.tags
-                .map(
-                    (t) =>
-                        `<span style="font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);">${esc(t)}</span>`,
-                )
-                .join('<span style="color:var(--text-muted);"> · </span>');
-
             const popup = new maplibregl.Popup({
                 offset: 16,
                 closeButton: false,
                 closeOnClick: false,
                 maxWidth: "320px",
-            }).setHTML(`
-                <div style="padding:0.7rem 0.9rem;font-family:var(--sans);max-width:320px;">
-                    <div style="font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin-bottom:0.25rem;">${esc(m.name)}</div>
-                    ${m.place ? `<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.4;margin-bottom:0.3rem;">📍 ${esc(m.place)}</div>` : ""}
-                    ${m.desc ? `<div style="font-size:0.85rem;color:var(--ink);line-height:1.45;margin-bottom:0.4rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${esc(m.desc)}</div>` : ""}
-                    ${m.type || m.territory ? `<div style="font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.35rem;">${esc([m.type, m.territory].filter(Boolean).join(" · "))}</div>` : ""}
-                    ${chips ? `<div style="margin-bottom:0.35rem;">${chips}</div>` : ""}
-                    ${m.website ? `<a href="${esc(m.website)}" target="_blank" rel="noopener noreferrer" style="font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--primary);text-decoration:none;">Website →</a>` : ""}
-                </div>
-            `);
+            }).setHTML(popupContent(m));
 
             const marker = new maplibregl.Marker({
                 element: dot,
                 anchor: "center",
-                offset: offsets.get(m.id) ?? [0, 0],
+                offset: opts.offset ?? [0, 0],
             })
                 .setLngLat([m.lng, m.lat])
                 .setPopup(popup)
                 .addTo(map);
+
+            const setPopup = bindPopup(
+                dot,
+                popup,
+                marker,
+                (active) =>
+                    (square.style.transform = active
+                        ? "scale(1.2)"
+                        : "scale(1)"),
+            );
+
+            if (opts.hidden) dot.style.display = "none";
 
             // Click → find the org in the list below and flash it (if the current
             // filters still show it).
@@ -362,7 +398,223 @@ if (missing > 0 && mapped.length > 0) {
                 );
             });
 
-            bounds.extend([m.lng, m.lat]);
+            return { dot, marker, setPopup };
+        };
+
+        // Count chip for a coordinate group — click to fan the orgs out.
+        const makeChip = (
+            group: MarkerData[],
+            origin: { lat: number; lng: number },
+            onExpand: () => void,
+        ) => {
+            const first = group[0];
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "org-map-hit";
+            chip.setAttribute(
+                "aria-label",
+                `${group.length} organizations here`,
+            );
+            chip.style.cssText = [
+                "box-sizing:content-box",
+                "width:20px",
+                "height:20px",
+                "padding:0",
+                "display:block",
+                "cursor:pointer",
+                "background:transparent",
+                "border:none",
+            ].join(";");
+
+            const disc = document.createElement("span");
+            disc.className = "org-map-chip";
+            disc.style.cssText = [
+                "display:flex",
+                "align-items:center",
+                "justify-content:center",
+                "width:20px",
+                "height:20px",
+                "border-radius:50%",
+                `background:${first.color || ink}`,
+                "border:3px solid " + paper,
+                `box-shadow:0 2px 5px rgba(0,0,0,0.3), 0 0 0 3px ${hexToRgba(first.color || ink, 0.25)}, 0 0 12px 4px ${hexToRgba(first.color || ink, 0.5)}`,
+                "transition:transform 120ms ease",
+            ].join(";");
+            const num = document.createElement("span");
+            num.textContent = String(group.length);
+            num.style.cssText = [
+                "font-family:var(--mono)",
+                "font-size:10px",
+                "line-height:1",
+                "font-weight:600",
+                "color:" + paper,
+                "text-shadow:0 1px 2px rgba(0,0,0,0.5)",
+            ].join(";");
+            disc.appendChild(num);
+            chip.appendChild(disc);
+
+            const shown = group
+                .slice(0, 3)
+                .map(
+                    (m) =>
+                        `<div style="font-size:0.8rem;line-height:1.5;color:var(--text-primary);">${esc(m.name)}</div>`,
+                )
+                .join("");
+            const more =
+                group.length > 3
+                    ? `<div style="font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-top:0.2rem;">+ ${group.length - 3} more</div>`
+                    : "";
+            const popup = new maplibregl.Popup({
+                offset: 16,
+                closeButton: false,
+                closeOnClick: false,
+                maxWidth: "280px",
+            }).setHTML(`
+                <div style="padding:0.7rem 0.9rem;font-family:var(--sans);max-width:280px;">
+                    <div style="font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.25;margin-bottom:0.3rem;">${group.length} organizations here</div>
+                    ${shown}
+                    ${more}
+                    <div style="font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-top:0.5rem;">Click to spread them</div>
+                </div>
+            `);
+
+            const marker = new maplibregl.Marker({
+                element: chip,
+                anchor: "center",
+            })
+                .setLngLat([origin.lng, origin.lat])
+                .setPopup(popup)
+                .addTo(map);
+
+            const setPopup = bindPopup(
+                chip,
+                popup,
+                marker,
+                (active) =>
+                    (disc.style.transform = active
+                        ? "scale(1.15)"
+                        : "scale(1)"),
+            );
+
+            chip.addEventListener("click", (e) => {
+                e.stopPropagation();
+                setPopup(false);
+                onExpand();
+            });
+
+            return { el: chip, marker, setPopup };
+        };
+
+        // --- spiderfy: fans + connectors ---
+        const fans: FanState[] = [];
+
+        const ensureFanLines = () => {
+            if (map.getSource("fan-lines")) return;
+            map.addSource("fan-lines", {
+                type: "geojson",
+                data: { type: "FeatureCollection", features: [] },
+            });
+            map.addLayer({
+                id: "fan-lines",
+                type: "line",
+                source: "fan-lines",
+                paint: {
+                    "line-color": "rgba(34, 26, 18, 0.35)",
+                    "line-width": 1,
+                },
+            });
+        };
+
+        const refreshFan = (fan: FanState) => {
+            const c = map.project([fan.origin.lng, fan.origin.lat]);
+            const lines = {
+                type: "FeatureCollection" as const,
+                features: fan.dots.map((d) => {
+                    const off = offsets.get(d.m.id)!;
+                    const ll = map.unproject([c.x + off[0], c.y + off[1]]);
+                    d.marker.setLngLat([ll.lng, ll.lat]);
+                    return {
+                        type: "Feature" as const,
+                        geometry: {
+                            type: "LineString" as const,
+                            coordinates: [
+                                [fan.origin.lng, fan.origin.lat],
+                                [ll.lng, ll.lat],
+                            ],
+                        },
+                    };
+                }),
+            };
+            const src = map.getSource("fan-lines") as any;
+            if (src) src.setData(lines);
+        };
+
+        const expand = (fan: FanState) => {
+            if (fan.expanded) return;
+            fan.expanded = true;
+            fan.chip.marker.remove();
+            for (const d of fan.dots) d.el.style.display = "block";
+            ensureFanLines();
+            refreshFan(fan);
+        };
+
+        const collapse = (fan: FanState) => {
+            if (!fan.expanded) return;
+            fan.expanded = false;
+            for (const d of fan.dots) {
+                d.el.style.display = "none";
+                d.setPopup(false);
+            }
+            fan.chip.marker.addTo(map);
+            if (!fans.some((f) => f.expanded)) {
+                const src = map.getSource("fan-lines") as any;
+                if (src)
+                    src.setData({ type: "FeatureCollection", features: [] });
+            }
+        };
+
+        const collapseAll = () => fans.forEach(collapse);
+
+        // Canvas clicks collapse any open fan (pin clicks stopPropagation, so
+        // they never reach the map).
+        map.on("click", collapseAll);
+        // Keep fanned pins glued to their pixel ring while panning/zooming.
+        map.on("move", () =>
+            fans.forEach((f) => {
+                if (f.expanded) refreshFan(f);
+            }),
+        );
+
+        for (const m of markers) {
+            const key = `${m.lat.toFixed(4)},${m.lng.toFixed(4)}`;
+            const group = groups.get(key)!;
+            if (group.length === 1) {
+                makePin(m, {});
+                bounds.extend([m.lng, m.lat]);
+            } else if (group[0].id === m.id) {
+                const origin = { lat: group[0].lat, lng: group[0].lng };
+                const fan: FanState = {
+                    origin,
+                    chip: null as any,
+                    dots: [],
+                    expanded: false,
+                };
+                for (const gm of group) {
+                    const pin = makePin(gm, {
+                        offset: offsets.get(gm.id),
+                        hidden: true,
+                    });
+                    fan.dots.push({
+                        m: gm,
+                        el: pin.dot,
+                        marker: pin.marker,
+                        setPopup: pin.setPopup,
+                    });
+                }
+                fan.chip = makeChip(group, origin, () => expand(fan));
+                fans.push(fan);
+                bounds.extend([origin.lng, origin.lat]);
+            }
         }
 
         if (markers.length > 1) {
