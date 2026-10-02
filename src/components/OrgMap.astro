@@ -180,8 +180,8 @@ if (missing > 0 && mapped.length > 0) {
                 group.forEach((m, i) => {
                     const ang = (2 * Math.PI * i) / group.length - Math.PI / 2;
                     offsets.set(m.id, [
-                        Math.round(Math.cos(ang) * 20),
-                        Math.round(Math.sin(ang) * 20),
+                        Math.round(Math.cos(ang) * 26),
+                        Math.round(Math.sin(ang) * 26),
                     ]);
                 });
             }
@@ -255,8 +255,8 @@ if (missing > 0 && mapped.length > 0) {
             dot.setAttribute("aria-label", m.name);
             dot.style.cssText = [
                 "box-sizing:content-box",
-                "width:14px",
-                "height:14px",
+                "width:18px",
+                "height:18px",
                 "padding:0",
                 "display:block",
                 "cursor:pointer",
@@ -268,12 +268,13 @@ if (missing > 0 && mapped.length > 0) {
             square.className = "org-map-dot";
             square.style.cssText = [
                 "display:block",
-                "width:14px",
-                "height:14px",
+                "width:18px",
+                "height:18px",
                 "border-radius:50%",
                 `background:${m.color || ink}`,
-                `border:2px solid ${paper}`,
-                `box-shadow:0 0 0 3px ${hexToRgba(m.color || ink, 0.18)}, 0 0 10px 2px ${hexToRgba(m.color || ink, 0.45)}`,
+                "border:3px solid " + paper,
+                // elevation drop, ink separation halo, then the color glow
+                `box-shadow:0 2px 5px rgba(0,0,0,0.3), 0 0 0 3px ${hexToRgba(m.color || ink, 0.25)}, 0 0 12px 4px ${hexToRgba(m.color || ink, 0.5)}`,
                 "transition:transform 120ms ease",
             ].join(";");
             dot.appendChild(square);
