@@ -29,10 +29,21 @@ if (actorsSection?.database_id) {
     error = "No database_id configured for actors section.";
 }
 
-const actors: CrmActor[] = records
-    .filter(hasCatbis)
-    .map(normalizeRecord)
-    .filter(isOrgActor); // directory shows only Agency~org entries (2026-09-29)
+const catbisActors: CrmActor[] = records.filter(hasCatbis).map(normalizeRecord);
+
+// Diagnostic (2026-10-01, La Recol·lectora case): surface rows that pass CATBIS
+// but fail the Agency~org rule, so a missing org can be told apart from a row
+// that never reaches the site (wrong DB, archived, casing…).
+const agencyDropped = catbisActors.filter((a) => !isOrgActor(a));
+if (agencyDropped.length > 0) {
+    console.info(
+        `[filter] ${agencyDropped.length} CATBIS row(s) dropped — Agency without "org": ${agencyDropped
+            .map((a) => a.name)
+            .join(", ")}`,
+    );
+}
+
+const actors = catbisActors.filter(isOrgActor); // directory shows only Agency~org entries (2026-09-29)
 
 const activePriorityAreas = priorityAreaOptions.filter((p) =>
     actors.some((a) => a.thirdTags.includes(p)),
