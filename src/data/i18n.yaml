@@ -66,6 +66,11 @@ home:
   evDesc: { en: "Gatherings, conferences, workshops, and community meetups.", ca: "Trobades, conferències, tallers i jornades comunitàries.", es: "Encuentros, conferencias, talleres y jornadas comunitarias." }
   browse: { en: "Browse →", ca: "Explora →", es: "Explora →" }
 
+submit:
+  note: { en: "This is a work in progress: an open mapping process, not a finished product. We welcome input, feedback, and collaboration — and of course, new entries.", ca: "Això és una feina en curs: un procés de cartografia obert, no un producte acabat. Totes les aportacions, comentaris i col·laboracions són benvingudes — i, és clar, també les noves entrades.", es: "Esto es un trabajo en curso: un proceso de mapeo abierto, no un producto acabado. Agradecemos aportaciones, comentarios y colaboración — y, por supuesto, también nuevas entradas." }
+  addEntry: { en: "Add an entry →", ca: "Afegeix una entrada →", es: "Añade una entrada →" }
+  writeUs: { en: "Write to us →", ca: "Escriu-nos →", es: "Escríbenos →" }
+
 orgs:
   heroLede:
     en: "Discover regenerative actors, organizations, networks, and initiatives across Catalunya. Search by name or filter by priority area, territory, role, themes, and ontology tags."

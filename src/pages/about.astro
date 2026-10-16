@@ -2,9 +2,22 @@
 import Layout from "../components/Layout.astro";
 import OrganicAmbient from "../components/OrganicAmbient.astro";
 import type { I18nString } from "../lib/i18n";
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
 
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+
+// Public submission form (Notion form view URL, from site.yaml). While unset,
+// the CTA falls back to email so the button works before the form is published.
+const site = yaml.load(
+    fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
+) as { submitFormUrl?: string };
+const submitFormUrl = String(site.submitFormUrl ?? "").trim();
+const submitHref = submitFormUrl || "mailto:hello@motiu.org";
+const submitKey = submitFormUrl ? "submit.addEntry" : "submit.writeUs";
+const submitLabel = submitFormUrl ? "Add an entry →" : "Write to us →";
 
 const contentDict: Record<string, I18nString> = {
     "about.heroTitle": {
@@ -173,6 +186,9 @@ const contentDict: Record<string, I18nString> = {
                 >
                     More about us →
                 </a>
+                <a href={submitHref} data-i18n={submitKey}>
+                    {submitLabel}
+                </a>
             </p>
         </div>
     </section>
@@ -231,6 +247,9 @@ const contentDict: Record<string, I18nString> = {
     }
     .about-more {
         margin: var(--space-10) 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
     }
     .about-more a {
         display: inline-block;

@@ -5,6 +5,19 @@ import OrgMap from "../components/OrgMap.astro";
 import { loadSectionConfig, fetchDatabaseRecords } from "../lib/notion";
 import { hasCatbis, normalizeRecord, isOrgActor } from "../lib/crm";
 import type { CrmActor } from "../lib/crm";
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
+
+// Public submission form (Notion form view URL, from site.yaml). While unset,
+// the CTA falls back to email so the button works before the form is published.
+const site = yaml.load(
+    fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
+) as { submitFormUrl?: string };
+const submitFormUrl = String(site.submitFormUrl ?? "").trim();
+const submitHref = submitFormUrl || "mailto:hello@motiu.org";
+const submitKey = submitFormUrl ? "submit.addEntry" : "submit.writeUs";
+const submitLabel = submitFormUrl ? "Add an entry →" : "Write to us →";
 
 const sections = loadSectionConfig();
 const actorsSection = sections.find((s) => s.id === "actors");
@@ -100,6 +113,21 @@ const exploreLinks = [
             </p>
 
             <OrgMap actors={actors} showTitle={false} />
+
+            <div class="open-process">
+                <p class="open-process__note" data-i18n="submit.note">
+                    This is a work in progress: an open mapping process, not a
+                    finished product. We welcome input, feedback, and
+                    collaboration — and of course, new entries.
+                </p>
+                <a
+                    class="open-process__cta"
+                    href={submitHref}
+                    data-i18n={submitKey}
+                >
+                    {submitLabel}
+                </a>
+            </div>
 
             {error && (
                 <div class="error-banner">
@@ -260,6 +288,41 @@ const exploreLinks = [
         font-size: 0.8rem;
         margin-top: var(--space-6);
         max-width: 60ch;
+    }
+
+    .open-process {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-4);
+        margin: var(--space-6) auto 0;
+        max-width: 58ch;
+    }
+    .open-process__note {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+        margin: 0;
+    }
+    .open-process__cta {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--primary);
+        text-decoration: none;
+        border: 1px solid var(--border-default);
+        padding: var(--space-3) var(--space-5);
+        transition:
+            background-color var(--t-fast),
+            color var(--t-fast);
+    }
+    .open-process__cta:hover {
+        background: var(--primary);
+        color: var(--primary-foreground);
     }
 
     @media (max-width: 720px) {

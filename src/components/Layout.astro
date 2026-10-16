@@ -7,9 +7,13 @@ import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import "@fontsource/averia-serif-libre/400.css";
 import "@fontsource/averia-serif-libre/700.css";
-import "../styles/tokens.css";
-import "../styles/theme.css";
+// Styles: structural tokens, the active theme and the base layer all come from
+// the shared design system (@motiu/design). This repo keeps only site-local
+// overrides (the Fluvià shell palette + src/styles/global.css).
+import "@motiu/design/styles/tokens.css";
+import "@motiu/design/styles/theme.css";
 import "../styles/themes/fluvia-river.css";
+import "@motiu/design/styles/global.css";
 import "../styles/global.css";
 import Nav from "./Nav.astro";
 import FluviaNav from "./FluviaNav.astro";

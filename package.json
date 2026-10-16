@@ -11,6 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@motiu/design": "github:motiuorg/motiu-design#v0.2.3",
     "@notionhq/client": "^3.1.0",
     "astro": "^5.0.0",
     "d3": "^7.9.0",
@@ -19,11 +20,11 @@
   },
   "devDependencies": {
     "@fontsource-variable/fraunces": "^5.0.0",
-    "@fontsource-variable/inter": "^5.0.0",
-    "@fontsource/ibm-plex-mono": "^5.0.0",
     "@fontsource-variable/geist": "^5.0.0",
     "@fontsource-variable/geist-mono": "^5.0.0",
+    "@fontsource-variable/inter": "^5.0.0",
     "@fontsource/averia-serif-libre": "^5.0.0",
+    "@fontsource/ibm-plex-mono": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
     "typescript": "^5.9.3"
   }

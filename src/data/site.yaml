@@ -2,4 +2,8 @@ name: Regenerant Catalunya Maps
 url: https://motiuorg.github.io/Regenerant-Catalunya-Maps
 description: A first attempt at aggregating regenerative projects and programs related to regeneration in Catalunya — explored by priority or territory.
 ogImage: /assets/og.png
+# Public form for new entries, corrections and feedback — the published Notion
+# form (workspace notion.site host, reachable without a Notion account).
+# While empty, the "Add an entry" CTA falls back to email.
+submitFormUrl: "https://octagonal-feather-939.notion.site/aabdf6b3bf4f4920979ec20ecdac4888"
 legalNote: Motiu · Catalunya
