@@ -43,6 +43,8 @@ export interface CrmProgram {
   area2: string[];
   agency: string | null;
   secondTags: string[];
+  /** Explicit priority tags from the `3RDTAG` multi-select, when filled in the CRM. */
+  explicitPriorities: string[];
   /** Free-form context/verification notes kept in the CRM (Notes property). */
   notes: string;
 }
@@ -181,6 +183,7 @@ export function normalizeProgram(record: NormalizedRecord): CrmProgram {
     area2: toStringArray(props["Area2"]),
     agency: toNullableString(props["Agency"]),
     secondTags: toStringArray(props["2NDTAG"]),
+    explicitPriorities: toStringArray(props["3RDTAG"]),
     notes: String(props["Notes"] ?? ""),
   };
 }
@@ -271,12 +274,34 @@ export function priorityColor(priorityId: string): string {
 
 export function inferPriorityTags(record: NormalizedRecord | CrmProgram): string[] {
   const priorities = loadPriorities();
-  const props = "properties" in record ? record.properties : record as any;
+  const props = ("properties" in record ? record.properties : record) as any;
+
+  // An explicit `3RDTAG` (or an already-normalized equivalent) is
+  // authoritative — it lets the CRM decide, instead of guessing from copy.
+  const explicit = [
+    ...toStringArray(props["3RDTAG"]),
+    ...(Array.isArray(props.explicitPriorities) ? props.explicitPriorities : []),
+  ];
+  if (explicit.length) {
+    const picked = explicit
+      .map((tag) => {
+        const wanted = String(tag).toLowerCase();
+        return priorities.find(
+          (p) => String(p.id).toLowerCase() === wanted || String(p.slug).toLowerCase() === wanted,
+        )?.id;
+      })
+      .filter(Boolean) as string[];
+    if (picked.length) return Array.from(new Set(picked));
+  }
+
+  // Fall back to keyword matching. Callers pass a *normalized* record (camelCase,
+  // no `properties`), so read both shapes — reading only the raw CRM keys made
+  // the haystack permanently empty and every priority report "0 programs".
   const haystack = [
-    props["Name"] ?? "",
-    props["Description"] ?? "",
-    props["What it is"] ?? "",
-    props["Agency"] ?? "",
+    props["Name"] ?? props.name ?? "",
+    props["Description"] ?? props.description ?? "",
+    props["What it is"] ?? props.whatItIs ?? "",
+    props["Agency"] ?? props.agency ?? "",
     ...(Array.isArray(props["Memes"]) ? props["Memes"] : [props["Memes"] ?? ""]),
   ]
     .map((v) => String(v).toLowerCase())
