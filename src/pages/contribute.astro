@@ -305,15 +305,19 @@ if (data.taxCallout?.body) contentDict["c.tax.body"] = data.taxCallout.body;
     }
     .modality__heading {
         display: flex;
-        gap: var(--space-4);
+        gap: 0;
         align-items: baseline;
         margin-bottom: var(--space-4);
     }
+    /* One shared text column: the number hangs at the block edge, and the
+     * title, one-liner, body copy and card text all start at the same inset
+     * as the bordered blocks (1px border + --space-5 padding). */
     .modality__number {
         font-family: var(--mono);
         font-size: 0.8rem;
         color: var(--regen);
         flex-shrink: 0;
+        width: calc(var(--space-5) + 1px);
     }
     .modality__name {
         font-family: var(--serif);
@@ -334,7 +338,8 @@ if (data.taxCallout?.body) contentDict["c.tax.body"] = data.taxCallout.body;
         font-size: 0.95rem;
         line-height: 1.6;
         color: var(--text-primary);
-        max-width: 70ch;
+        max-width: calc(70ch + var(--space-5) + 1px);
+        padding-left: calc(var(--space-5) + 1px);
         margin: 0 0 var(--space-6);
     }
 

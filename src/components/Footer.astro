@@ -18,7 +18,14 @@ const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
 <footer class="site-footer">
     <div class="cols">
         <div class="col">
-            <span class="lockup">{site.name}</span>
+            <a
+                class="lockup"
+                href="https://motiu.org"
+                target="_blank"
+                rel="noopener"
+            >
+                {site.name}
+            </a>
             <p data-i18n="footer.legalNote">{site.legalNote}</p>
         </div>
         <div class="col">
@@ -66,18 +73,6 @@ const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
                 </li>
             </ul>
         </div>
-        <div class="col">
-            <span class="eyebrow" data-i18n="footer.partners">
-                Partners
-            </span>
-            <ul>
-                <li>
-                    <a href="https://motiu.org" target="_blank" rel="noopener">
-                        Motiu
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
     <div class="meta">
         <span>
@@ -106,7 +101,7 @@ const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
     }
     .cols {
         display: grid;
-        grid-template-columns: 1.4fr repeat(3, 1fr);
+        grid-template-columns: 1.4fr 1fr;
         gap: var(--space-8);
         max-width: var(--container-default);
         margin: 0 auto;
@@ -116,6 +111,10 @@ const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
         font-size: 1.1rem;
         color: var(--ink);
         display: block;
+        text-decoration: none;
+    }
+    .lockup:hover {
+        color: var(--regen);
     }
     .col p {
         margin: var(--space-2) 0 0;

@@ -98,7 +98,6 @@ const exploreLinks = [
     <header class="hero">
         <OrganicAmbient />
         <div class="hero__inner section">
-            <p class="eyebrow">Regenerant Catalunya Maps</p>
             <h1 class="display" data-i18n="home.title">
                 Who is regenerating Catalunya?
             </h1>
@@ -131,26 +130,11 @@ const exploreLinks = [
                     href={`${base}contribute/`}
                     data-i18n="home.howToContribute"
                 >
-                    How to contribute
+                    How to contribute to regeneration
                 </a>
             </div>
 
             <OrgMap actors={actors} showTitle={false} />
-
-            <div class="open-process">
-                <p class="open-process__note" data-i18n="submit.note">
-                    This is a work in progress: an open mapping process, not a
-                    finished product. We welcome input, feedback, and
-                    collaboration — and of course, new entries.
-                </p>
-                <a
-                    class="open-process__cta"
-                    href={submitHref}
-                    data-i18n={submitKey}
-                >
-                    {submitLabel}
-                </a>
-            </div>
 
             {error && (
                 <div class="error-banner">
@@ -210,9 +194,6 @@ const exploreLinks = [
         align-items: center;
     }
 
-    .hero .eyebrow {
-        margin-bottom: var(--space-3);
-    }
     .hero h1 {
         margin-bottom: var(--space-5);
     }
@@ -363,41 +344,6 @@ const exploreLinks = [
         font-size: 0.8rem;
         margin-top: var(--space-6);
         max-width: 60ch;
-    }
-
-    .open-process {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--space-4);
-        margin: var(--space-6) auto 0;
-        max-width: 58ch;
-    }
-    .open-process__note {
-        font-family: var(--serif);
-        font-style: italic;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: var(--text-muted);
-        margin: 0;
-    }
-    .open-process__cta {
-        display: inline-block;
-        font-family: var(--mono);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        color: var(--primary);
-        text-decoration: none;
-        border: 1px solid var(--border-default);
-        padding: var(--space-3) var(--space-5);
-        transition:
-            background-color var(--t-fast),
-            color var(--t-fast);
-    }
-    .open-process__cta:hover {
-        background: var(--primary);
-        color: var(--primary-foreground);
     }
 
     @media (max-width: 720px) {
