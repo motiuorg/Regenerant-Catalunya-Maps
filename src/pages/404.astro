@@ -8,7 +8,8 @@ import yaml from "js-yaml";
 const site = yaml.load(
     fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
 ) as { submitFormUrl?: string };
-const submitHref = String(site.submitFormUrl ?? "").trim() || "mailto:hello@motiu.org";
+const submitHref =
+    String(site.submitFormUrl ?? "").trim() || "mailto:hello@motiu.org";
 
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
@@ -30,13 +31,15 @@ const destinations = [
             <p class="eyebrow">Error 404</p>
             <h1 class="display">This path doesn't lead anywhere.</h1>
             <p class="lede">
-                The page you were looking for isn't here. It may have moved,
-                or the link may be out of date — this site is an open process
-                that keeps changing.
+                The page you were looking for isn't here. It may have moved, or
+                the link may be out of date — this site is an open process that
+                keeps changing.
             </p>
 
             <div class="hero-actions">
-                <a class="hero-actions__cta" href={base}>Back to the map →</a>
+                <a class="hero-actions__cta" href={base}>
+                    Back to the map →
+                </a>
                 <a
                     class="hero-actions__link"
                     href={submitHref}
@@ -48,13 +51,11 @@ const destinations = [
             </div>
 
             <nav class="destinations" aria-label="Site sections">
-                {
-                    destinations.map((d) => (
-                        <a href={d.href} class="destination">
-                            {d.label}
-                        </a>
-                    ))
-                }
+                {destinations.map((d) => (
+                    <a href={d.href} class="destination">
+                        {d.label}
+                    </a>
+                ))}
             </nav>
         </div>
     </header>
@@ -63,7 +64,7 @@ const destinations = [
 <style>
     .hero {
         position: relative;
-        padding: var(--space-16) var(--gutter) var(--space-12);
+        padding: var(--space-16) 0 var(--space-12);
         border-bottom: 1px solid var(--ink);
         background: var(--paper);
         text-align: center;

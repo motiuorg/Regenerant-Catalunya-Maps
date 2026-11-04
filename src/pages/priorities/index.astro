@@ -113,13 +113,18 @@ for (const p of priorities) {
         <h2 class="section-title" data-i18n="pri.six">
             The six priorities
         </h2>
+        <p class="section-lede" data-i18n="pri.filterHint">
+            Detailed pages for each priority are being reworked, so the cards
+            below are not links for now. To explore by priority, filter the
+            Organizations, Programs and Initiatives, and Events sections using
+            their priority area filter.
+        </p>
         <div class="priority-grid">
             {priorities.map((priority) => {
                 const counts = countsForPriority(priority.id);
                 return (
                     <PriorityCard
                         priority={priority}
-                        href={`${base}priorities/${priority.slug}/`}
                         actorCount={counts.actors}
                         programCount={counts.programs}
                     />
@@ -151,7 +156,7 @@ for (const p of priorities) {
 <style>
     .hero--compact {
         position: relative;
-        padding: var(--space-12) var(--gutter) var(--space-8);
+        padding: var(--space-12) 0 var(--space-8);
         border-bottom: 1px solid var(--ink);
         background: var(--paper);
         overflow: hidden;

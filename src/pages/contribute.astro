@@ -171,7 +171,10 @@ if (data.taxCallout?.body) contentDict["c.tax.body"] = data.taxCallout.body;
 <style>
     .hero--compact {
         position: relative;
-        padding: var(--space-12) var(--gutter) var(--space-8);
+        /* .hero__inner already carries .section's gutter; padding here subtracted
+         * the gutter a second time, pushing hero copy 32px right of the sections
+         * below it. */
+        padding: var(--space-12) 0 var(--space-8);
         border-bottom: 1px solid var(--ink);
         background: var(--paper);
         overflow: hidden;

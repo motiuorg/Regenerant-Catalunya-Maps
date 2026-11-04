@@ -69,7 +69,7 @@ home:
 
 submit:
   note: { en: "This is a work in progress: an open mapping process, not a finished product. We welcome input, feedback, and collaboration — and of course, new entries.", ca: "Això és una feina en curs: un procés de cartografia obert, no un producte acabat. Totes les aportacions, comentaris i col·laboracions són benvingudes — i, és clar, també les noves entrades.", es: "Esto es un trabajo en curso: un proceso de mapeo abierto, no un producto acabado. Agradecemos aportaciones, comentarios y colaboración — y, por supuesto, también nuevas entradas." }
-  addEntry: { en: "Suggest an entry →", ca: "Suggereix una entrada →", es: "Sugiere una entrada →" }
+  addEntry: { en: "Suggest or correct an entry →", ca: "Suggereix o corregeix una entrada →", es: "Sugiere o corrige una entrada →" }
   writeUs: { en: "Write to us →", ca: "Escriu-nos →", es: "Escríbenos →" }
 
 orgs:
@@ -125,10 +125,14 @@ bio:
 pri:
   heroTitle: { en: "Six priorities for a living Catalunya", ca: "Sis prioritats per a una Catalunya viva", es: "Seis prioridades para una Cataluña viva" }
   heroLede:
-    en: "A diagnosis of the bioregion across six interdependent systems, plus the leverage and capital vehicles that can move each toward regeneration."
-    ca: "Un diagnòstic del bioregion a través de sis sistemes interdependent, més les palanques i els vehicles de capital que poden moure cadascun cap a la regeneració."
-    es: "Un diagnóstico del biorregión a través de seis sistemas interdependientes, más las palancas y los vehículos de capital que pueden mover cada uno hacia la regeneración."
+    en: "A diagnosis of the bioregion across six interdependent systems, and the leverage that can move each toward regeneration."
+    ca: "Un diagnòstic del bioregion a través de sis sistemes interdependents, i les palanques que poden moure cadascun cap a la regeneració."
+    es: "Un diagnóstico del biorregión a través de seis sistemas interdependientes, y las palancas que pueden mover cada uno hacia la regeneración."
   six: { en: "The six priorities", ca: "Les sis prioritats", es: "Las seis prioridades" }
+  filterHint:
+    en: "Detailed pages for each priority are being reworked, so the cards below are not links for now. To explore by priority, use the priority area filter in the Organizations, Programs and Initiatives, and Events sections."
+    ca: "Les pàgines de detall de cada prioritat s'estan reelaborant, així que les targetes de sota no són enllaços per ara. Per explorar per prioritat, fes servir el filtre d'àrea prioritària a les seccions d'Organitzacions, Programes i iniciatives, i Esdeveniments."
+    es: "Las páginas de detalle de cada prioridad se están reelaborando, así que las tarjetas de abajo no son enlaces por ahora. Para explorar por prioridad, usa el filtro de área prioritaria en las secciones de Organizaciones, Programas e iniciativas, y Eventos."
   interdependence: { en: "Interdependence", ca: "Interdependència", es: "Interdependencia" }
   interdependenceLede:
     en: "The six priorities are not a menu. They are a system: restoring watersheds increases food resilience; reducing energy demand lowers pressure on water; social commons create the capacity to act across all of them."
