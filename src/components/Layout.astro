@@ -26,7 +26,13 @@ import yaml from "js-yaml";
 
 const site = yaml.load(
     fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
-) as { name: string; url: string; description: string; ogImage?: string };
+) as {
+    name: string;
+    url: string;
+    description: string;
+    ogImage?: string;
+    goatcounter?: string;
+};
 
 const uiStrings = loadI18n();
 
@@ -67,6 +73,10 @@ const favicon = `${base}favicon.svg`;
 const appleTouchIcon = `${base}assets/apple-touch-icon.png`;
 // Social previews need an absolute, crawler-fetchable image URL.
 const ogImage = `${siteRoot}assets/og.png`;
+
+// Cookieless analytics. Same approach as the other Motiu sites: one <script>
+// per page, counting by path. Prefix paths with the site code in the dashboard.
+const analyticsEndpoint = String(site.goatcounter ?? "").trim();
 ---
 
 <!doctype html>
@@ -81,6 +91,31 @@ const ogImage = `${siteRoot}assets/og.png`;
         <link rel="icon" href={favicon} type="image/svg+xml" />
         <link rel="apple-touch-icon" href={appleTouchIcon} />
         <meta name="theme-color" content="#2C5A0D" />
+        {analyticsEndpoint && (
+            <>
+                <script
+                    is:inline
+                    data-goatcounter={analyticsEndpoint}
+                    async
+                    src="https://gc.zgo.at/count.js"
+                />
+                <script is:inline>
+                    // Count loads of the "suggest an entry" CTA as GoatCounter
+                    // events, so traffic to the map can be told apart from
+                    // actual intent to contribute.
+                    document.addEventListener("click", (event) => {
+                        const target = event.target;
+                        if (!(target instanceof Element)) return;
+                        const link = target.closest("[data-goatcounter-event]");
+                        if (!link || !window.goatcounter?.count) return;
+                        window.goatcounter.count({
+                            path: link.getAttribute("data-goatcounter-event"),
+                            event: true,
+                        });
+                    });
+                </script>
+            </>
+        )}
         <I18n dict={mergedDict} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={site.name} />

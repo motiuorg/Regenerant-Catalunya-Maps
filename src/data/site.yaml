@@ -2,6 +2,9 @@ name: Regenerant Catalunya Maps
 url: https://motiuorg.github.io/Regenerant-Catalunya-Maps
 description: An open mapping process of the organizations, programs and events working toward a regenerative Catalunya — explored by priority, territory and theme.
 ogImage: /assets/og.png
+# GoatCounter analytics — cookieless, no personal data. The site code is the
+# left-hand part of https://<code>.goatcounter.com. Leave empty to disable.
+goatcounter: "https://regenerant.goatcounter.com/count"
 # Public form for new entries, corrections and feedback — the published Notion
 # form (workspace notion.site host, reachable without a Notion account).
 # While empty, the "Add an entry" CTA falls back to email.

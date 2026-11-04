@@ -17,7 +17,9 @@ const site = yaml.load(
 const submitFormUrl = String(site.submitFormUrl ?? "").trim();
 const submitHref = submitFormUrl || "mailto:hello@motiu.org";
 const submitKey = submitFormUrl ? "submit.addEntry" : "submit.writeUs";
-const submitLabel = submitFormUrl ? "Add an entry →" : "Write to us →";
+const submitLabel = submitFormUrl
+    ? "Suggest or correct an entry →"
+    : "Write to us →";
 
 const contentDict: Record<string, I18nString> = {
     "about.heroTitle": {
@@ -194,7 +196,11 @@ const contentDict: Record<string, I18nString> = {
                 >
                     More about us →
                 </a>
-                <a href={submitHref} data-i18n={submitKey}>
+                <a
+                    href={submitHref}
+                    data-goatcounter-event="cta-suggest-entry"
+                    data-i18n={submitKey}
+                >
                     {submitLabel}
                 </a>
             </p>
