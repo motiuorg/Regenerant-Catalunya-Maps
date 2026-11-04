@@ -13,6 +13,16 @@
  * 1. Adaptations
  * ------------------------------------------------------------------------ */
 
+/* The system's container already subtracts 2×--gutter, and this site's
+ * .section adds another 2×--gutter of padding. At the token default (2rem)
+ * that compounds to 128px on a 390px phone, squeezing text to ~260px. Desktop
+ * hides it behind the 1280px cap; small screens don't. */
+@media (max-width: 640px) {
+    :root {
+        --gutter: 1.125rem;
+    }
+}
+
 /* The system's Nav is fixed/overlay and reserves --nav-h on <main>; RC Maps'
  * nav is a static bar, so nothing needs reserving here. */
 main {

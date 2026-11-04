@@ -90,7 +90,11 @@ const exploreLinks = [
 ];
 ---
 
-<Layout title="Home" current="home">
+<Layout
+    title="Home"
+    current="home"
+    description="An open mapping process of the organizations, programs and events working toward a regenerative Catalunya. Search, filter and explore who is doing what — and suggest an entry."
+>
     <header class="hero">
         <OrganicAmbient />
         <div class="hero__inner section">
@@ -111,6 +115,25 @@ const exploreLinks = [
                     organizations, programs, and events currently mapped
                 </span>
             </p>
+
+            <div class="hero-actions">
+                <a
+                    class="hero-actions__cta"
+                    href={submitHref}
+                    target="_blank"
+                    rel="noopener"
+                    data-i18n={submitKey}
+                >
+                    {submitLabel}
+                </a>
+                <a
+                    class="hero-actions__link"
+                    href={`${base}contribute/`}
+                    data-i18n="home.howToContribute"
+                >
+                    How to contribute
+                </a>
+            </div>
 
             <OrgMap actors={actors} showTitle={false} />
 
@@ -213,6 +236,58 @@ const exploreLinks = [
         font-size: clamp(1.8rem, 3.5vw, 2.6rem);
         font-weight: 500;
         color: var(--regen);
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-3) var(--space-5);
+        margin: 0 0 var(--space-6);
+    }
+    .hero-actions__cta {
+        display: inline-flex;
+        align-items: center;
+        background: var(--regen);
+        color: var(--regen-foreground);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        text-decoration: none;
+        padding: 0.7rem 1.4rem;
+        border: 1px solid var(--regen);
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+        transition:
+            background-color var(--t-fast),
+            color var(--t-fast),
+            translate var(--t-fast);
+    }
+    .hero-actions__cta:hover,
+    .hero-actions__cta:focus-visible {
+        background: var(--regen-hover);
+        border-color: var(--regen-hover);
+        color: var(--regen-foreground);
+        translate: 0 -1px;
+    }
+    .hero-actions__link {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 1px solid transparent;
+        padding-bottom: 1px;
+    }
+    .hero-actions__link:hover,
+    .hero-actions__link:focus-visible {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
     }
 
     .section-prompt {

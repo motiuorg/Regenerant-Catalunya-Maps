@@ -1,0 +1,165 @@
+---
+import Layout from "../components/Layout.astro";
+import OrganicAmbient from "../components/OrganicAmbient.astro";
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
+
+const site = yaml.load(
+    fs.readFileSync(path.join(process.cwd(), "src/data/site.yaml"), "utf8"),
+) as { submitFormUrl?: string };
+const submitHref = String(site.submitFormUrl ?? "").trim() || "mailto:hello@motiu.org";
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+
+const destinations = [
+    { label: "Home", href: base },
+    { label: "Priorities", href: `${base}priorities/` },
+    { label: "Organizations", href: `${base}organizations/` },
+    { label: "Programs and Initiatives", href: `${base}programs/` },
+    { label: "Events", href: `${base}events/` },
+    { label: "Contribute", href: `${base}contribute/` },
+];
+---
+
+<Layout title="Page not found" current="" noindex>
+    <header class="hero">
+        <OrganicAmbient />
+        <div class="hero__inner section">
+            <p class="eyebrow">Error 404</p>
+            <h1 class="display">This path doesn't lead anywhere.</h1>
+            <p class="lede">
+                The page you were looking for isn't here. It may have moved,
+                or the link may be out of date — this site is an open process
+                that keeps changing.
+            </p>
+
+            <div class="hero-actions">
+                <a class="hero-actions__cta" href={base}>Back to the map →</a>
+                <a
+                    class="hero-actions__link"
+                    href={submitHref}
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Suggest an entry
+                </a>
+            </div>
+
+            <nav class="destinations" aria-label="Site sections">
+                {
+                    destinations.map((d) => (
+                        <a href={d.href} class="destination">
+                            {d.label}
+                        </a>
+                    ))
+                }
+            </nav>
+        </div>
+    </header>
+</Layout>
+
+<style>
+    .hero {
+        position: relative;
+        padding: var(--space-16) var(--gutter) var(--space-12);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+        text-align: center;
+        overflow: hidden;
+    }
+    .hero__inner {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-default);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero .eyebrow {
+        margin-bottom: var(--space-3);
+    }
+    .hero h1 {
+        margin-bottom: var(--space-5);
+    }
+    .hero .lede {
+        max-width: 56ch;
+        margin: 0 auto var(--space-8);
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-3) var(--space-5);
+        margin: 0 0 var(--space-10);
+    }
+    .hero-actions__cta {
+        display: inline-flex;
+        align-items: center;
+        background: var(--regen);
+        color: var(--regen-foreground);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        text-decoration: none;
+        padding: 0.7rem 1.4rem;
+        border: 1px solid var(--regen);
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+        transition:
+            background-color var(--t-fast),
+            color var(--t-fast),
+            translate var(--t-fast);
+    }
+    .hero-actions__cta:hover,
+    .hero-actions__cta:focus-visible {
+        background: var(--regen-hover);
+        border-color: var(--regen-hover);
+        color: var(--regen-foreground);
+        translate: 0 -1px;
+    }
+    .hero-actions__link {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 1px solid transparent;
+        padding-bottom: 1px;
+    }
+    .hero-actions__link:hover,
+    .hero-actions__link:focus-visible {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+    }
+
+    .destinations {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-3) var(--space-5);
+        border-top: 1px solid var(--border-subtle);
+        padding-top: var(--space-6);
+        width: 100%;
+        max-width: 60rem;
+    }
+    .destination {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+    .destination:hover {
+        color: var(--ink);
+    }
+</style>
